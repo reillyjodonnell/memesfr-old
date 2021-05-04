@@ -5,23 +5,30 @@ import Home from "../Homepage/Home";
 
 export default function Memesfr() {
   const [register, openRegister] = useState(false);
-  const [displayRegister, update] = useState(0);
+  const [signIn, openSignIn] = useState(false);
+  const [home, displayHome] = useState(true);
 
   const updateRegister = () => {
+    displayHome(!home);
     openRegister(!register);
+  };
+  const updateSignIn = () => {
+    displayHome(!home);
+    openSignIn(!signIn);
   };
 
   return (
     <div>
-      <Home />
+      {home ? (
+        <Home updateSignIn={updateSignIn} updateRegister={updateRegister} />
+      ) : null}
       {}
-      {displayRegister ? (
+      {register ? (
         <>
           <Register updateRegister={updateRegister} />
-
-          <Login updateRegister={updateRegister} />
         </>
       ) : null}
+      {signIn ? <Login /> : null}
     </div>
   );
 }

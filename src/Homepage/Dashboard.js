@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -20,10 +20,17 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Settings from "../Assets/Icons/Settings.svg";
 import { mainListItems, secondaryListItems } from "../Homepage/ListItems";
+import DropDown from "./DropDownMenu";
+import Alien from "../Assets/Icons/Assets/Alien.svg";
 
 import Card from "./Card";
+import DropDownMenu from "./DropDownMenu";
+import Filter from "./Filter";
+import "../CSS Components/Dashboard.css";
+import CreatePost from "../CreatePost";
 
 const drawerWidth = 240;
+const login = false;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,6 +69,8 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
+    fontSize: "2rem",
+    cursor: "pointer",
   },
   drawerPaper: {
     position: "relative",
@@ -108,18 +117,30 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "space-evenly",
     cursor: "pointer",
+    "@media (max-width: 650px)": {
+      display: "none",
+    },
+  },
+  image: {
+    paddingRight: "1rem",
   },
 }));
 
-export default function Dashboard() {
+export default function Dashboard(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const [expand, expandMenu] = useState(false);
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  const openMenu = () => {
+    expandMenu(!expand);
+  };
+
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
@@ -140,6 +161,7 @@ export default function Dashboard() {
               open && classes.menuButtonHidden
             )}
           ></IconButton>
+          <img className={classes.image} src={Alien}></img>
           <Typography
             component="h1"
             variant="h6"
@@ -151,6 +173,7 @@ export default function Dashboard() {
           </Typography>
           <div className={classes.loginregister}>
             <Typography
+              onClick={props.updateSignIn}
               component="h1"
               variant="h6"
               color="inherit"
@@ -160,6 +183,7 @@ export default function Dashboard() {
               Login
             </Typography>
             <Typography
+              onClick={props.updateRegister}
               component="h1"
               variant="h6"
               color="inherit"
@@ -173,11 +197,12 @@ export default function Dashboard() {
 
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
-              <img src={Settings} />
+              <img onClick={openMenu} src={Settings} />
             </Badge>
           </IconButton>
         </Toolbar>
       </AppBar>
+
       <Drawer
         variant="permanent"
         classes={{
@@ -193,14 +218,17 @@ export default function Dashboard() {
         <Divider />
         <List>{mainListItems}</List>
         <Divider />
-        <List>{secondaryListItems}</List>
+        {login ? <List>{secondaryListItems}</List> : null}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={5}></Grid>
           <Box spacing={5} pt={4}>
-            <div>
+            <CreatePost />
+            <Filter />
+
+            <div className="main-content">
               <Card />
               <Card />
               <Card />
@@ -208,6 +236,7 @@ export default function Dashboard() {
             </div>
           </Box>
         </Container>
+        {expand ? <DropDownMenu /> : null}
       </main>
     </div>
   );
