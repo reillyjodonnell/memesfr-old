@@ -1,0 +1,57 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  font-size: 2rem;
+  width: 30vw;
+  height: 100%;
+  border: black 1px solid;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+  border-radius: 10px;
+}
+.upper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+.username {
+  display: flex;
+  text-align: center;
+  font-size: 1rem;
+  padding: 5px;
+  width: 100%;
+}
+.meme-image {
+  display: flex;
+  max-width: 100%;
+  max-height: 100%;
+}
+.lower {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+}
+.lower img,
+svg {
+  cursor: pointer;
+}
+
+/*
+  Heart icon
+*/
+.inactive-heart {
+  fill: none;
+  stroke: black;
+}
+
+.inactive-heart:hover {
+  stroke: red;
+}
+.active-heart {
+  stroke: red;
+  fill: red;
+}
