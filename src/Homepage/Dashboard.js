@@ -18,22 +18,10 @@ import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import Settings from "../Assets/Icons/Settings.svg";
 import { mainListItems, secondaryListItems } from "../Homepage/ListItems";
 
 import Card from "./Card";
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Memesfr
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 
 const drawerWidth = 240;
 
@@ -114,6 +102,13 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 240,
   },
+  loginregister: {
+    width: "50%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+    cursor: "pointer",
+  },
 }));
 
 export default function Dashboard() {
@@ -144,9 +139,7 @@ export default function Dashboard() {
               classes.menuButton,
               open && classes.menuButtonHidden
             )}
-          >
-            <MenuIcon />
-          </IconButton>
+          ></IconButton>
           <Typography
             component="h1"
             variant="h6"
@@ -154,11 +147,33 @@ export default function Dashboard() {
             noWrap
             className={classes.title}
           >
-            Dashboard
+            Memesfr
           </Typography>
+          <div className={classes.loginregister}>
+            <Typography
+              component="h1"
+              variant="h6"
+              color="inherit"
+              noWrap
+              className={classes.register}
+            >
+              Login
+            </Typography>
+            <Typography
+              component="h1"
+              variant="h6"
+              color="inherit"
+              paddingRight="auto"
+              noWrap
+              className={classes.login}
+            >
+              Register
+            </Typography>
+          </div>
+
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
+              <img src={Settings} />
             </Badge>
           </IconButton>
         </Toolbar>

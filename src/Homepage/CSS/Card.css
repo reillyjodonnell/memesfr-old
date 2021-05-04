@@ -1,3 +1,9 @@
+.card-area {
+  display: flex;
+  width: 35vw;
+  margin: 1rem;
+}
+
 .card {
   display: flex;
   flex-direction: column;
@@ -8,10 +14,10 @@
   border: black 1px solid;
   align-items: center;
   justify-content: center;
-  margin: 1rem;
   border-radius: 10px;
   padding: 1rem;
   background-color: rgba(255, 255, 255, 0.548);
+  position: relative;
 }
 .upper {
   display: flex;
@@ -20,20 +26,94 @@
   justify-content: center;
   align-items: center;
 }
+.upper-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .username {
   display: flex;
   text-align: center;
-  font-size: 1.5rem;
-  padding: 5px;
+  font-size: 12px;
+  padding-left: 0;
   width: 100%;
+}
+.clickable {
+  cursor: pointer;
+}
+.clickable:hover {
+  border-bottom: 0.5px solid black;
+}
+.number-of-likes {
+  display: flex;
+  margin-left: auto;
 }
 .meme-image {
   display: flex;
   max-width: 100%;
   max-height: 100%;
 }
+.upper-top-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.meme-identification {
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+/*PENCIL*/
+.edit-mode {
+  position: absolute;
+  right: 5px;
+}
+.edit-mode svg {
+  height: 25px;
+}
+
+.expanded-pencil {
+  height: auto;
+  width: 210px;
+  position: absolute;
+  top: 2rem;
+  right: 15px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid black;
+}
+.expanded-pencil div:hover {
+  background-color: rgba(243, 241, 241, 0.959);
+  border-radius: 10px;
+}
+.expanded-pencil span {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.edit {
+  width: 100%;
+  display: flex;
+}
+.delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/*End Of Pencil*/
 .meme-title {
   padding: 0.25rem;
+  padding-left: 0;
 }
 .lower {
   display: flex;
@@ -53,13 +133,24 @@ svg {
   fill: none;
   stroke: black;
 }
-
+@keyframes hearted {
+  0% {
+    opacity: 0%;
+  }
+  50% {
+    opacity: 50%;
+  }
+  100% {
+    opacity: 100%;
+  }
+}
 .inactive-heart:hover {
   stroke: red;
 }
 .active-heart {
-  stroke: red;
+  stroke: black;
   fill: red;
+  animation: hearted 0.5s steps(20);
 }
 
 /* thumbs up*/
@@ -72,5 +163,70 @@ svg {
 }
 /*Report */
 .report:hover {
-  stroke: orange;
+  stroke: orangered;
+}
+
+/* options expanded menu on card*/
+.options-expanded {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 120px;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  background-color: white;
+  padding: 10px;
+  margin-left: 14rem;
+  margin-top: 29rem;
+  border: 1px solid black;
+  z-index: 2;
+}
+.option1,
+.option2,
+.option3 {
+  display: flex;
+  width: 100%;
+  height: 30px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+}
+.option1 span,
+.option2 span {
+  text-align: center;
+}
+.option1:hover,
+.option2:hover,
+.option3:hover {
+  background-color: gainsboro;
+}
+.options-expanded span {
+  padding-bottom: 7px;
+}
+.expanded {
+  width: 100%;
+}
+.report-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+  width: 100%;
+}
+.report-group > span {
+  padding-left: auto;
+}
+
+/* responsiveness <3 */
+@media only screen and (max-width: 600px) {
+  .card-area,
+  card {
+    width: 75vw;
+  }
+  .inactive-heart:hover {
+    stroke: none;
+  }
 }

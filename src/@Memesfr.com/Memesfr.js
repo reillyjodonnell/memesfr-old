@@ -5,7 +5,7 @@ import Home from "../Homepage/Home";
 
 export default function Memesfr() {
   const [register, openRegister] = useState(false);
-  const [displatRegister, update] = useState(0);
+  const [displayRegister, update] = useState(0);
 
   const updateRegister = () => {
     openRegister(!register);
@@ -15,7 +15,7 @@ export default function Memesfr() {
     <div>
       <Home />
       {}
-      {displatRegister ? (
+      {displayRegister ? (
         <>
           <Register updateRegister={updateRegister} />
 
