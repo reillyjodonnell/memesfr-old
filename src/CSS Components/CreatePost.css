@@ -8,7 +8,7 @@
 }
 .create-post-preview {
   display: flex;
-  width: 30vw;
+  width: 35vw;
   border-radius: 20px;
   border: 3px solid rgba(65, 65, 65, 0.445);
   height: 80px;
@@ -30,8 +30,10 @@
   border-radius: 10px;
 }
 .plus {
+  display: flex;
   border-radius: 50%;
   background-color: black;
+  margin-left: auto;
 }
 .create-prompt {
   display: flex;
@@ -41,7 +43,6 @@
   font-size: 1.4rem;
   border-radius: 15px;
   height: 100%;
-  padding: 1rem;
   width: 80%;
   cursor: pointer;
   white-space: nowrap;
@@ -58,9 +59,10 @@
   display: flex;
   flex-direction: column;
   width: 75vw;
+  max-width: 1000px;
   align-items: center;
   justify-content: center;
-  height: 40vh;
+  height: 80vh;
   background-color: rgb(250, 250, 250);
   border: 2px solid black;
   z-index: 100;
@@ -72,6 +74,7 @@
   transform: translate(-50%, -50%);
   margin: -35px -35px 0 0;
   padding: 1rem;
+  border-radius: 20px;
 }
 .upper-section {
   display: flex;
@@ -129,6 +132,9 @@
   justify-content: center;
   height: 100%;
   border: 10px dotted pink;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 .lower-section {
   display: flex;
@@ -140,6 +146,25 @@
 .lower-section button {
   margin-left: auto;
 }
+.image-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 400px;
+  padding: 1rem;
+}
+.image-preview span {
+  width: 100%;
+  font-size: 3rem;
+}
+.image-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+/*Media Queries */
+
 @media only screen and (max-width: 1050px) {
   .create-post-preview {
     width: 50vw;
@@ -152,15 +177,13 @@
     margin-bottom: 1rem;
   }
   .create-prompt {
-    font-size: 1rem;
+    font-size: 0.85rem;
+    white-space: pre-wrap;
     padding: 0;
     margin: 10px;
     width: 100%;
   }
-  .expanded-file {
-    transform: translate(-41%, -50%);
-    width: 70vw;
-  }
+
   .expanded-file {
     width: 80vw;
     height: 60vh;
@@ -170,16 +193,26 @@
   }
 
   .plus {
-    height: 36px;
+    height: 30px;
   }
   .upper-section {
     font-size: 1.6rem;
   }
+  .lower-section {
+    column-gap: 5px;
+    font-size: 0.7rem;
+  }
+  .lower-section button {
+    padding-left: auto;
+  }
 }
+
 @media only screen and (max-width: 350px) {
   .expanded-file {
-    width: 80vw;
-    height: 60vh;
+    width: 90vw;
+    height: 80vh;
+    margin: 0;
+    transform: translate(-40%, -50%);
   }
   .upper-section {
     font-size: 1.4rem;
@@ -192,11 +225,5 @@
   }
   .lower-section {
     font-size: 0.6rem;
-  }
-}
-
-@media only screen and (min-width: 1050px) {
-  .expanded-file {
-    width: 40vw;
   }
 }
