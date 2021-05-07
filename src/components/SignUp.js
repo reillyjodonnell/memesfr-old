@@ -92,8 +92,12 @@ export default function SignUp({ onSuccess }, props) {
     handleCodeInApp: true,
   };
 
-  const [user, setUser] = useState(false);
-  if (user) {
+  const [userCreation, setUserCreation] = useState(false);
+
+  //when the user becomes active, that means the email and pass is valid,
+  //This useEffect will only execute once, when the userCreation is true
+
+  useEffect(() => {
     firebase
       .auth()
       .sendSignInLinkToEmail(email, actionCodeSettings)
@@ -107,9 +111,10 @@ export default function SignUp({ onSuccess }, props) {
       .catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
+        console.log(errorCode, errorMessage);
         // ...
       });
-  }
+  }, [userCreation]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -124,7 +129,7 @@ export default function SignUp({ onSuccess }, props) {
         .then((userCredential) => {
           //Signed in
           console.log(userCredential);
-          setUser(true);
+          setUserCreation(true);
         });
     } catch {
       setError("Email is already in use");
@@ -199,7 +204,7 @@ export default function SignUp({ onSuccess }, props) {
         {alert && (
           <span style={{ paddingTop: "1rem", color: "red" }}>{error}</span>
         )}
-        {user ? (
+        {userCreation ? (
           <ConfirmEmailAddress />
         ) : (
           <>
