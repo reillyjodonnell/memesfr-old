@@ -86,6 +86,30 @@ export default function SignUp({ onSuccess }, props) {
   const usernameRef = useRef();
   const passwordRef = useRef();
 
+  var actionCodeSettings = {
+    url: "http://localhost:3000",
+    handleCodeInApp: true,
+  };
+
+  const [user, setUser] = useState(false);
+  if (user) {
+    firebase
+      .auth()
+      .sendSignInLinkToEmail(email, actionCodeSettings)
+      .then(() => {
+        // The link was successfully sent. Inform the user.
+        // Save the email locally so you don't need to ask the user for it again
+        // if they open the link on the same device.
+        window.localStorage.setItem("emailForSignIn", email);
+        // ...
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        // ...
+      });
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     var email = emailRef.current.value;
@@ -94,9 +118,16 @@ export default function SignUp({ onSuccess }, props) {
     try {
       setError("");
       setLoading(true);
-      await auth.createUserWithEmailAndPassword(email, password);
+      await auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          //Signed in
+          console.log(userCredential);
+          setUser(true);
+        });
     } catch {
-      setError("Failed to create an account");
+      setError("Email is already in use");
+      setEmailError(true);
     }
 
     setLoading(false);
@@ -110,6 +141,7 @@ export default function SignUp({ onSuccess }, props) {
   const passwordRegEx = /^(?=.*[a-zA-z])(?=.*\d).{8,}$/;
 
   const checkEmailError = (e) => {
+    setError(false);
     setEmail(e.target.value);
     if (e.target.value.match(emailRegEx)) {
       setEmailErrorMessage("");
@@ -135,6 +167,19 @@ export default function SignUp({ onSuccess }, props) {
     showPasswordFunction(!showPassword);
   }
 
+  const ConfirmEmailAddress = () => {
+    return (
+      <>
+        <span style={{ padding: "1rem" }}>
+          Check your inbox to confirm it's you
+        </span>
+        <span style={{ textDecoration: "underline", cursor: "pointer" }}>
+          Didn't get it?
+        </span>
+      </>
+    );
+  };
+
   //When a user submits an email we need to check two things:
   // 1. Is that email already in use?
   // 2. If not, they need to confirm it's theirs by confirming via email
@@ -149,86 +194,96 @@ export default function SignUp({ onSuccess }, props) {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        {alert && <span>{error}</span>}
-        <form onSubmit={handleSubmit} className={classes.form} noValidate>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                inputRef={emailRef}
-                variant="outlined"
-                required
+        {alert && (
+          <span style={{ paddingTop: "1rem", color: "red" }}>{error}</span>
+        )}
+        {user ? (
+          <ConfirmEmailAddress />
+        ) : (
+          <>
+            <form onSubmit={handleSubmit} className={classes.form} noValidate>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <TextField
+                    inputRef={emailRef}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    value={email}
+                    onChange={(e) => checkEmailError(e)}
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    helperText={emailErrorMessage}
+                    error={emailError}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    inputRef={passwordRef}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    onChange={(e) => checkPasswordError(e)}
+                    value={password}
+                    name="password"
+                    label="Password"
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    autoComplete="current-password"
+                    helperText={passwordErrorMessage}
+                    error={passwordError}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            edge="end"
+                            onClick={enablePassword}
+                          >
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Checkbox value="allowExtraEmails" color="primary" />
+                    }
+                    label="I want to receive inspirational memes via email ❤️"
+                  />
+                </Grid>
+              </Grid>
+              <Button
+                disabled={loading}
+                type="submit"
                 fullWidth
-                value={email}
-                onChange={(e) => checkEmailError(e)}
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                helperText={emailErrorMessage}
-                error={emailError}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                inputRef={passwordRef}
-                variant="outlined"
-                required
-                fullWidth
-                onChange={(e) => checkPasswordError(e)}
-                value={password}
-                name="password"
-                label="Password"
-                type={showPassword ? "text" : "password"}
-                id="password"
-                autoComplete="current-password"
-                helperText={passwordErrorMessage}
-                error={passwordError}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        edge="end"
-                        onClick={enablePassword}
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspirational memes via email ❤️"
-              />
-            </Grid>
-          </Grid>
-          <Button
-            disabled={loading}
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            Sign Up
-          </Button>
-          <div className={classes.orparent}>
-            <span className={classes.or}>Or</span>
-          </div>
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                Sign Up
+              </Button>
+              <div className={classes.orparent}>
+                <span className={classes.or}>Or</span>
+              </div>
 
-          <div className={classes.social}></div>
+              <div className={classes.social}></div>
 
-          <Grid container justify="flex-end">
-            <Grid item>
-              <Link onClick={props.updateRegister} href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
-            </Grid>
-          </Grid>
-        </form>
+              <Grid container justify="flex-end">
+                <Grid item>
+                  <Link onClick={props.updateRegister} href="#" variant="body2">
+                    Already have an account? Sign in
+                  </Link>
+                </Grid>
+              </Grid>
+            </form>
+          </>
+        )}
       </div>
       <Box mt={5}>
         <Copyright />

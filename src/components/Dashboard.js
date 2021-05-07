@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -23,6 +23,7 @@ import Filter from "./Filter";
 import "../CSS Components/Dashboard.css";
 import CreatePost from "./CreatePost";
 import User from "../Assets/Icons/User.svg";
+import firebase from "firebase";
 
 const drawerWidth = 240;
 const login = false;
@@ -136,6 +137,41 @@ export default function Dashboard(props) {
   const openMenu = () => {
     expandMenu(!expand);
   };
+  useEffect(() => {
+    // Confirm the link is a sign-in with email link.
+    if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+      // Additional state parameters can also be passed via URL.
+      // This can be used to continue the user's intended action before triggering
+      // the sign-in operation.
+      // Get the email if available. This should be available if the user completes
+      // the flow on the same device where they started it.
+      var email = window.localStorage.getItem("emailForSignIn");
+      if (!email) {
+        // User opened the link on a different device. To prevent session fixation
+        // attacks, ask the user to provide the associated email again. For example:
+        email = window.prompt("Please provide your email for confirmation");
+      }
+      // The client SDK will parse the code from the link for you.
+      firebase
+        .auth()
+        .signInWithEmailLink(email, window.location.href)
+        .then((result) => {
+          // Clear email from storage.
+          window.localStorage.removeItem("emailForSignIn");
+          console.log(result);
+          // You can access the new user via result.user
+          // Additional user info profile not available via:
+          // result.additionalUserInfo.profile == null
+          // You can check if the user is new or existing:
+          // result.additionalUserInfo.isNewUser
+        })
+        .catch((error) => {
+          console.log(error);
+          // Some error occurred, you can inspect the code: error.code
+          // Common errors could be invalid email and invalid or expired OTPs.
+        });
+    }
+  }, []);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
