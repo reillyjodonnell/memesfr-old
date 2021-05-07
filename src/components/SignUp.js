@@ -20,6 +20,7 @@ import EyeHidden from "../Assets/Icons/EyeHidden.svg";
 import { InputAdornment } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import CreateProfile from "./CreateProfile";
 
 function Copyright() {
   return (
@@ -170,6 +171,7 @@ export default function SignUp({ onSuccess }, props) {
   const ConfirmEmailAddress = () => {
     return (
       <>
+        <CreateProfile />
         <span style={{ padding: "1rem" }}>
           Check your inbox to confirm it's you
         </span>
