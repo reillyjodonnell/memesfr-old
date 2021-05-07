@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Login from "./Login";
 import Register from "./SignUp";
 import Home from "./Home";
+import AuthProvider from "../contexts/AuthContext";
+import ResetPassword from "./ResetPassword";
 
 export default function Memesfr() {
   const [register, openRegister] = useState(false);
@@ -19,16 +21,18 @@ export default function Memesfr() {
 
   return (
     <div>
-      {home ? (
-        <Home updateSignIn={updateSignIn} updateRegister={updateRegister} />
-      ) : null}
-      {}
-      {register ? (
-        <>
-          <Register updateRegister={updateRegister} />
-        </>
-      ) : null}
-      {signIn ? <Login /> : null}
+      <AuthProvider>
+        {home ? (
+          <Home updateSignIn={updateSignIn} updateRegister={updateRegister} />
+        ) : null}
+        {}
+        {register ? (
+          <>
+            <Register updateRegister={updateRegister} />
+          </>
+        ) : null}
+        {signIn ? <Login /> : null}
+      </AuthProvider>
     </div>
   );
 }

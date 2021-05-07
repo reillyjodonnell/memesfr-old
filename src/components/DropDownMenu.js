@@ -9,12 +9,16 @@ import { ReactComponent as Doge } from "../Assets/doge.svg";
 import { ReactComponent as Help } from "../Assets/Icons/Help.svg";
 import plus from "../Assets/Icons/Assets/plus.svg";
 
+import { useAuth } from "../contexts/AuthContext";
+
 export default function DropDownMenu(props) {
   const [open, openSettings] = useState(false);
   const [openFriends, manageFriends] = useState(false);
   const [openFile, expandFileSubmit] = useState(false);
   const [file, setFile] = useState(null);
 
+  const { currentUser, signOut } = useAuth();
+  console.log(currentUser);
   function DropDownItem(props) {
     return (
       <a href="#" style={props.style} className="menu-item">
@@ -100,7 +104,7 @@ export default function DropDownMenu(props) {
   function UserPrimaryOptions() {
     return (
       <>
-        <div>
+        <div onClick={signOut}>
           <DropDownItem IconText="Sign Out" />
         </div>
         <div onClick={() => manageFriends(!openFriends)}>
@@ -112,20 +116,36 @@ export default function DropDownMenu(props) {
       </>
     );
   }
-
-  return (
-    <div className="dropdown">
-      <div className="menu">
-        {openFile ? (
-          <UpdateProfilePicture />
-        ) : null || open ? (
-          <SecondaryOptions />
-        ) : openFriends ? (
-          <ExpandFriends />
-        ) : (
-          <PrimaryOptions />
-        )}
+  if (currentUser == null) {
+    return (
+      <div className="dropdown">
+        <div className="menu">
+          {openFile ? (
+            <UpdateProfilePicture />
+          ) : null || open ? (
+            <SecondaryOptions />
+          ) : openFriends ? (
+            <ExpandFriends />
+          ) : (
+            <PrimaryOptions />
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else if (currentUser)
+    return (
+      <div className="dropdown">
+        <div className="menu">
+          {openFile ? (
+            <UpdateProfilePicture />
+          ) : null || open ? (
+            <UserSecondaryOptions />
+          ) : openFriends ? (
+            <ExpandFriends />
+          ) : (
+            <UserPrimaryOptions />
+          )}
+        </div>
+      </div>
+    );
 }

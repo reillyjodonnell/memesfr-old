@@ -21,6 +21,7 @@ import { InputAdornment } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import CreateProfile from "./CreateProfile";
+import { useAuth } from "../contexts/AuthContext";
 
 function Copyright() {
   return (
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp({ onSuccess }, props) {
+export default function SignUp() {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -87,50 +88,24 @@ export default function SignUp({ onSuccess }, props) {
   const usernameRef = useRef();
   const passwordRef = useRef();
 
-  var actionCodeSettings = {
-    url: "http://localhost:3000",
-    handleCodeInApp: true,
-  };
+  const { signup, currentUser } = useAuth();
 
   const [userCreation, setUserCreation] = useState(false);
-
   //when the user becomes active, that means the email and pass is valid,
   //This useEffect will only execute once, when the userCreation is true
 
-  useEffect(() => {
-    firebase
-      .auth()
-      .sendSignInLinkToEmail(email, actionCodeSettings)
-      .then(() => {
-        // The link was successfully sent. Inform the user.
-        // Save the email locally so you don't need to ask the user for it again
-        // if they open the link on the same device.
-        window.localStorage.setItem("emailForSignIn", email);
-        // ...
-      })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        // ...
-      });
-  }, [userCreation]);
-
   async function handleSubmit(e) {
     e.preventDefault();
+    setUserCreation(false);
+
     var email = emailRef.current.value;
     var password = passwordRef.current.value;
 
     try {
       setError("");
       setLoading(true);
-      await auth
-        .createUserWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          //Signed in
-          console.log(userCredential);
-          setUserCreation(true);
-        });
+      await signup(email, password);
+      setUserCreation(true);
     } catch {
       setError("Email is already in use");
       setEmailError(true);
@@ -198,6 +173,7 @@ export default function SignUp({ onSuccess }, props) {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
+        {currentUser && currentUser}
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
@@ -283,7 +259,7 @@ export default function SignUp({ onSuccess }, props) {
 
               <Grid container justify="flex-end">
                 <Grid item>
-                  <Link onClick={props.updateRegister} href="#" variant="body2">
+                  <Link href="#" variant="body2">
                     Already have an account? Sign in
                   </Link>
                 </Grid>

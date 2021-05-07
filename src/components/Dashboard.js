@@ -24,6 +24,7 @@ import "../CSS Components/Dashboard.css";
 import CreatePost from "./CreatePost";
 import User from "../Assets/Icons/User.svg";
 import firebase from "firebase";
+import { useAuth } from "../contexts/AuthContext";
 
 const drawerWidth = 240;
 const login = false;
@@ -65,9 +66,10 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
   },
   title: {
-    flexGrow: 1,
     fontSize: "2rem",
     cursor: "pointer",
+    marginRight: "auto",
+    overflow: "visible",
   },
   drawerPaper: {
     position: "relative",
@@ -127,6 +129,10 @@ export default function Dashboard(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [expand, expandMenu] = useState(false);
+
+  const { currentUser } = useAuth();
+
+  console.log(currentUser);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -194,6 +200,7 @@ export default function Dashboard(props) {
             )}
           ></IconButton>
           <img className={classes.image} src={Alien}></img>
+
           <Typography
             component="h1"
             variant="h6"
@@ -203,29 +210,31 @@ export default function Dashboard(props) {
           >
             Memesfr
           </Typography>
-          <div className={classes.loginregister}>
-            <Typography
-              onClick={props.updateSignIn}
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              className={classes.register}
-            >
-              Log In
-            </Typography>
-            <Typography
-              onClick={props.updateRegister}
-              component="h1"
-              variant="h6"
-              color="inherit"
-              paddingRight="auto"
-              noWrap
-              className={classes.login}
-            >
-              Register
-            </Typography>
-          </div>
+          {currentUser ? null : (
+            <div className={classes.loginregister}>
+              <Typography
+                onClick={props.updateSignIn}
+                component="h1"
+                variant="h6"
+                color="inherit"
+                noWrap
+                className={classes.register}
+              >
+                Log In
+              </Typography>
+              <Typography
+                onClick={props.updateRegister}
+                component="h1"
+                variant="h6"
+                color="inherit"
+                paddingRight="auto"
+                noWrap
+                className={classes.login}
+              >
+                Register
+              </Typography>
+            </div>
+          )}
 
           <IconButton color="inherit">
             <Badge badgeContent={1} color="secondary">
