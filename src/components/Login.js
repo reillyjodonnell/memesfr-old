@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,6 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Doge from "../Assets/doge.svg";
 import BuffDoge from "../Assets/buff-doge.png";
+import firebase from "../services/firebase";
 
 function Copyright() {
   return (
@@ -62,8 +63,43 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignInSide(props) {
+  const [error, setError] = useState(false);
+  const [currentUser, setCurrentUser] = useState();
   console.log(props.openRegister);
   const classes = useStyles();
+
+  const emailRef = useRef();
+  const passwordRef = useRef();
+
+  useEffect(() => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      setCurrentUser(user);
+    });
+    return unsubscribe;
+  }, []);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    var email = emailRef.current.value;
+    var password = passwordRef.current.value;
+    //Now we need to send it to Firebase to authenticate and send a token back
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        //signed in
+        var user = userCredential.user;
+        console.log(userCredential);
+        console.log(`${user} is signed in`);
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode, errorMessage);
+        setError((prevError) => !prevError);
+      });
+  }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -77,8 +113,21 @@ export default function SignInSide(props) {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          {error ? (
+            <span
+              style={{
+                textAlign: "center",
+                width: "100%",
+                padding: "1rem",
+                color: "red",
+              }}
+            >
+              Invalid email or password. Please double-check and try again.
+            </span>
+          ) : null}
+          <form onSubmit={handleSubmit} className={classes.form} noValidate>
             <TextField
+              inputRef={emailRef}
               variant="outlined"
               margin="normal"
               required
@@ -90,6 +139,7 @@ export default function SignInSide(props) {
               autoFocus
             />
             <TextField
+              inputRef={passwordRef}
               variant="outlined"
               margin="normal"
               required

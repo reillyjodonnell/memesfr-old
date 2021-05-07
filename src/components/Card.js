@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Meme from "../Assets/o3yck1fvhyw61.jpg";
-import "./CSS/Card.css";
+import "../CSS Components/Card.css";
 
 export default function Card() {
   const [heart, setHeart] = useState(false);

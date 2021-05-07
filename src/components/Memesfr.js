@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Login from "../Login/Login";
-import Register from "../Login/SignUp";
-import Home from "../Homepage/Home";
+import Login from "./Login";
+import Register from "./SignUp";
+import Home from "./Home";
 
 export default function Memesfr() {
   const [register, openRegister] = useState(false);

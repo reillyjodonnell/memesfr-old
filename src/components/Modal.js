@@ -1,10 +1,10 @@
 import React, { useState, useRef } from "react";
 import ReactDom from "react-dom";
-import X from "./Assets/Icons/X.svg";
-import Image from "./Assets/Icons/Image.svg";
-import Video from "./Assets/Icons/Video.svg";
-import Gif from "./Assets/Icons/Gif.svg";
-import Upload from "./Assets/Icons/CloudUpload.svg";
+import X from "../Assets/Icons/X.svg";
+import Image from "../Assets/Icons/Image.svg";
+import Video from "../Assets/Icons/Video.svg";
+import Gif from "../Assets/Icons/Gif.svg";
+import Upload from "../Assets/Icons/CloudUpload.svg";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -86,15 +86,8 @@ export default function Modal(props) {
           </div>
         </div>
       </div>
-      <div
-        onDrop={(e) => handleDrop(e)}
-        onDragOver={(e) => handleDragOver(e)}
-        onDragEnter={(e) => handleDragEnter(e)}
-        onDragLeave={(e) => handleDragLeave(e)}
-        draggable="true"
-        className="main-section"
-      >
-        {file ? (
+      {file ? (
+        <div className="main-section">
           <div className="image-preview">
             {file && <ImageThumb image={file} />}
 
@@ -107,13 +100,22 @@ export default function Modal(props) {
               variant="outlined"
             />
           </div>
-        ) : (
+        </div>
+      ) : (
+        <div
+          onDrop={(e) => handleDrop(e)}
+          onDragOver={(e) => handleDragOver(e)}
+          onDragEnter={(e) => handleDragEnter(e)}
+          onDragLeave={(e) => handleDragLeave(e)}
+          draggable="true"
+          className="main-section"
+        >
           <>
             <img src={Upload}></img>
             <span>Drag Drop to upload or browse</span>
           </>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="lower-section">
         {file ? (

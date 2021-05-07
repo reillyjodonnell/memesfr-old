@@ -13,21 +13,16 @@ import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Link from "@material-ui/core/Link";
-import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import Settings from "../Assets/Icons/Settings.svg";
-import { mainListItems, secondaryListItems } from "../Homepage/ListItems";
-import DropDown from "./DropDownMenu";
-import Alien from "../Assets/Icons/Assets/Alien.svg";
+import { mainListItems, secondaryListItems } from "./ListItems";
 
+import Alien from "../Assets/Icons/Assets/Alien.svg";
 import Card from "./Card";
 import DropDownMenu from "./DropDownMenu";
 import Filter from "./Filter";
 import "../CSS Components/Dashboard.css";
-import CreatePost from "../CreatePost";
+import CreatePost from "./CreatePost";
+import User from "../Assets/Icons/User.svg";
 
 const drawerWidth = 240;
 const login = false;
@@ -38,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
   toolbar: {
     paddingRight: 24, // keep right padding when drawer closed
+    backgroundColor: "#1098F7",
   },
   toolbarIcon: {
     display: "flex",
@@ -180,7 +176,7 @@ export default function Dashboard(props) {
               noWrap
               className={classes.register}
             >
-              Login
+              Log In
             </Typography>
             <Typography
               onClick={props.updateRegister}
@@ -196,8 +192,8 @@ export default function Dashboard(props) {
           </div>
 
           <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <img onClick={openMenu} src={Settings} />
+            <Badge badgeContent={1} color="secondary">
+              <img onClick={openMenu} src={props.activeUser ? null : User} />
             </Badge>
           </IconButton>
         </Toolbar>

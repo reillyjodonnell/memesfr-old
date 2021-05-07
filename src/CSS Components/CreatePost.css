@@ -1,3 +1,9 @@
+.outer-post-box {
+  display: flex;
+  border: rgb(235, 238, 240) 1px solid;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  margin-bottom: 2rem;
+}
 .avatar {
   display: flex;
   height: 40px;
@@ -5,13 +11,13 @@
   width: 40px;
   background-color: cadetblue;
   justify-self: flex-start;
+  margin-left: 8px;
 }
 .create-post-preview {
   display: flex;
   width: 35vw;
   border-radius: 20px;
-  border: 3px solid rgba(65, 65, 65, 0.445);
-  height: 80px;
+  height: 100px;
   align-items: center;
 }
 .create-post-content {
@@ -26,8 +32,9 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 3.2rem;
-  border-radius: 10px;
+  height: 3.6rem;
+  margin: 1rem;
+  padding: 1rem;
 }
 .plus {
   display: flex;
@@ -46,12 +53,13 @@
   width: 80%;
   cursor: pointer;
   white-space: nowrap;
+  padding: 2rem;
 }
 .create-prompt > * {
   margin: 0.3rem;
 }
 .create-prompt:hover {
-  background-color: rgb(204, 204, 204);
+  background-color: rgba(231, 231, 231, 0.966);
 }
 /*Expanded file*/
 .expanded-file {
@@ -165,9 +173,12 @@
 }
 /*Media Queries */
 
-@media only screen and (max-width: 1050px) {
+@media only screen and (max-width: 1200px) {
   .create-post-preview {
     width: 50vw;
+  }
+  .add-content {
+    margin: 0;
   }
 }
 @media only screen and (max-width: 550px) {
@@ -175,6 +186,7 @@
     width: 75vw;
     margin-top: 1rem;
     margin-bottom: 1rem;
+    height: 75px;
   }
   .create-prompt {
     font-size: 0.85rem;
@@ -182,6 +194,7 @@
     padding: 0;
     margin: 10px;
     width: 100%;
+    height: 70px;
   }
 
   .expanded-file {
@@ -206,13 +219,20 @@
     padding-left: auto;
   }
 }
+@media only screen and (max-width: 750px) {
+  .create-prompt span {
+    font-size: 1rem;
+  }
+  .plus {
+    height: 1.7rem;
+  }
+}
 
 @media only screen and (max-width: 350px) {
   .expanded-file {
     width: 90vw;
     height: 80vh;
     margin: 0;
-    transform: translate(-40%, -50%);
   }
   .upper-section {
     font-size: 1.4rem;
@@ -225,5 +245,8 @@
   }
   .lower-section {
     font-size: 0.6rem;
+  }
+  .add-content {
+    margin: 0;
   }
 }

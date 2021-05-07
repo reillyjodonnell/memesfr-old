@@ -37,14 +37,14 @@ export default function Filter() {
   const handleChange = (e) => setValue(e.target.value);
 
   return (
-    <div>
+    <div className="filter-container">
       <FormControl size="small" className={classes.form}>
         <Select
           onChange={handleChange}
           style={{
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "center",
           }}
           MenuProps={{}}
           value={value}
@@ -56,20 +56,20 @@ export default function Filter() {
             }}
             value={"Popular"}
           >
-            <Hot />
+            <Hot style={{ marginRight: "10px" }} />
             Popular
           </MenuItem>
           <MenuItem value={"Trending"}>
-            <Trending />
+            <Trending style={{ marginRight: "10px" }} />
             Trending
           </MenuItem>
           <MenuItem value={"Recent"}>
-            <Recent />
+            <Recent style={{ marginRight: "10px" }} />
             Recent
           </MenuItem>
           <MenuItem value={"Random"}>
-            <Random />
-            Random
+            <Random style={{ marginRight: "10px" }} />
+            Random meme
           </MenuItem>
         </Select>
       </FormControl>
