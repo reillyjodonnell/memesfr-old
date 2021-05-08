@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { auth } from "../services/firebase";
+import { auth, db } from "../services/firebase";
 
 const AuthContext = React.createContext();
 
@@ -9,25 +9,90 @@ export function useAuth() {
 
 export default function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
-
-  function signup(email, password) {
-    return auth.createUserWithEmailAndPassword(email, password);
-  }
-
-  //this is where firebase creates the user, we only want to call this once though
-  //So call it under a useEffect hook
+  const [availability, setAvailability] = useState(true);
 
   var actionCodeSettings = {
     url: "http://localhost:3000",
     handleCodeInApp: true,
   };
 
+  function signup(email, password) {
+    return auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  function login(email, password) {
+    return auth.signInWithEmailAndPassword(email, password);
+  }
+  function confirmEmail(email) {
+    return auth.sendSignInLinkToEmail(email);
+  }
+  function resetPassword(email) {
+    return auth.sendPasswordResetEmail(email);
+  }
+  function signOut() {
+    return auth.signOut();
+    //Route to home screen and refresh the page plz
+  }
+
+  function uploadMeme() {
+    console.log("Uploading your dank meme");
+    db.collection("memes")
+      .doc("LA")
+      .set({ name: "LA", state: "CA", Country: "USA" });
+  }
+
+  function sendToDB() {
+    console.log("Executed.. sending to DB now");
+    db.collection("cities")
+      .doc("LA")
+      .set({ name: "LA", state: "CA", Country: "USA" });
+  }
+
+  async function checkUsernameAvailability(id) {
+    var search = await db.collection("usernames").doc(id).get();
+    const data = search.data();
+    console.log("Beginning search. Have received ", data, id, search);
+    if (data != undefined) {
+      console.log("username taken");
+    } else if (data === undefined) {
+      console.log("Username available");
+    }
+  }
+
+  function setUserName(username) {
+    currentUser
+      .updateProfile({
+        displayName: username,
+      })
+      .then(
+        function () {
+          console.log("SUCCESS");
+        },
+        function (error) {
+          console.log(error);
+        }
+      );
+  }
+
+  function setProfilePicture(url) {
+    currentUser
+      .updateProfile({
+        photoURL: url,
+      })
+      .then(
+        function () {
+          console.log("SUCCESS");
+        },
+        function (error) {
+          console.log(error);
+        }
+      );
+  }
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      //If the user is new and hasn't confirmed their email do not set them to currentUser instead
-      //Send them to confirm their email
       console.log(user.emailVerified);
-
+      setCurrentUser(user);
       if (user.emailVerified == false) {
         auth
           .sendSignInLinkToEmail(user.email, actionCodeSettings)
@@ -52,20 +117,6 @@ export default function AuthProvider({ children }) {
     return unsubscribe;
   }, []);
 
-  function login(email, password) {
-    return auth.signInWithEmailAndPassword(email, password);
-  }
-  function confirmEmail(email) {
-    return auth.sendSignInLinkToEmail(email);
-  }
-  function resetPassword(email) {
-    return auth.sendPasswordResetEmail(email);
-  }
-  function signOut() {
-    return auth.signOut();
-    //Route to home screen and refresh the page plz
-  }
-
   const values = {
     currentUser,
     signup,
@@ -73,6 +124,12 @@ export default function AuthProvider({ children }) {
     confirmEmail,
     resetPassword,
     signOut,
+    setUserName,
+    setProfilePicture,
+    sendToDB,
+    uploadMeme,
+    checkUsernameAvailability,
+    availability,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

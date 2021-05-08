@@ -88,7 +88,7 @@ export default function SignUp() {
   const usernameRef = useRef();
   const passwordRef = useRef();
 
-  const { signup, currentUser } = useAuth();
+  const { signup } = useAuth();
 
   const [userCreation, setUserCreation] = useState(false);
   //when the user becomes active, that means the email and pass is valid,
@@ -104,18 +104,15 @@ export default function SignUp() {
     try {
       setError("");
       setLoading(true);
-      await signup(email, password);
       setUserCreation(true);
+      await signup(email, password);
     } catch {
       setError("Email is already in use");
       setEmailError(true);
     }
-
     setLoading(false);
-
     return;
   }
-  console.log(error);
 
   const emailRegEx = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
@@ -173,7 +170,6 @@ export default function SignUp() {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        {currentUser && currentUser}
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>

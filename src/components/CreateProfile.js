@@ -3,6 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import "../CSS Components/CreateProfile.css";
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,16 +17,39 @@ const useStyles = makeStyles((theme) => ({
 export default function SelectUsername() {
   const classes = useStyles();
   const [error, setError] = useState(false);
+  const [taken, setTaken] = useState(false);
 
-  const available = "Username is taken";
+  var available;
 
-  const [name, setName] = useState("Cat in the Hat");
+  const [name, setName] = useState("");
+
+  //USERNAME IS UNIQUE AND CAN BE SAVED IF TRUE
+  const [validUserName, setValidUserName] = useState(false);
+
   const handleChange = (event) => {
+    event.preventDefault();
     setName(event.target.value);
+    //We cannot call this if the event.target.value is empty
+    if (event.target.value !== "") {
+      checkUsernameAvailability(event.target.value);
+    }
   };
   const [viewPhoto, viewPhotoFunction] = useState(false);
   const [file, setFile] = useState("");
   const inputFile = useRef(null);
+
+  const {
+    setUserName,
+    setProfilePicture,
+    currentUser,
+    availability,
+    checkUsernameAvailability,
+  } = useAuth();
+
+  function saveProfile() {
+    setProfilePicture(URL.createObjectURL(file));
+    setUserName(name);
+  }
 
   const handleUpload = (event) => {
     setFile(event.target.files[0]);
@@ -36,6 +60,7 @@ export default function SelectUsername() {
     console.log("Line 36");
   };
   const ImageThumb = ({ image }) => {
+    console.log(currentUser);
     console.log("Line 39");
     return <img src={URL.createObjectURL(image)} alt={image.name} />;
   };
@@ -48,8 +73,9 @@ export default function SelectUsername() {
         <form className={classes.root} autoComplete="off">
           <div>
             <TextField
+              onChange={(e) => handleChange(e)}
               required
-              error={error}
+              error={taken}
               id="filled-error-helper-text"
               label="username"
               defaultValue=""
@@ -78,7 +104,7 @@ export default function SelectUsername() {
         ) : null}
       </div>
       <div className="submit-profile">
-        <Button variant="contained" color="primary">
+        <Button onClick={saveProfile} variant="contained" color="primary">
           Save Profile
         </Button>
       </div>

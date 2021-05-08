@@ -130,7 +130,7 @@ export default function Dashboard(props) {
   const [open, setOpen] = React.useState(true);
   const [expand, expandMenu] = useState(false);
 
-  const { currentUser } = useAuth();
+  const { currentUser, checkUsernameAvailability } = useAuth();
 
   console.log(currentUser);
 
@@ -141,6 +141,7 @@ export default function Dashboard(props) {
     setOpen(false);
   };
   const openMenu = () => {
+    checkUsernameAvailability();
     expandMenu(!expand);
   };
   useEffect(() => {
