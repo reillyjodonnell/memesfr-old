@@ -25,6 +25,7 @@ import CreatePost from "./CreatePost";
 import User from "../Assets/Icons/User.svg";
 import firebase from "firebase";
 import { useAuth } from "../contexts/AuthContext";
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 const login = false;
@@ -132,7 +133,17 @@ export default function Dashboard(props) {
 
   const { currentUser, checkUsernameAvailability } = useAuth();
 
-  console.log(currentUser);
+  const history = useHistory();
+
+  const openRegister = () => {
+    console.log("opening register ");
+    history.push("/signup");
+  };
+
+  const openSignIn = () => {
+    console.log("opening sign in ");
+    history.push("/login");
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -214,7 +225,7 @@ export default function Dashboard(props) {
           {currentUser ? null : (
             <div className={classes.loginregister}>
               <Typography
-                onClick={props.updateSignIn}
+                onClick={openSignIn}
                 component="h1"
                 variant="h6"
                 color="inherit"
@@ -224,7 +235,7 @@ export default function Dashboard(props) {
                 Log In
               </Typography>
               <Typography
-                onClick={props.updateRegister}
+                onClick={openRegister}
                 component="h1"
                 variant="h6"
                 color="inherit"

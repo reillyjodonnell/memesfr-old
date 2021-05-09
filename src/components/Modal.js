@@ -7,6 +7,7 @@ import Gif from "../Assets/Icons/Gif.svg";
 import Upload from "../Assets/Icons/CloudUpload.svg";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,13 +23,28 @@ const useStyles = makeStyles((theme) => ({
 const accept = "images";
 export default function Modal(props) {
   const classes = useStyles();
-  const [name, setName] = React.useState("Cat in the Hat");
-  const handleChange = (event) => {
-    setName(event.target.value);
-  };
+  const [name, setName] = useState("Use The Memes, Luke");
   const [viewPhoto, viewPhotoFunction] = useState(false);
+  const [disabled, setDisabled] = useState(true);
   const [file, setFile] = useState("");
   const inputFile = useRef(null);
+
+  const { uploadMeme } = useAuth();
+
+  const uploadPost = (e) => {
+    e.preventDefault();
+    var image = file;
+    var title = name;
+    uploadMeme(image, title);
+  };
+
+  const handleChange = (event) => {
+    event.preventDefault();
+    setName(event.target.value);
+    if (name !== "") {
+      setDisabled(false);
+    } else setDisabled(true);
+  };
   const handleDragEnter = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -87,68 +103,71 @@ export default function Modal(props) {
         </div>
       </div>
       {file ? (
-        <div className="main-section">
-          <div className="image-preview">
-            {file && <ImageThumb image={file} />}
+        <>
+          <form onSubmit={uploadPost}>
+            <div className="main-section">
+              <div className="image-preview">
+                {file && <ImageThumb image={file} />}
+                <input type="image" style={{ display: "none" }} image={file} />
 
-            <TextField
-              className={classes.input}
-              id="outlined-name"
-              label="Title"
-              value={name}
-              onChange={handleChange}
-              variant="outlined"
-            />
-          </div>
-        </div>
+                <TextField
+                  className={classes.input}
+                  id="outlined-name"
+                  label="Title"
+                  value={name}
+                  onChange={(e) => handleChange(e)}
+                  variant="outlined"
+                />
+              </div>
+            </div>
+            <div className="lower-section">
+              <span>
+                By clicking upload you agree to abide by our Community Policy.
+              </span>
+              <button type="submit" disabled={!name} onClick={onButtonClick}>
+                <input
+                  type="submit"
+                  id="file"
+                  ref={inputFile}
+                  style={{ display: "none" }}
+                />
+                Upload
+              </button>
+            </div>
+          </form>
+        </>
       ) : (
-        <div
-          onDrop={(e) => handleDrop(e)}
-          onDragOver={(e) => handleDragOver(e)}
-          onDragEnter={(e) => handleDragEnter(e)}
-          onDragLeave={(e) => handleDragLeave(e)}
-          draggable="true"
-          className="main-section"
-        >
-          <>
-            <img src={Upload}></img>
-            <span>Drag Drop to upload or browse</span>
-          </>
-        </div>
-      )}
+        <>
+          <div
+            onDrop={(e) => handleDrop(e)}
+            onDragOver={(e) => handleDragOver(e)}
+            onDragEnter={(e) => handleDragEnter(e)}
+            onDragLeave={(e) => handleDragLeave(e)}
+            draggable="true"
+            className="main-section"
+          >
+            <>
+              <img src={Upload}></img>
+              <span>Drag Drop to upload or browse</span>
+            </>
+          </div>
 
-      <div className="lower-section">
-        {file ? (
-          <>
-            <span>
-              By clicking upload you agree to abide by our Community Policy.
-            </span>
-            <button onClick={onButtonClick}>
-              <input
-                onChange={handleUpload}
-                type="file"
-                id="file"
-                ref={inputFile}
-                style={{ display: "none" }}
-              />
-              Upload
-            </button>
-          </>
-        ) : (
-          <>
-            <button onClick={onButtonClick}>
-              <input
-                onChange={handleUpload}
-                type="file"
-                id="file"
-                ref={inputFile}
-                style={{ display: "none" }}
-              />
-              Browse
-            </button>
-          </>
-        )}
-      </div>
+          <div className="lower-section">
+            <>
+              <button onClick={onButtonClick}>
+                <input
+                  onChange={handleUpload}
+                  type="file"
+                  id="file"
+                  ref={inputFile}
+                  style={{ display: "none" }}
+                />
+                Browse
+              </button>
+            </>
+          </div>
+        </>
+      )}
     </div>,
     document.getElementById("portal")
   );

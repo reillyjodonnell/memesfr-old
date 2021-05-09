@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -8,6 +8,7 @@ import doge from "../Assets/doge.svg";
 import "../CSS Components/CreatePost.css";
 import Plus from "../Assets/Icons/Plus.svg";
 import Modal from "./Modal";
+import { useAuth } from "../contexts/AuthContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,7 +77,9 @@ const UploadButton = () => {
 export default function CreatePost(props) {
   const classes = useStyles();
   const [createPost, createPostFunction] = useState(false);
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState(false);
+
+  const { currentUser } = useAuth();
 
   const OpenFilePrompt = () => {
     createPostFunction(!createPost);
@@ -92,7 +95,7 @@ export default function CreatePost(props) {
     return (
       <div className="outer-post-box">
         <div className="create-post-preview">
-          {user ? (
+          {currentUser ? (
             <div className="create-post-content">
               {createPost ? <Modal openFilePrompt={OpenFilePrompt} /> : null}
               <div className="avatar">

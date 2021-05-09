@@ -11,10 +11,17 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
+import IconButton from "@material-ui/core/IconButton";
+
+import { InputAdornment } from "@material-ui/core";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { makeStyles } from "@material-ui/core/styles";
 import Doge from "../Assets/doge.svg";
 import BuffDoge from "../Assets/buff-doge.png";
 import firebase from "../services/firebase";
+import { useHistory } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 function Copyright() {
   return (
@@ -65,11 +72,15 @@ const useStyles = makeStyles((theme) => ({
 export default function SignInSide(props) {
   const [error, setError] = useState(false);
   const [currentUser, setCurrentUser] = useState();
-  console.log(props.openRegister);
+  const [showPassword, showPasswordFunction] = useState(false);
+
   const classes = useStyles();
 
   const emailRef = useRef();
   const passwordRef = useRef();
+
+  const history = useHistory();
+  const { login } = useAuth();
 
   useEffect(() => {
     const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
@@ -78,27 +89,23 @@ export default function SignInSide(props) {
     return unsubscribe;
   }, []);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-
     var email = emailRef.current.value;
     var password = passwordRef.current.value;
-    //Now we need to send it to Firebase to authenticate and send a token back
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        //signed in
-        var user = userCredential.user;
-        console.log(userCredential);
-        console.log(`${user} is signed in`);
-      })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorCode, errorMessage);
-        setError((prevError) => !prevError);
-      });
+
+    try {
+      await login(email, password);
+      history.push("/");
+    } catch {
+      setError("Failed to log in");
+    }
+  }
+  function redirectToSignup() {
+    history.push("/signup");
+  }
+  function enablePassword() {
+    showPasswordFunction(!showPassword);
   }
 
   return (
@@ -125,7 +132,11 @@ export default function SignInSide(props) {
               Invalid email or password. Please double-check and try again.
             </span>
           ) : null}
-          <form onSubmit={handleSubmit} className={classes.form} noValidate>
+          <form
+            onSubmit={(e) => handleSubmit(e)}
+            className={classes.form}
+            noValidate
+          >
             <TextField
               inputRef={emailRef}
               variant="outlined"
@@ -146,9 +157,22 @@ export default function SignInSide(props) {
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               autoComplete="current-password"
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      edge="end"
+                      onClick={enablePassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -170,7 +194,7 @@ export default function SignInSide(props) {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" onClick={props.updateRegister} variant="body2">
+                <Link href="#" onClick={redirectToSignup} variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

@@ -16,9 +16,20 @@ export default function DropDownMenu(props) {
   const [openFriends, manageFriends] = useState(false);
   const [openFile, expandFileSubmit] = useState(false);
   const [file, setFile] = useState(null);
+  const [doge, setDoge] = useState(false);
 
   const { currentUser, signOut } = useAuth();
-  console.log(currentUser);
+
+  function activateDoge() {
+    console.log("Activating doge");
+    if (!doge) {
+      document.getElementById("root").style.backgroundImage =
+        "url('https://media0.giphy.com/media/Ogak8XuKHLs6PYcqlp/giphy.gif')";
+    } else
+      document.getElementById("root").style.removeProperty("background-image");
+    setDoge((prevDoge) => !prevDoge);
+  }
+
   function DropDownItem(props) {
     return (
       <a href="#" style={props.style} className="menu-item">
@@ -58,7 +69,9 @@ export default function DropDownMenu(props) {
   function SecondaryOptions() {
     return (
       <div style={{ whiteSpace: "nowrap" }}>
-        <DropDownItem Icon={<Doge />} IconText="Activate Doge" />
+        <div onClick={activateDoge}>
+          <DropDownItem Icon={<Doge />} IconText="Activate Doge" />
+        </div>
 
         <div onClick={() => expandFileSubmit(!openFile)}>
           <DropDownItem IconText="This button is worthless" />
@@ -74,7 +87,9 @@ export default function DropDownMenu(props) {
   function UserSecondaryOptions() {
     return (
       <div style={{ whiteSpace: "nowrap" }}>
-        <DropDownItem Icon={<Doge />} IconText="Activate Doge" />
+        <div onClick={activateDoge}>
+          <DropDownItem Icon={<Doge />} IconText="Activate Doge" />
+        </div>
 
         <div onClick={() => expandFileSubmit(!openFile)}>
           <DropDownItem IconText="Change Profile Picture" />

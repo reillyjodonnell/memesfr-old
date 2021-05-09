@@ -12,16 +12,14 @@ import IconButton from "@material-ui/core/IconButton";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import firebase from "firebase/app";
-import { auth } from "../services/firebase";
-import Eye from "../Assets/Icons/Eye.svg";
-import EyeHidden from "../Assets/Icons/EyeHidden.svg";
 import { InputAdornment } from "@material-ui/core";
+
+import Container from "@material-ui/core/Container";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import CreateProfile from "./CreateProfile";
 import { useAuth } from "../contexts/AuthContext";
+import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
@@ -88,7 +86,9 @@ export default function SignUp() {
   const usernameRef = useRef();
   const passwordRef = useRef();
 
-  const { signup } = useAuth();
+  const history = useHistory();
+
+  const { signup, sendConfirmationEmail, login } = useAuth();
 
   const [userCreation, setUserCreation] = useState(false);
   //when the user becomes active, that means the email and pass is valid,
@@ -106,6 +106,7 @@ export default function SignUp() {
       setLoading(true);
       setUserCreation(true);
       await signup(email, password);
+      sendConfirmationEmail();
     } catch {
       setError("Email is already in use");
       setEmailError(true);
@@ -144,11 +145,13 @@ export default function SignUp() {
   function enablePassword() {
     showPasswordFunction(!showPassword);
   }
+  function redirectToLogin() {
+    history.push("/login");
+  }
 
   const ConfirmEmailAddress = () => {
     return (
       <>
-        <CreateProfile />
         <span style={{ padding: "1rem" }}>
           Check your inbox to confirm it's you
         </span>
@@ -165,108 +168,110 @@ export default function SignUp() {
 
   return (
     <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <div className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign up
-        </Typography>
-        {alert && (
-          <span style={{ paddingTop: "1rem", color: "red" }}>{error}</span>
-        )}
-        {userCreation ? (
-          <ConfirmEmailAddress />
-        ) : (
-          <>
-            <form onSubmit={handleSubmit} className={classes.form} noValidate>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    inputRef={emailRef}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    value={email}
-                    onChange={(e) => checkEmailError(e)}
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                    helperText={emailErrorMessage}
-                    error={emailError}
-                  />
+      <CssBaseline>
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          {alert && (
+            <span style={{ paddingTop: "1rem", color: "red" }}>{error}</span>
+          )}
+          {userCreation ? (
+            <ConfirmEmailAddress />
+          ) : (
+            <>
+              <form onSubmit={handleSubmit} className={classes.form} noValidate>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <TextField
+                      inputRef={emailRef}
+                      variant="outlined"
+                      required
+                      fullWidth
+                      value={email}
+                      onChange={(e) => checkEmailError(e)}
+                      id="email"
+                      label="Email Address"
+                      name="email"
+                      autoComplete="email"
+                      helperText={emailErrorMessage}
+                      error={emailError}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      inputRef={passwordRef}
+                      variant="outlined"
+                      required
+                      fullWidth
+                      onChange={(e) => checkPasswordError(e)}
+                      value={password}
+                      name="password"
+                      label="Password"
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      autoComplete="current-password"
+                      helperText={passwordErrorMessage}
+                      error={passwordError}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              edge="end"
+                              onClick={enablePassword}
+                            >
+                              {showPassword ? (
+                                <Visibility />
+                              ) : (
+                                <VisibilityOff />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox value="allowExtraEmails" color="primary" />
+                      }
+                      label="I want to receive inspirational memes via email ❤️"
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    inputRef={passwordRef}
-                    variant="outlined"
-                    required
-                    fullWidth
-                    onChange={(e) => checkPasswordError(e)}
-                    value={password}
-                    name="password"
-                    label="Password"
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    autoComplete="current-password"
-                    helperText={passwordErrorMessage}
-                    error={passwordError}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            edge="end"
-                            onClick={enablePassword}
-                          >
-                            {showPassword ? <Visibility /> : <VisibilityOff />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    control={
-                      <Checkbox value="allowExtraEmails" color="primary" />
-                    }
-                    label="I want to receive inspirational memes via email ❤️"
-                  />
-                </Grid>
-              </Grid>
-              <Button
-                disabled={loading}
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.submit}
-              >
-                Sign Up
-              </Button>
-              <div className={classes.orparent}>
-                <span className={classes.or}>Or</span>
-              </div>
+                <Button
+                  disabled={loading}
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.submit}
+                >
+                  Sign Up
+                </Button>
 
-              <div className={classes.social}></div>
+                <div className={classes.social}></div>
 
-              <Grid container justify="flex-end">
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    Already have an account? Sign in
-                  </Link>
+                <Grid container justify="flex-end">
+                  <Grid item>
+                    <Link onClick={redirectToLogin} href="#" variant="body2">
+                      Already have an account? Sign in
+                    </Link>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </form>
-          </>
-        )}
-      </div>
-      <Box mt={5}>
-        <Copyright />
-      </Box>
+              </form>
+            </>
+          )}
+        </div>
+        <Box mt={5}>
+          <Copyright />
+        </Box>
+      </CssBaseline>
     </Container>
   );
 }
