@@ -4,6 +4,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import RightIcon from "@material-ui/icons/SubdirectoryArrowRight";
+import picture from "../Assets/Icons/Image.svg";
 import doge from "../Assets/doge.svg";
 import "../CSS Components/CreatePost.css";
 import Plus from "../Assets/Icons/Plus.svg";
@@ -80,6 +81,10 @@ export default function CreatePost(props) {
   const [user, setUser] = useState(false);
 
   const { currentUser } = useAuth();
+  if (currentUser) {
+    console.log(currentUser);
+    var profilePicture = currentUser.photoURL;
+  }
 
   const OpenFilePrompt = () => {
     createPostFunction(!createPost);
@@ -97,14 +102,21 @@ export default function CreatePost(props) {
         <div className="create-post-preview">
           {currentUser ? (
             <div className="create-post-content">
-              {createPost ? <Modal openFilePrompt={OpenFilePrompt} /> : null}
-              <div className="avatar">
-                <img src={doge} />
+              {createPost ? (
+                <Modal
+                  createPostFunction={createPostFunction}
+                  openFilePrompt={OpenFilePrompt}
+                />
+              ) : null}
+              <div className="avatar-container">
+                <div className="avatar">
+                  <img src={`${profilePicture}`} />
+                </div>
               </div>
               <div className="add-content">
                 <div onClick={OpenFilePrompt} className="create-prompt">
                   <span>Upload Dank Meme</span>
-                  <img className="plus" src={Plus} />
+                  <img className="plus" src={picture} />
                 </div>
               </div>
             </div>

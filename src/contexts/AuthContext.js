@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useContext } from "react";
 import { auth, db, storage } from "../services/firebase";
 import { useHistory } from "react-router-dom";
+import { DateRange } from "@material-ui/icons";
+import { app } from "firebase-admin";
+import firebase from "firebase/app";
 
 const AuthContext = React.createContext();
 
@@ -13,7 +16,6 @@ export default function AuthProvider({ children }) {
   const [loadUser, setLoadUser] = useState(true);
   const [userExists, setUserExists] = useState(true);
   const history = useHistory();
-  const [availability, setAvailability] = useState(false);
 
   var actionCodeSettings = {
     url: "http://localhost:3000/setup",
@@ -21,26 +23,18 @@ export default function AuthProvider({ children }) {
   };
 
   var user = auth.currentUser;
-  console.log(user);
 
   function signup(email, password) {
-    history.push("/signup");
-
     return auth.createUserWithEmailAndPassword(email, password);
   }
 
   function login(email, password) {
-    history.push("/login");
-
     return auth.signInWithEmailAndPassword(email, password);
   }
   function confirmEmail(email) {
-    history.push("/confirm");
-    auth.sendSignInLinkToEmail(email).then(
+    auth.sendSignInLinkToEmail(email, actionCodeSettings).then(
       function () {
-        console.log("Signed out");
-        history.push("/");
-        history.go(0);
+        console.log("sent email");
       },
       function (error) {
         console.log(error);
@@ -84,9 +78,13 @@ export default function AuthProvider({ children }) {
           .getDownloadURL()
           .then((url) => {
             console.log(url);
-            db.collection("memes")
-              .doc(author)
-              .set({ author: author, image: url, title: title });
+            db.collection("memes").doc(author).set({
+              author: author,
+              image: url,
+              title: title,
+              likes: 0,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
           });
       }
     );
@@ -99,13 +97,52 @@ export default function AuthProvider({ children }) {
       .set({ name: "LA", state: "CA", Country: "USA" });
   }
 
-  function checkUsernameAvailability(id) {
-    console.log(id);
-    if (id > 4) {
-      var search = db.collection("usernames").doc(id).get();
-      const data = search.data().object;
+  /*
+  Here the user is going to like a post 
+  Two things need to happen:
+    1. Write into the document and increment the count by 1
+    (Similiarly when the user dislikes a post we will have to retrieve the same document)
+    2. Write into a collection of the user's likes a document with the id of the id of the post (For retrieval later to see the posts/memes they've liked)
+
+
+  */
+  function increment(col, document, action) {
+    const increase = db.FieldValue.increment(1);
+    const decrease = db.FieldValue.increment(-1);
+    //Now we need to pass the current
+    const postRef = db.collection(`${col}`).doc(`${document}`);
+    postRef.update({ likes: increment });
+  }
+
+  async function checkUsernameAvailability(id) {
+    var username = id.toLowerCase();
+    //Prevent throwing error
+    if (user && id.length >= 5) {
+      var search = await db.collection("usernames").doc(username).get();
+      const data = search.data();
       console.log(data);
+      if (data === undefined) {
+        console.log(`${id} available`);
+        return undefined;
+      } else {
+        console.log(`${id} taken`);
+        return false;
+      }
     }
+  }
+
+  function addUsernameToDB(id) {
+    var value = user.uid;
+    console.log(id);
+    console.log(value);
+    db.collection("usernames").doc(id).set({ uid: value });
+  }
+  function updateProfile(name, file) {
+    console.log(name, file);
+    addUsernameToDB(name);
+    setUserName(name);
+    setProfilePicture(file);
+    history.push("");
   }
 
   function setUserName(username) {
@@ -123,10 +160,31 @@ export default function AuthProvider({ children }) {
       );
   }
 
-  function setProfilePicture(url) {
+  function setProfilePicture(file) {
+    var id = user.uid;
+    var imageFile = URL.createObjectURL(file);
+    const upload = storage.ref(`users/${id}`).put(file);
+    upload.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        storage
+          .ref("users")
+          .child(id)
+          .getDownloadURL()
+          .then((url) => {
+            currentUser.updateProfile({
+              photoURL: url,
+            });
+          });
+      }
+    );
     currentUser
       .updateProfile({
-        photoURL: url,
+        photoURL: imageFile,
       })
       .then(
         function () {
@@ -221,6 +279,8 @@ export default function AuthProvider({ children }) {
     userExists,
     loadUser,
     sendConfirmationEmail,
+    addUsernameToDB,
+    updateProfile,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

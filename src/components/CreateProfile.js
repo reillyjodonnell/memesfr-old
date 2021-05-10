@@ -69,30 +69,39 @@ function Copyright() {
 }
 export default function SelectUsername() {
   const classes = useStyles();
-  const [error, setError] = useState(false);
   const [taken, setTaken] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [available, setAvailable] = useState("");
+  const [availableMessage, setAvailableMessage] = useState("");
+  const [error, setError] = useState(false);
 
   const [name, setName] = useState("");
 
-  useEffect(() => {
-    if (userExists) {
-      console.log(userExists);
-    }
-  }, [name]);
-
-  //USERNAME IS UNIQUE AND CAN BE SAVED IF TRUE
-  const [validUserName, setValidUserName] = useState(false);
-
   function handleChange(event) {
+    console.log(event.target.value.length);
     setName(event.target.value);
-    if (name.length < 5) {
+    if (event.target.value.length < 5) {
+      setAvailableMessage("");
+      setError(true);
       setDisabled(true);
-      setAvailable("");
-    }
-    if (name.length >= 5) {
-      checkUsernameAvailability(name);
+    } else if (name.length < 16) {
+      checkUsernameAvailability(event.target.value).then((result) => {
+        console.log(result);
+        if (result == false) {
+          console.log(
+            "Username not available from correct functional component"
+          );
+          setAvailableMessage("Username taken");
+          setDisabled(true);
+          setError(true);
+        } else {
+          setAvailableMessage("Username Available");
+          setError(false);
+          console.log(
+            "Username is available from correct functional component"
+          );
+          setDisabled(false);
+        }
+      });
     }
     //We cannot call this if the event.target.value is empty
   }
@@ -100,18 +109,11 @@ export default function SelectUsername() {
   const [file, setFile] = useState("");
   const inputFile = useRef(null);
 
-  const {
-    setUserName,
-    setProfilePicture,
-    currentUser,
-    availability,
-    checkUsernameAvailability,
-    userExists,
-  } = useAuth();
+  const { checkUsernameAvailability, updateProfile } = useAuth();
 
   function saveProfile() {
-    setProfilePicture(URL.createObjectURL(file));
-    setUserName(name);
+    console.log(name);
+    updateProfile(name, file);
   }
 
   const handleUpload = (event) => {
@@ -126,6 +128,12 @@ export default function SelectUsername() {
     console.log("Line 39");
     return <img src={URL.createObjectURL(image)} alt={image.name} />;
   };
+
+  function usernameTaken(test) {
+    console.log(test);
+    return test ? true : false;
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline>
@@ -136,6 +144,7 @@ export default function SelectUsername() {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
+
           <div className="create-profile">
             <h2>Your Profile!</h2>
             <div className="username">
@@ -147,11 +156,11 @@ export default function SelectUsername() {
                     className={classes.username}
                     onChange={(e) => handleChange(e)}
                     required
-                    error={taken}
+                    error={error}
                     id="filled-error-helper-text"
                     label="username"
                     defaultValue=""
-                    helperText={available}
+                    helperText={availableMessage}
                     variant="filled"
                   />
                 </div>

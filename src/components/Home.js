@@ -10,7 +10,7 @@ export default function Home(props) {
 
   useEffect(() => {
     console.log(loadUser);
-    if (loadUser === false) {
+    if (loadUser === false || currentUser === undefined) {
       setLoading(false);
     }
   }, [loadUser]);
@@ -20,10 +20,7 @@ export default function Home(props) {
         <Loading />
       ) : (
         <div>
-          <Dashboard
-            updateSignIn={props.updateSignIn}
-            updateRegister={props.updateRegister}
-          />
+          <Dashboard />
         </div>
       )}
     </>

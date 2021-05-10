@@ -14,7 +14,7 @@ import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { mainListItems, secondaryListItems } from "./ListItems";
+import { mainListItems, SecondaryListItems } from "./ListItems";
 
 import Alien from "../Assets/Icons/Assets/Alien.svg";
 import Card from "./Card";
@@ -130,10 +130,10 @@ export default function Dashboard(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [expand, expandMenu] = useState(false);
-
-  const { currentUser, checkUsernameAvailability } = useAuth();
-
+  const { currentUser } = useAuth();
   const history = useHistory();
+
+  var hide = true;
 
   const openRegister = () => {
     console.log("opening register ");
@@ -152,7 +152,6 @@ export default function Dashboard(props) {
     setOpen(false);
   };
   const openMenu = () => {
-    checkUsernameAvailability();
     expandMenu(!expand);
   };
   useEffect(() => {
@@ -271,7 +270,11 @@ export default function Dashboard(props) {
         <Divider />
         <List>{mainListItems}</List>
         <Divider />
-        {login ? <List>{secondaryListItems}</List> : null}
+        {hide ? null : (
+          <List>
+            <SecondaryListItems />
+          </List>
+        )}
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />

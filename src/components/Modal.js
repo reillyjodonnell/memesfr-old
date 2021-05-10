@@ -8,6 +8,7 @@ import Upload from "../Assets/Icons/CloudUpload.svg";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
+import Loading from "./Loading";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,6 +29,7 @@ export default function Modal(props) {
   const [disabled, setDisabled] = useState(true);
   const [file, setFile] = useState("");
   const inputFile = useRef(null);
+  const [uploaded, setUploaded] = useState(false);
 
   const { uploadMeme } = useAuth();
 
@@ -36,6 +38,8 @@ export default function Modal(props) {
     var image = file;
     var title = name;
     uploadMeme(image, title);
+    setUploaded(true);
+    props.createPostFunction(false);
   };
 
   const handleChange = (event) => {
@@ -75,36 +79,42 @@ export default function Modal(props) {
   console.log(props);
   return ReactDom.createPortal(
     <div className="expanded-file">
-      <div className="upper-section">
-        <span>Upload Meme</span>
-        <img onClick={props.openFilePrompt} src={X} />
-      </div>
-      <div className="upper-middle">
-        <div className="group">
-          <img src={Image}></img>
-          <div className="details">
-            <span className="title">Photos</span>
-            <span className="description">PNG, JPG, GIF </span>
+      {uploaded ? (
+        <Loading />
+      ) : (
+        <>
+          <div className="upper-section">
+            <span>Upload Meme</span>
+            <img onClick={props.openFilePrompt} src={X} />
           </div>
-        </div>
-        <div className="group">
-          <img src={Gif}></img>
-          <div className="details">
-            <span className="title">Gifs</span>
-            <span className="description">800x600 or 400x300 </span>
+          <div className="upper-middle">
+            <div className="group">
+              <img src={Image}></img>
+              <div className="details">
+                <span className="title">Photos</span>
+                <span className="description">PNG, JPG, GIF </span>
+              </div>
+            </div>
+            <div className="group">
+              <img src={Gif}></img>
+              <div className="details">
+                <span className="title">Gifs</span>
+                <span className="description">800x600 or 400x300 </span>
+              </div>
+            </div>
+            <div className="group">
+              <img src={Video}></img>
+              <div className="details">
+                <span className="title">Videos</span>
+                <span className="description">800x600 or 400x300 </span>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="group">
-          <img src={Video}></img>
-          <div className="details">
-            <span className="title">Videos</span>
-            <span className="description">800x600 or 400x300 </span>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
       {file ? (
         <>
-          <form onSubmit={uploadPost}>
+          <form className="main-section-form" onSubmit={uploadPost}>
             <div className="main-section">
               <div className="image-preview">
                 {file && <ImageThumb image={file} />}
