@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { auth, db, storage } from "../services/firebase";
 import { useHistory } from "react-router-dom";
-import { DateRange } from "@material-ui/icons";
-import { app } from "firebase-admin";
 import firebase from "firebase/app";
+import admin from "firebase-admin";
 
 const AuthContext = React.createContext();
 
@@ -61,6 +60,7 @@ export default function AuthProvider({ children }) {
     //Route to home screen and refresh the page plz
   }
 
+  //The first ca
   function uploadMeme(image, title) {
     var author = currentUser.uid;
     console.log("Uploading your dank meme");
@@ -78,13 +78,29 @@ export default function AuthProvider({ children }) {
           .getDownloadURL()
           .then((url) => {
             console.log(url);
-            db.collection("memes").add({
-              author: author,
-              image: url,
-              title: title,
-              likes: 0,
-              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
+            db.collection("memes")
+              .add({
+                author: author,
+                image: url,
+                title: title,
+                likes: 0,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              })
+              .then(
+                (data) => {
+                  db.collection("users")
+                    .doc(author)
+                    .set({
+                      createdPosts: firebase.firestore.FieldValue.arrayUnion(
+                        data
+                      ),
+                    });
+                },
+                { merge: true }
+              )
+              .catch((error) => {
+                console.log(error);
+              });
           });
       }
     );
