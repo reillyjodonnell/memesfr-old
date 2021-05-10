@@ -78,7 +78,7 @@ export default function AuthProvider({ children }) {
           .getDownloadURL()
           .then((url) => {
             console.log(url);
-            db.collection("memes").doc(author).set({
+            db.collection("memes").add({
               author: author,
               image: url,
               title: title,
