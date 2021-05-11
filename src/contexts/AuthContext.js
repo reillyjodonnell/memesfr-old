@@ -60,7 +60,7 @@ export default function AuthProvider({ children }) {
     //Route to home screen and refresh the page plz
   }
 
-  //The first ca
+  //this currently takes up about 22 reads
   function uploadMeme(image, title) {
     var author = currentUser.uid;
     console.log("Uploading your dank meme");
@@ -72,12 +72,14 @@ export default function AuthProvider({ children }) {
         console.log(error);
       },
       () => {
+        //This is 1 write
         storage
           .ref("memes")
           .child(title)
           .getDownloadURL()
           .then((url) => {
             console.log(url);
+            //1 read here
             db.collection("memes")
               .add({
                 author: author,
@@ -88,6 +90,7 @@ export default function AuthProvider({ children }) {
               })
               .then(
                 (data) => {
+                  //1 read here
                   db.collection("users")
                     .doc(author)
                     .set({
@@ -107,6 +110,7 @@ export default function AuthProvider({ children }) {
   }
 
   function sendToDB() {
+    //1 read
     console.log("Executed.. sending to DB now");
     db.collection("cities")
       .doc("LA")
@@ -130,6 +134,7 @@ export default function AuthProvider({ children }) {
     postRef.update({ likes: increment });
   }
 
+  //many many reads (exponentially increases based on the number of users and number of queries)
   async function checkUsernameAvailability(id) {
     var username = id.toLowerCase();
     //Prevent throwing error
@@ -146,13 +151,14 @@ export default function AuthProvider({ children }) {
       }
     }
   }
-
+  //1 read
   function addUsernameToDB(id) {
     var value = user.uid;
     console.log(id);
     console.log(value);
     db.collection("usernames").doc(id).set({ uid: value });
   }
+
   function updateProfile(name, file) {
     console.log(name, file);
     addUsernameToDB(name);
