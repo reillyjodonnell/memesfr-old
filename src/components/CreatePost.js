@@ -122,7 +122,7 @@ export default function CreatePost(props) {
             </div>
           ) : (
             <div className="add-content">
-              <div className="create-prompt" style={{ padding: "1rem" }}>
+              <div className="create-prompt">
                 <span>Login to Upload Dank Meme</span>
               </div>
             </div>

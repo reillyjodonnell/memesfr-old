@@ -46,11 +46,11 @@
 .add-content {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
-  height: 3.6rem;
+  height: 4.6rem;
   margin: 1rem;
-  padding: 1rem;
+  padding: .5rem;
 }
 .plus {
   display: flex;
@@ -209,8 +209,6 @@
 @media only screen and (max-width: 550px) {
   .create-post-preview {
     width: 75vw;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
     height: 75px;
   }
   .makeStyles-input-28 {
@@ -277,7 +275,10 @@
   }
 }
 
-@media only screen and (max-width: 350px) {
+@media only screen and (max-width: 361px) {
+  .create-prompt span {
+    font-size: .94rem;
+  }
   .expanded-file {
     width: 90vw;
     height: 80vh;

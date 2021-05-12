@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme) => ({
   },
   form: {
     display: "flex",
-    width: "20%",
+    minWidth: '140px',
+    width: "40%",
+    maxWidth: '200px'
   },
 
   menuPaper: {
