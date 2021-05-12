@@ -67,7 +67,7 @@ export default function AuthProvider({ children }) {
     const upload = storage.ref(`memes/${title}`).put(image);
     upload.on(
       "state_changed",
-      (snapshot) => {},
+      (snapshot) => { },
       (error) => {
         console.log(error);
       },
@@ -108,6 +108,17 @@ export default function AuthProvider({ children }) {
       }
     );
   }
+
+  /* function retrievePopularPosts 
+  Since this will be universal (all people will see the same top posts)
+  lets query a single document to find the top posts (reading say 100 posts)
+  then when everyone clicks the popular icon to filter
+  it returns the "Popular document"
+
+  We would only need to update the popular document once every hour or so depending on demand
+  So how do we create such a document?
+
+  */
 
   function sendToDB() {
     //1 read
@@ -188,7 +199,7 @@ export default function AuthProvider({ children }) {
     const upload = storage.ref(`users/${id}`).put(file);
     upload.on(
       "state_changed",
-      (snapshot) => {},
+      (snapshot) => { },
       (error) => {
         console.log(error);
       },

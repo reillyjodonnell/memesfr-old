@@ -10,6 +10,7 @@ import { ReactComponent as Help } from "../Assets/Icons/Help.svg";
 import plus from "../Assets/Icons/Assets/plus.svg";
 
 import { useAuth } from "../contexts/AuthContext";
+import { useHistory } from "react-router";
 
 export default function DropDownMenu(props) {
   const [open, openSettings] = useState(false);
@@ -102,9 +103,10 @@ export default function DropDownMenu(props) {
     );
   }
   function PrimaryOptions() {
+    const history = useHistory();
     return (
       <>
-        <div onClick={() => manageFriends(!openFriends)}>
+        <div onClick={() => history.push("/help")}>
           <DropDownItem Icon={<Help />} IconText="Help" />
         </div>
         <div onClick={() => openSettings(!open)}>

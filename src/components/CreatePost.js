@@ -10,6 +10,7 @@ import "../CSS Components/CreatePost.css";
 import Plus from "../Assets/Icons/Plus.svg";
 import Modal from "./Modal";
 import { useAuth } from "../contexts/AuthContext";
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,6 +81,8 @@ export default function CreatePost(props) {
   const [createPost, createPostFunction] = useState(false);
   const [user, setUser] = useState(false);
 
+  const history = useHistory();
+
   const { currentUser } = useAuth();
   if (currentUser) {
     console.log(currentUser);
@@ -90,6 +93,10 @@ export default function CreatePost(props) {
     createPostFunction(!createPost);
     console.log("Time to make your first post");
   };
+
+  function loadLoginScreen() {
+    history.push("/login")
+  }
 
   const CreateNewPost = () => {
     {
@@ -122,7 +129,7 @@ export default function CreatePost(props) {
             </div>
           ) : (
             <div className="add-content">
-              <div className="create-prompt">
+              <div className="create-prompt" onClick={loadLoginScreen}>
                 <span>Login to Upload Dank Meme</span>
               </div>
             </div>
