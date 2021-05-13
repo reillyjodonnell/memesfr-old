@@ -119,6 +119,42 @@ export default function AuthProvider({ children }) {
   So how do we create such a document?
 
   */
+  //Here we will retrieve a series of posts that have already been ordered
+
+  //Retrieves the posts but doesn't organize the results in order.
+  //Also we need to transfer the id to become the id of the new popular post
+  //If the ids match then don't add the document otherwise if they don't match
+  //Update the list (reorganize resort likes etc..)
+  function retrievePopularPosts() {
+    var memesRef = db.collection("memes");
+
+    memesRef.orderBy("likes", "desc").limit(4).get()
+      .then((querySnapshot) => {
+        console.log(querySnapshot)
+        querySnapshot.forEach((item) => {
+
+          console.log(item.data())
+          var copiedID = item.id
+          console.log(copiedID)
+          db.collection("popular").doc(copiedID).set({
+            author: item.data().author,
+            image: item.data().image,
+            title: item.data().title,
+            likes: item.data().likes,
+            createdAt: item.data().createdAt
+          })
+          //If the largest is larger than the smallest shift the order
+
+
+        })
+      })
+
+
+
+
+
+  }
+
 
   function sendToDB() {
     //1 read
@@ -314,6 +350,7 @@ export default function AuthProvider({ children }) {
     sendConfirmationEmail,
     addUsernameToDB,
     updateProfile,
+    retrievePopularPosts
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

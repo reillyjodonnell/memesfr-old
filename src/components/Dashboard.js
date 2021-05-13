@@ -130,7 +130,7 @@ export default function Dashboard(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [expand, expandMenu] = useState(false);
-  const { currentUser } = useAuth();
+  const { currentUser, retrievePopularPosts } = useAuth();
   const history = useHistory();
 
   var hide = true;
@@ -146,6 +146,8 @@ export default function Dashboard(props) {
   };
 
   const handleDrawerOpen = () => {
+    console.log("Opening")
+
     setOpen(true);
   };
   const handleDrawerClose = () => {
@@ -155,6 +157,9 @@ export default function Dashboard(props) {
     expandMenu(!expand);
   };
   useEffect(() => {
+    console.log("Searching for memes")
+    retrievePopularPosts();
+
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
       // Additional state parameters can also be passed via URL.
@@ -191,6 +196,7 @@ export default function Dashboard(props) {
   }, []);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
 
   return (
     <div className={classes.root}>
@@ -285,9 +291,6 @@ export default function Dashboard(props) {
             <Filter />
 
             <div className="main-content">
-              <Card />
-              <Card />
-              <Card />
               <Card />
             </div>
           </Box>
