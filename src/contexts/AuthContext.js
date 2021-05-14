@@ -125,6 +125,9 @@ export default function AuthProvider({ children }) {
   //Also we need to transfer the id to become the id of the new popular post
   //If the ids match then don't add the document otherwise if they don't match
   //Update the list (reorganize resort likes etc..)
+
+  //Now the issue is, if there are likes on these posts, I'll have to update both the post under memes and the post
+  //created under popular. Solution: just reference the original post in popular by using the same ID 
   function retrievePopularPosts() {
     var memesRef = db.collection("memes");
 
@@ -144,15 +147,8 @@ export default function AuthProvider({ children }) {
             createdAt: item.data().createdAt
           })
           //If the largest is larger than the smallest shift the order
-
-
         })
       })
-
-
-
-
-
   }
 
 
