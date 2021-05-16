@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import Meme from "../Assets/o3yck1fvhyw61.jpg";
 import "../CSS Components/Card.css";
 
-export default function Card() {
+export default function Card(props) {
+  console.log(props.item);
+  var item = props.item;
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);
@@ -153,14 +155,14 @@ export default function Card() {
               <span>Category: </span>
               <span className="clickable">{memeTag}</span>
               <span> posted by </span>
-              <span className="clickable">{userName}</span>
+              <span className="clickable">item.author</span>
             </div>
             {permission ? <Edit /> : null}
             {pencil ? <ExpandedPencil /> : null}
           </div>
           <div className="upper-top">
-            <span className="meme-title">Meme title</span>
-            <span className="number-of-likes">{likes}</span>
+            <span className="meme-title">item.title</span>
+            <span className="number-of-likes">item.likes</span>
           </div>
 
           <img

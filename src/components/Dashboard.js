@@ -135,8 +135,9 @@ export default function Dashboard(props) {
     currentUser,
     retrievePopularPosts,
     referencePopularPosts,
-    popularItems
+    popularItems,
   } = useAuth();
+
   const history = useHistory();
 
   var hide = true;
@@ -164,8 +165,9 @@ export default function Dashboard(props) {
   };
   useEffect(() => {
     console.log("Searching for memes");
-    retrievePopularPosts();
+    referencePopularPosts();
     setPopularPosts(popularItems);
+    console.log(popularItems);
 
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
@@ -297,6 +299,11 @@ export default function Dashboard(props) {
             <Filter />
 
             <div className="main-content">
+              {popularPosts
+                ? popularPosts.map((item) => {
+                    return <Card item={item} />;
+                  })
+                : null}
               <Card />
             </div>
           </Box>
