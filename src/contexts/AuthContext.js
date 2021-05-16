@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { auth, db, storage } from "../services/firebase";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase/app";
-import admin from "firebase-admin";
+import admin, { firestore } from "firebase-admin";
 
 const AuthContext = React.createContext();
 
@@ -67,7 +67,7 @@ export default function AuthProvider({ children }) {
     const upload = storage.ref(`memes/${title}`).put(image);
     upload.on(
       "state_changed",
-      (snapshot) => { },
+      (snapshot) => {},
       (error) => {
         console.log(error);
       },
@@ -127,30 +127,52 @@ export default function AuthProvider({ children }) {
   //Update the list (reorganize resort likes etc..)
 
   //Now the issue is, if there are likes on these posts, I'll have to update both the post under memes and the post
-  //created under popular. Solution: just reference the original post in popular by using the same ID 
+  //created under popular. Solution: just reference the original post in popular by using the same ID
+  function referencePopularPosts() {
+    var memesRef = db.collection("memes");
+    memesRef
+      .orderBy("likes", "desc")
+      .limit(20)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((item) => {
+          var copiedID = item.id;
+          db.collection("popular")
+            .doc("top20")
+            .update({
+              postID: firebase.firestore.FieldValue.arrayUnion(copiedID),
+            });
+        });
+      });
+  }
+
+  function displayPopular() {}
+
   function retrievePopularPosts() {
     var memesRef = db.collection("memes");
 
-    memesRef.orderBy("likes", "desc").limit(4).get()
+    memesRef
+      .orderBy("likes", "desc")
+      .limit(4)
+      .get()
       .then((querySnapshot) => {
-        console.log(querySnapshot)
+        console.log(querySnapshot);
         querySnapshot.forEach((item) => {
-
-          console.log(item.data())
-          var copiedID = item.id
-          console.log(copiedID)
+          console.log(item.data());
+          var copiedID = item.id;
           db.collection("popular").doc(copiedID).set({
             author: item.data().author,
             image: item.data().image,
             title: item.data().title,
             likes: item.data().likes,
-            createdAt: item.data().createdAt
-          })
-          //If the largest is larger than the smallest shift the order
-        })
-      })
-  }
+            createdAt: item.data().createdAt,
+          });
+          return item.data();
 
+          //If the largest is larger than the smallest shift the order
+        });
+      });
+  }
 
   function sendToDB() {
     //1 read
@@ -231,7 +253,7 @@ export default function AuthProvider({ children }) {
     const upload = storage.ref(`users/${id}`).put(file);
     upload.on(
       "state_changed",
-      (snapshot) => { },
+      (snapshot) => {},
       (error) => {
         console.log(error);
       },
@@ -346,7 +368,8 @@ export default function AuthProvider({ children }) {
     sendConfirmationEmail,
     addUsernameToDB,
     updateProfile,
-    retrievePopularPosts
+    retrievePopularPosts,
+    referencePopularPosts,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

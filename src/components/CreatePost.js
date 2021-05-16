@@ -10,7 +10,7 @@ import "../CSS Components/CreatePost.css";
 import Plus from "../Assets/Icons/Plus.svg";
 import Modal from "./Modal";
 import { useAuth } from "../contexts/AuthContext";
-import { useHistory } from 'react-router-dom'
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -84,9 +84,12 @@ export default function CreatePost(props) {
   const history = useHistory();
 
   const { currentUser } = useAuth();
+
   if (currentUser) {
-    console.log(currentUser);
-    var profilePicture = currentUser.photoURL;
+    console.log(currentUser.photoURL);
+    if (currentUser.photoURL == undefined) {
+      var profilePicture = doge;
+    } else var profilePicture = currentUser.photoURL;
   }
 
   const OpenFilePrompt = () => {
@@ -95,7 +98,7 @@ export default function CreatePost(props) {
   };
 
   function loadLoginScreen() {
-    history.push("/login")
+    history.push("/login");
   }
 
   const CreateNewPost = () => {

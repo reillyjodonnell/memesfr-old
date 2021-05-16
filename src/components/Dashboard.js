@@ -130,7 +130,12 @@ export default function Dashboard(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [expand, expandMenu] = useState(false);
-  const { currentUser, retrievePopularPosts } = useAuth();
+  const [popularPosts, setPopularPosts] = useState([{}]);
+  const {
+    currentUser,
+    retrievePopularPosts,
+    referencePopularPosts,
+  } = useAuth();
   const history = useHistory();
 
   var hide = true;
@@ -146,7 +151,7 @@ export default function Dashboard(props) {
   };
 
   const handleDrawerOpen = () => {
-    console.log("Opening")
+    console.log("Opening");
 
     setOpen(true);
   };
@@ -157,7 +162,7 @@ export default function Dashboard(props) {
     expandMenu(!expand);
   };
   useEffect(() => {
-    console.log("Searching for memes")
+    console.log("Searching for memes");
     retrievePopularPosts();
 
     // Confirm the link is a sign-in with email link.
@@ -196,7 +201,6 @@ export default function Dashboard(props) {
   }, []);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
 
   return (
     <div className={classes.root}>
