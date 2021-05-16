@@ -135,6 +135,7 @@ export default function Dashboard(props) {
     currentUser,
     retrievePopularPosts,
     referencePopularPosts,
+    popularItems
   } = useAuth();
   const history = useHistory();
 
@@ -164,6 +165,7 @@ export default function Dashboard(props) {
   useEffect(() => {
     console.log("Searching for memes");
     retrievePopularPosts();
+    setPopularPosts(popularItems);
 
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {

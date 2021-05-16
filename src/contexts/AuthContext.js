@@ -14,6 +14,7 @@ export default function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loadUser, setLoadUser] = useState(true);
   const [userExists, setUserExists] = useState(true);
+  const [popularItems, setPopularItems] = useState({})
   const history = useHistory();
 
   var actionCodeSettings = {
@@ -137,16 +138,40 @@ export default function AuthProvider({ children }) {
       .then((querySnapshot) => {
         querySnapshot.forEach((item) => {
           var copiedID = item.id;
+          
           db.collection("popular")
             .doc("top20")
             .update({
               postID: firebase.firestore.FieldValue.arrayUnion(copiedID),
+              title: item.title,
+              author: item.author,
+              likes: item.likes,
+              image: item.image,
+              createdAt: item.createdAt
             });
         });
       });
   }
 
-  function displayPopular() {}
+  //For each user I need to have a document that contains the feed that they should see
+  //Here we will retrieve the top 20 posts and save them into state on the dashboard component and 
+  //then display the rsults in the component
+  function displayPopular() {
+    var docRef = db.collection("popular").doc("top20");
+
+    docRef.get().then((doc) => {
+      if(doc.exists) {
+        console.log("Items found, displaying results in state")
+        setPopularItems(doc);
+
+      } else {
+        console.log("HMMM Items not found!")
+      }
+    }) .catch((error) => {
+      console.log("Error getting document: ", error)
+    })
+
+  }
 
   function retrievePopularPosts() {
     var memesRef = db.collection("memes");
@@ -370,6 +395,7 @@ export default function AuthProvider({ children }) {
     updateProfile,
     retrievePopularPosts,
     referencePopularPosts,
+    popularItems
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }
