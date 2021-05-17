@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Meme from "../Assets/o3yck1fvhyw61.jpg";
 import "../CSS Components/Card.css";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Card(props) {
   console.log(props.item);
@@ -11,9 +12,20 @@ export default function Card(props) {
   const [options, expandOptions] = useState(false);
   const [pencil, expandPencil] = useState(false);
 
+  const { popularItems } = useAuth();
+
   const toggleHeart = () => {
     setHeart(!heart);
   };
+
+  useEffect(() => {
+    {
+      if (props) {
+        changeLikes(props.item.likes);
+      }
+      console.log(likes);
+    }
+  }, [popularItems]);
 
   const toggleThumbUp = () => {
     if (thumbUp == true) {

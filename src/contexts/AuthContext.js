@@ -170,14 +170,13 @@ export default function AuthProvider({ children }) {
               },
               { merge: true }
             )
-            .then(
-              () => {
-                setLoadingFilter(false);
-              },
-              (error) => {
-                console.log("Failed", error);
-              }
-            );
+            .then((data) => {
+              console.log(data);
+              setLoadingFilter(false);
+            })
+            .catch((error) => {
+              console.log("ERROR: ", error);
+            });
         });
       });
 

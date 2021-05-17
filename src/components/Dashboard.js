@@ -336,7 +336,7 @@ export default function Dashboard(props) {
 
               {popularPosts
                 ? popularPosts.map((item) => {
-                    return <Card item={item} />;
+                    return <Card popularItems={popularItems} item={item} />;
                   })
                 : null}
             </div>
