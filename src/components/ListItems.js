@@ -7,7 +7,7 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 import HomeIcon from "@material-ui/icons/Home";
 import TrendingIcon from "@material-ui/icons/TrendingUp";
 import PeopleIcon from "@material-ui/icons/Whatshot";
-import BarChartIcon from "@material-ui/icons/Search";
+import RecentIcon from "@material-ui/icons/AccessTime";
 import LayersIcon from "@material-ui/icons/Casino";
 import { useAuth } from "../contexts/AuthContext";
 
@@ -34,11 +34,11 @@ export default function MainListItems(props) {
         </ListItemIcon>
         <ListItemText primary="Popular" />
       </ListItem>
-      <ListItem button>
+      <ListItem onClick={props.recentFilter} button>
         <ListItemIcon>
-          <BarChartIcon />
+          <RecentIcon />
         </ListItemIcon>
-        <ListItemText primary="Search" />
+        <ListItemText primary="Recent" />
       </ListItem>
       <ListItem button>
         <ListItemIcon>

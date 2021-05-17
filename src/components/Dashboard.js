@@ -139,10 +139,14 @@ export default function Dashboard(props) {
   const [open, setOpen] = useState(false);
   const [expand, expandMenu] = useState(false);
   const [popularPosts, setPopularPosts] = useState([{}]);
+  const [recentPosts, setRecentPosts] = useState([{}]);
+
   const {
     currentUser,
     referencePopularPosts,
     popularItems,
+    referenceRecentPosts,
+    recentItems,
     loadingFilter,
     retrievePopularPosts,
   } = useAuth();
@@ -173,7 +177,6 @@ export default function Dashboard(props) {
     expandMenu(!expand);
   };
   useEffect(() => {
-    retrievePopularPosts();
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
       // Additional state parameters can also be passed via URL.
@@ -214,11 +217,22 @@ export default function Dashboard(props) {
     referencePopularPosts();
   }
 
+  function recentFilter() {
+    console.log("Searching for most recent memes");
+    referenceRecentPosts();
+  }
+
   useEffect(() => {
     console.log("Detected a change in loading, refreshing now");
     console.log(popularItems);
     setPopularPosts(popularItems);
   }, [popularItems]);
+
+  useEffect(() => {
+    console.log("Detected a change in loading, refreshing now");
+    console.log(recentItems);
+    setRecentPosts(recentItems);
+  }, [recentItems]);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -309,7 +323,10 @@ export default function Dashboard(props) {
         </div>
         <Divider />
         <List>
-          <MainListItems popularFilter={popularFilter} />
+          <MainListItems
+            recentFilter={recentFilter}
+            popularFilter={popularFilter}
+          />
         </List>
         <Divider />
         {hide ? null : (
@@ -337,6 +354,11 @@ export default function Dashboard(props) {
               {popularPosts
                 ? popularPosts.map((item) => {
                     return <Card popularItems={popularItems} item={item} />;
+                  })
+                : null}
+              {recentPosts
+                ? recentPosts.map((item) => {
+                    return <Card recentItems={recentItems} item={item} />;
                   })
                 : null}
             </div>

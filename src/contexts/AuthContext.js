@@ -15,6 +15,8 @@ export default function AuthProvider({ children }) {
   const [loadUser, setLoadUser] = useState(true);
   const [userExists, setUserExists] = useState(true);
   const [popularItems, setPopularItems] = useState([]);
+  const [recentItems, setRecentItems] = useState([]);
+
   const [loadingFilter, setLoadingFilter] = useState(false);
   const history = useHistory();
 
@@ -128,6 +130,57 @@ export default function AuthProvider({ children }) {
   //Also we need to transfer the id to become the id of the new popular post
   //If the ids match then don't add the document otherwise if they don't match
   //Update the list (reorganize resort likes etc..)
+  function referenceRecentPosts() {
+    console.log("Searching...");
+    setLoadingFilter(true);
+    var memesRef = db.collection("memes");
+    setRecentItems([]);
+    memesRef
+      .orderBy("createdAt", "desc")
+      .limit(20)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((item) => {
+          var copiedID = item.id;
+          var items = item.data();
+          console.log(items);
+          var usersname = items.userName;
+          var titleName = items.title;
+          var authorName = items.author;
+          var likeNumber = items.likes;
+          var imageSource = items.image;
+          var created = items.createdAt;
+          var docData = {
+            userDisplay: usersname,
+            id: copiedID,
+            title: titleName,
+            author: authorName,
+            likes: likeNumber,
+            image: imageSource,
+            createdAt: created,
+          };
+          setRecentItems((prevState) => [...prevState, docData]);
+
+          db.collection("recent")
+            .doc("recent_twenty")
+            .set(
+              {
+                posts: firebase.firestore.FieldValue.arrayUnion(docData),
+              },
+              { merge: true }
+            )
+            .then((data) => {
+              console.log(data);
+              setLoadingFilter(false);
+            })
+            .catch((error) => {
+              console.log("ERROR: ", error);
+            });
+        });
+      });
+
+    console.log("Search has ended");
+  }
 
   //Now the issue is, if there are likes on these posts, I'll have to update both the post under memes and the post
   //created under popular. Solution: just reference the original post in popular by using the same ID
@@ -181,31 +234,6 @@ export default function AuthProvider({ children }) {
       });
 
     console.log("Search has ended");
-  }
-
-  function retrievePopularPosts() {
-    var memesRef = db.collection("memes");
-
-    memesRef
-      .orderBy("likes", "desc")
-      .limit(4)
-      .get()
-      .then((querySnapshot) => {
-        console.log(querySnapshot);
-        querySnapshot.forEach((item) => {
-          var copiedID = item.id;
-          db.collection("popular").doc(copiedID).set({
-            author: item.data().author,
-            image: item.data().image,
-            title: item.data().title,
-            likes: item.data().likes,
-            createdAt: item.data().createdAt,
-          });
-          return item.data();
-
-          //If the largest is larger than the smallest shift the order
-        });
-      });
   }
 
   function sendToDB() {
@@ -402,9 +430,10 @@ export default function AuthProvider({ children }) {
     sendConfirmationEmail,
     addUsernameToDB,
     updateProfile,
-    retrievePopularPosts,
     referencePopularPosts,
     popularItems,
+    referenceRecentPosts,
+    recentItems,
     loadingFilter,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
