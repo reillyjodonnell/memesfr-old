@@ -65,7 +65,7 @@ export default function AuthProvider({ children }) {
   //this currently takes up about 22 reads
   function uploadMeme(image, title) {
     var author = currentUser.uid;
-    console.log("Uploading your dank meme");
+    var ud = currentUser.displayName;
     const upload = storage.ref(`memes/${title}`).put(image);
     upload.on(
       "state_changed",
@@ -84,6 +84,7 @@ export default function AuthProvider({ children }) {
             //1 read here
             db.collection("memes")
               .add({
+                userName: ud,
                 author: author,
                 image: url,
                 title: title,
@@ -143,12 +144,15 @@ export default function AuthProvider({ children }) {
         querySnapshot.forEach((item) => {
           var copiedID = item.id;
           var items = item.data();
+          console.log(items);
+          var usersname = items.userName;
           var titleName = items.title;
           var authorName = items.author;
           var likeNumber = items.likes;
           var imageSource = items.image;
           var created = items.createdAt;
           var docData = {
+            userDisplay: usersname,
             id: copiedID,
             title: titleName,
             author: authorName,
@@ -182,7 +186,6 @@ export default function AuthProvider({ children }) {
       .then((querySnapshot) => {
         console.log(querySnapshot);
         querySnapshot.forEach((item) => {
-          console.log(item.data());
           var copiedID = item.id;
           db.collection("popular").doc(copiedID).set({
             author: item.data().author,

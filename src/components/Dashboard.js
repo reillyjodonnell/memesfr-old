@@ -136,6 +136,7 @@ export default function Dashboard(props) {
     referencePopularPosts,
     popularItems,
     loadingFilter,
+    retrievePopularPosts,
   } = useAuth();
 
   const history = useHistory();
@@ -164,6 +165,7 @@ export default function Dashboard(props) {
     expandMenu(!expand);
   };
   useEffect(() => {
+    retrievePopularPosts();
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
       // Additional state parameters can also be passed via URL.

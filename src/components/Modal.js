@@ -9,6 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import Loading from "./Loading";
+import { SettingsOutlined } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   input: {
-    margin: "2rem",
+    marginBottom: ".5rem",
   },
 }));
 const accept = "images";
@@ -27,19 +28,36 @@ export default function Modal(props) {
   const [name, setName] = useState("Use The Memes, Luke");
   const [viewPhoto, viewPhotoFunction] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [memeTitle, setMemeTitle] = useState("");
+  const [titleError, setTitleError] = useState(true);
+  const [titleErrorMessage, setTitleErrorMessage] = useState("");
   const [file, setFile] = useState("");
   const inputFile = useRef(null);
   const [uploaded, setUploaded] = useState(false);
+
+  const titleRef = useRef();
 
   const { uploadMeme } = useAuth();
 
   const uploadPost = (e) => {
     e.preventDefault();
     var image = file;
-    var title = name;
+    var title = memeTitle;
     uploadMeme(image, title);
     setUploaded(true);
     props.createPostFunction(false);
+  };
+
+  const checkTitleError = (e) => {
+    setTitleError(false);
+    setMemeTitle(e.target.value);
+    if (e.target.value == "") {
+      setTitleError(true);
+      setTitleErrorMessage("Cannot be empty");
+    } else {
+      setTitleErrorMessage("");
+      setTitleError(false);
+    }
   };
 
   const handleChange = (event) => {
@@ -119,14 +137,28 @@ export default function Modal(props) {
               <div className="image-preview">
                 {file && <ImageThumb image={file} />}
                 <input type="image" style={{ display: "none" }} image={file} />
-
+              </div>
+              <div
+                style={{
+                  flex: 0,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  display: "flex",
+                  width: "100%",
+                  flexGrow: 0,
+                }}
+              >
                 <TextField
+                  inputRef={titleRef}
+                  value={memeTitle}
+                  onChange={(e) => checkTitleError(e)}
+                  required
                   className={classes.input}
                   id="outlined-name"
                   label="Title"
-                  value={name}
-                  onChange={(e) => handleChange(e)}
                   variant="outlined"
+                  helperText={titleErrorMessage}
+                  error={titleError}
                 />
               </div>
             </div>
@@ -134,7 +166,11 @@ export default function Modal(props) {
               <span>
                 By clicking upload you agree to abide by our Community Policy.
               </span>
-              <button type="submit" disabled={!name} onClick={onButtonClick}>
+              <button
+                type="submit"
+                disabled={titleError}
+                onClick={onButtonClick}
+              >
                 <input
                   type="submit"
                   id="file"
