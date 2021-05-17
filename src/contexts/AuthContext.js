@@ -169,11 +169,19 @@ export default function AuthProvider({ children }) {
                 posts: firebase.firestore.FieldValue.arrayUnion(docData),
               },
               { merge: true }
+            )
+            .then(
+              () => {
+                setLoadingFilter(false);
+              },
+              (error) => {
+                console.log("Failed", error);
+              }
             );
         });
       });
+
     console.log("Search has ended");
-    setLoadingFilter(false);
   }
 
   function retrievePopularPosts() {

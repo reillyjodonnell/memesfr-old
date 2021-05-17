@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import Skeleton from "@material-ui/lab/Skeleton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import { SecondaryListItems } from "./ListItems";
 import MainListItems from "./ListItems";
@@ -125,6 +126,11 @@ const useStyles = makeStyles((theme) => ({
 
   image: {
     marginRight: "1rem",
+  },
+  skeleton: {
+    margin: "1rem",
+    width: "40vw",
+    height: "40vh",
   },
 }));
 
@@ -321,6 +327,13 @@ export default function Dashboard(props) {
             <Filter />
 
             <div className="main-content">
+              {loadingFilter ? (
+                <>
+                  <Skeleton className={classes.skeleton} variant="rect" />
+                  <Skeleton className={classes.skeleton} variant="rect" />
+                </>
+              ) : null}
+
               {popularPosts
                 ? popularPosts.map((item) => {
                     return <Card item={item} />;
