@@ -4,7 +4,6 @@ import "../CSS Components/Card.css";
 
 export default function Card(props) {
   console.log(props.item);
-  var item = props.item;
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);
@@ -155,7 +154,7 @@ export default function Card(props) {
               <span>Category: </span>
               <span className="clickable">{memeTag}</span>
               <span> posted by </span>
-              <span className="clickable">item.author</span>
+              <span className="clickable">props.items.author</span>
             </div>
             {permission ? <Edit /> : null}
             {pencil ? <ExpandedPencil /> : null}

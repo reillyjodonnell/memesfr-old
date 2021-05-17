@@ -14,8 +14,8 @@ import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { mainListItems, SecondaryListItems } from "./ListItems";
-
+import { SecondaryListItems } from "./ListItems";
+import MainListItems from "./ListItems";
 import Alien from "../Assets/Icons/Assets/Alien.svg";
 import Card from "./Card";
 import DropDownMenu from "./DropDownMenu";
@@ -133,9 +133,9 @@ export default function Dashboard(props) {
   const [popularPosts, setPopularPosts] = useState([{}]);
   const {
     currentUser,
-    retrievePopularPosts,
     referencePopularPosts,
     popularItems,
+    loadingFilter,
   } = useAuth();
 
   const history = useHistory();
@@ -164,11 +164,6 @@ export default function Dashboard(props) {
     expandMenu(!expand);
   };
   useEffect(() => {
-    console.log("Searching for memes");
-    referencePopularPosts();
-    setPopularPosts(popularItems);
-    console.log(popularItems);
-
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
       // Additional state parameters can also be passed via URL.
@@ -203,6 +198,17 @@ export default function Dashboard(props) {
         });
     }
   }, []);
+
+  function popularFilter() {
+    console.log("Searching for most popular memes");
+    referencePopularPosts();
+  }
+
+  useEffect(() => {
+    console.log("Detected a change in loading, refreshing now");
+    console.log(popularItems);
+    setPopularPosts(popularItems);
+  }, [popularItems]);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -282,7 +288,9 @@ export default function Dashboard(props) {
           </IconButton>
         </div>
         <Divider />
-        <List>{mainListItems}</List>
+        <List>
+          <MainListItems popularFilter={popularFilter} />
+        </List>
         <Divider />
         {hide ? null : (
           <List>
@@ -304,7 +312,6 @@ export default function Dashboard(props) {
                     return <Card item={item} />;
                   })
                 : null}
-              <Card />
             </div>
           </Box>
         </Container>

@@ -12,40 +12,42 @@ import { useAuth } from "../contexts/AuthContext";
 
 import AssignmentIcon from "@material-ui/icons/Assignment";
 
-export const mainListItems = (
-  <div>
-    <ListItem button>
-      <ListItemIcon>
-        <HomeIcon />
-      </ListItemIcon>
-      <ListItemText primary="Home" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <TrendingIcon />
-      </ListItemIcon>
-      <ListItemText primary="Trending" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary="Popular" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Search" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
-      </ListItemIcon>
-      <ListItemText primary="Random meme" />
-    </ListItem>
-  </div>
-);
+export default function MainListItems(props) {
+  return (
+    <div>
+      <ListItem button>
+        <ListItemIcon>
+          <HomeIcon />
+        </ListItemIcon>
+        <ListItemText primary="Home" />
+      </ListItem>
+      <ListItem button>
+        <ListItemIcon>
+          <TrendingIcon />
+        </ListItemIcon>
+        <ListItemText primary="Trending" />
+      </ListItem>
+      <ListItem onClick={props.popularFilter} button>
+        <ListItemIcon>
+          <PeopleIcon />
+        </ListItemIcon>
+        <ListItemText primary="Popular" />
+      </ListItem>
+      <ListItem button>
+        <ListItemIcon>
+          <BarChartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Search" />
+      </ListItem>
+      <ListItem button>
+        <ListItemIcon>
+          <LayersIcon />
+        </ListItemIcon>
+        <ListItemText primary="Random meme" />
+      </ListItem>
+    </div>
+  );
+}
 
 export function SecondaryListItems() {
   const { currentUser } = useAuth();

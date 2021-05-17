@@ -15,6 +15,7 @@ export default function AuthProvider({ children }) {
   const [loadUser, setLoadUser] = useState(true);
   const [userExists, setUserExists] = useState(true);
   const [popularItems, setPopularItems] = useState([]);
+  const [loadingFilter, setLoadingFilter] = useState(false);
   const history = useHistory();
 
   var actionCodeSettings = {
@@ -130,7 +131,10 @@ export default function AuthProvider({ children }) {
   //Now the issue is, if there are likes on these posts, I'll have to update both the post under memes and the post
   //created under popular. Solution: just reference the original post in popular by using the same ID
   function referencePopularPosts() {
+    console.log("Searching...");
+    setLoadingFilter(true);
     var memesRef = db.collection("memes");
+    setPopularItems([]);
     memesRef
       .orderBy("likes", "desc")
       .limit(20)
@@ -164,27 +168,8 @@ export default function AuthProvider({ children }) {
             );
         });
       });
-  }
-
-  //For each user I need to have a document that contains the feed that they should see
-  //Here we will retrieve the top 20 posts and save them into state on the dashboard component and
-  //then display the rsults in the component
-  function displayPopular() {
-    var docRef = db.collection("popular").doc("top20");
-
-    docRef
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          console.log("Items found, displaying results in state");
-          setPopularItems(doc);
-        } else {
-          console.log("HMMM Items not found!");
-        }
-      })
-      .catch((error) => {
-        console.log("Error getting document: ", error);
-      });
+    console.log("Search has ended");
+    setLoadingFilter(false);
   }
 
   function retrievePopularPosts() {
@@ -410,6 +395,7 @@ export default function AuthProvider({ children }) {
     retrievePopularPosts,
     referencePopularPosts,
     popularItems,
+    loadingFilter,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }
