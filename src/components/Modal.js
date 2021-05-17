@@ -28,7 +28,6 @@ export default function Modal(props) {
   const [name, setName] = useState("Use The Memes, Luke");
   const [viewPhoto, viewPhotoFunction] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [memeTitle, setMemeTitle] = useState("");
   const [titleError, setTitleError] = useState(true);
   const [titleErrorMessage, setTitleErrorMessage] = useState("");
   const [file, setFile] = useState("");
@@ -42,7 +41,7 @@ export default function Modal(props) {
   const uploadPost = (e) => {
     e.preventDefault();
     var image = file;
-    var title = memeTitle;
+    var title = titleRef.current.value;
     uploadMeme(image, title);
     setUploaded(true);
     props.createPostFunction(false);
@@ -50,7 +49,6 @@ export default function Modal(props) {
 
   const checkTitleError = (e) => {
     setTitleError(false);
-    setMemeTitle(e.target.value);
     if (e.target.value == "") {
       setTitleError(true);
       setTitleErrorMessage("Cannot be empty");
@@ -150,7 +148,6 @@ export default function Modal(props) {
               >
                 <TextField
                   inputRef={titleRef}
-                  value={memeTitle}
                   onChange={(e) => checkTitleError(e)}
                   required
                   className={classes.input}

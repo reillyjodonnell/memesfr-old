@@ -16,7 +16,7 @@ import Grid from "@material-ui/core/Grid";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import { SecondaryListItems } from "./ListItems";
 import MainListItems from "./ListItems";
-import Alien from "../Assets/Icons/Assets/Alien.svg";
+import Crown from "../Assets/Icons/Crown.svg";
 import Card from "./Card";
 import DropDownMenu from "./DropDownMenu";
 import Filter from "./Filter";
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
+    paddingRight: 24, //keep right padding when drawer closed
     backgroundColor: "#1098F7",
   },
   toolbarIcon: {
@@ -112,6 +112,7 @@ const useStyles = makeStyles((theme) => ({
     height: 240,
   },
   loginregister: {
+    marginLeft: "auto",
     width: "50%",
     display: "flex",
     alignItems: "center",
@@ -121,14 +122,15 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+
   image: {
-    paddingRight: "1rem",
+    marginRight: "1rem",
   },
 }));
 
 export default function Dashboard(props) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(false);
   const [expand, expandMenu] = useState(false);
   const [popularPosts, setPopularPosts] = useState([{}]);
   const {
@@ -232,17 +234,27 @@ export default function Dashboard(props) {
               open && classes.menuButtonHidden
             )}
           ></IconButton>
-          <img className={classes.image} src={Alien}></img>
-
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginRight: "auto",
+            }}
           >
-            Memesfr
-          </Typography>
+            <Typography
+              component="h1"
+              variant="h6"
+              color="inherit"
+              noWrap
+              className={classes.title}
+            >
+              Memesfr
+            </Typography>
+
+            <img className={classes.image} src={Crown}></img>
+          </div>
+
           {currentUser ? null : (
             <div className={classes.loginregister}>
               <Typography
@@ -269,7 +281,7 @@ export default function Dashboard(props) {
             </div>
           )}
 
-          <IconButton color="inherit">
+          <IconButton style={{ marginLeft: "auto" }} color="inherit">
             <Badge badgeContent={1} color="secondary">
               <img onClick={openMenu} src={props.activeUser ? null : User} />
             </Badge>

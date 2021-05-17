@@ -15,11 +15,10 @@
   font-size: 2rem;
   width: 30vw;
   height: 100%;
-
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  padding: 1rem;
+  padding: 2rem;
   background-color: rgba(255, 255, 255, 0.548);
   position: relative;
 }
@@ -67,8 +66,16 @@
   width: 100%;
 }
 .meme-identification {
-  font-size: 10px;
+  font-size: 13px;
   white-space: nowrap;
+}
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #fffefe;
+  border-radius: 5px;
+  min-width: 100%;
 }
 
 /*PENCIL*/
@@ -91,10 +98,20 @@
   flex-direction: column;
   align-items: center;
   border: 1px solid black;
+  padding: 1rem;
+}
+.expanded-pencil div {
+  padding: 1rem;
+  transition: background 500ms;
+  border-radius: 10px;
 }
 .expanded-pencil div:hover {
-  background-color: rgba(243, 241, 241, 0.959);
+  background-color: rgba(228, 228, 228, 0.37);
   border-radius: 10px;
+}
+
+.makeStyles-drawerPaper-10 {
+  max-width: 40vw;
 }
 .expanded-pencil span {
   width: 100%;
@@ -123,11 +140,14 @@
   display: flex;
   width: 100%;
   justify-content: space-evenly;
+  margin-top: 1rem;
+}
+.lower svg:last-child {
+  justify-content: flex-end;
 }
 .lower img,
-svg {
+.lower svg {
   cursor: pointer;
-  width: 2rem;
 }
 
 /*
@@ -139,7 +159,7 @@ svg {
 }
 @keyframes hearted {
   0% {
-    opacity: 0%;
+    opacity: 48%;
   }
   50% {
     opacity: 50%;
@@ -154,7 +174,7 @@ svg {
 .active-heart {
   stroke: black;
   fill: red;
-  animation: hearted 0.5s steps(20);
+  animation: hearted 0.2s steps(20);
 }
 
 /* thumbs up*/
@@ -226,6 +246,9 @@ svg {
 
 /* responsiveness <3 */
 @media only screen and (max-width: 600px) {
+  .upper-top span {
+    font-size: 1rem;
+  }
   .card-area,
   card {
     width: 75vw;

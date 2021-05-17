@@ -86,13 +86,14 @@ export default function DropDownMenu(props) {
   }
 
   function UserSecondaryOptions() {
+    const history = useHistory();
     return (
       <div style={{ whiteSpace: "nowrap" }}>
         <div onClick={activateDoge}>
           <DropDownItem Icon={<Doge />} IconText="Activate Doge" />
         </div>
 
-        <div onClick={() => expandFileSubmit(!openFile)}>
+        <div onClick={() => history.push("/edit")}>
           <DropDownItem IconText="Change Profile Picture" />
         </div>
         <DropDownItem IconText="Change Password" />

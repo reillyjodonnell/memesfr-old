@@ -109,6 +109,30 @@ export default function Card(props) {
       </div>
     );
   }
+  function Options() {
+    return (
+      <div className="edit-mode">
+        <svg
+          onClick={openOptions}
+          xmlns="http://www.w3.org/2000/svg"
+          className="options report"
+          width="44"
+          height="44"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="#000000"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <circle cx="5" cy="12" r="1" />
+          <circle cx="12" cy="12" r="1" />
+          <circle cx="19" cy="12" r="1" />
+        </svg>
+      </div>
+    );
+  }
   const ExpandPencilContainer = () => {
     expandPencil(!pencil);
   };
@@ -151,24 +175,23 @@ export default function Card(props) {
           <div className="upper">
             <div className="upper-top-info">
               <div className="meme-identification">
-                <span>Category: </span>
-                <span className="clickable">{memeTag}</span>
                 <span> posted by </span>
                 <span className="clickable">{props.item.userDisplay}</span>
               </div>
-              {permission ? <Edit /> : null}
+              {permission ? <Edit /> : <Options />}
               {pencil ? <ExpandedPencil /> : null}
             </div>
             <div className="upper-top">
               <span className="meme-title">{props.item.title}</span>
               <span className="number-of-likes">{props.item.likes}</span>
             </div>
-
-            <img
-              onDoubleClick={toggleHeart}
-              className="meme-image"
-              src={props.item.image}
-            ></img>
+            <div className="image-container">
+              <img
+                onDoubleClick={toggleHeart}
+                className="meme-image"
+                src={props.item.image}
+              ></img>
+            </div>
           </div>
 
           <div className="lower">
@@ -219,24 +242,6 @@ export default function Card(props) {
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M7 13v-8a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v7a1 1 0 0 0 1 1h3a4 4 0 0 1 4 4v1a2 2 0 0 0 4 0v-5h3a2 2 0 0 0 2 -2l-1 -5a2 3 0 0 0 -2 -2h-7a3 3 0 0 0 -3 3" />
-            </svg>
-            <svg
-              onClick={openOptions}
-              xmlns="http://www.w3.org/2000/svg"
-              className="options report"
-              width="44"
-              height="44"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="#000000"
-              fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <circle cx="5" cy="12" r="1" />
-              <circle cx="12" cy="12" r="1" />
-              <circle cx="19" cy="12" r="1" />
             </svg>
           </div>
           {options ? <OptionsExpanded /> : null}
