@@ -114,126 +114,34 @@ export default function AuthProvider({ children }) {
     );
   }
 
-  /* function retrievePopularPosts 
-  Since this will be universal (all people will see the same top posts)
-  lets query a single document to find the top posts (reading say 100 posts)
-  then when everyone clicks the popular icon to filter
-  it returns the "Popular document"
-
-  We would only need to update the popular document once every hour or so depending on demand
-  So how do we create such a document?
-
-  */
-  //Here we will retrieve a series of posts that have already been ordered
-
-  //Retrieves the posts but doesn't organize the results in order.
-  //Also we need to transfer the id to become the id of the new popular post
-  //If the ids match then don't add the document otherwise if they don't match
-  //Update the list (reorganize resort likes etc..)
-  function referenceRecentPosts() {
-    console.log("Searching...");
-    setLoadingFilter(true);
-    var memesRef = db.collection("memes");
-    setRecentItems([]);
-    memesRef
-      .orderBy("createdAt", "desc")
-      .limit(20)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((item) => {
-          var copiedID = item.id;
-          var items = item.data();
-          console.log(items);
-          var usersname = items.userName;
-          var titleName = items.title;
-          var authorName = items.author;
-          var likeNumber = items.likes;
-          var imageSource = items.image;
-          var created = items.createdAt;
-          var docData = {
-            userDisplay: usersname,
-            id: copiedID,
-            title: titleName,
-            author: authorName,
-            likes: likeNumber,
-            image: imageSource,
-            createdAt: created,
-          };
-          setRecentItems((prevState) => [...prevState, docData]);
-
-          db.collection("recent")
-            .doc("recent_twenty")
-            .set(
-              {
-                posts: firebase.firestore.FieldValue.arrayUnion(docData),
-              },
-              { merge: true }
-            )
-            .then((data) => {
-              console.log(data);
-              setLoadingFilter(false);
-            })
-            .catch((error) => {
-              console.log("ERROR: ", error);
-            });
-        });
-      });
-
-    console.log("Search has ended");
-  }
-
-  //Now the issue is, if there are likes on these posts, I'll have to update both the post under memes and the post
-  //created under popular. Solution: just reference the original post in popular by using the same ID
-  function referencePopularPosts() {
-    console.log("Searching...");
-    setLoadingFilter(true);
-    var memesRef = db.collection("memes");
+  async function retrievePopularPosts() {
     setPopularItems([]);
-    memesRef
-      .orderBy("likes", "desc")
-      .limit(20)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((item) => {
-          var copiedID = item.id;
-          var items = item.data();
-          console.log(items);
-          var usersname = items.userName;
-          var titleName = items.title;
-          var authorName = items.author;
-          var likeNumber = items.likes;
-          var imageSource = items.image;
-          var created = items.createdAt;
-          var docData = {
-            userDisplay: usersname,
-            id: copiedID,
-            title: titleName,
-            author: authorName,
-            likes: likeNumber,
-            image: imageSource,
-            createdAt: created,
-          };
-          setPopularItems((prevState) => [...prevState, docData]);
+    setLoadingFilter(true);
+    const popRef = db.collection("popular").doc("top_twenty");
+    const collections = await popRef.get();
+    var items = collections.data();
+    console.log(items);
 
-          db.collection("popular")
-            .doc("top_twenty")
-            .set(
-              {
-                posts: firebase.firestore.FieldValue.arrayUnion(docData),
-              },
-              { merge: true }
-            )
-            .then((data) => {
-              console.log(data);
-              setLoadingFilter(false);
-            })
-            .catch((error) => {
-              console.log("ERROR: ", error);
-            });
-        });
-      });
-
-    console.log("Search has ended");
+    items.posts.map((item) => {
+      console.log(item);
+      var userid = item.id;
+      var usersname = item.userName;
+      var titleName = item.title;
+      var authorName = item.author;
+      var likeNumber = item.likes;
+      var imageSource = item.image;
+      var created = item.createdAt;
+      var docData = {
+        userDisplay: usersname,
+        title: titleName,
+        author: authorName,
+        likes: likeNumber,
+        image: imageSource,
+        createdAt: created,
+      };
+      setPopularItems((prevState) => [...prevState, docData]);
+    });
+    setLoadingFilter(false);
   }
 
   function sendToDB() {
@@ -430,11 +338,10 @@ export default function AuthProvider({ children }) {
     sendConfirmationEmail,
     addUsernameToDB,
     updateProfile,
-    referencePopularPosts,
     popularItems,
-    referenceRecentPosts,
     recentItems,
     loadingFilter,
+    retrievePopularPosts,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

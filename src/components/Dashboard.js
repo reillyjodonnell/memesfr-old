@@ -140,6 +140,7 @@ export default function Dashboard(props) {
   const [expand, expandMenu] = useState(false);
   const [popularPosts, setPopularPosts] = useState([{}]);
   const [recentPosts, setRecentPosts] = useState([{}]);
+  const [showPopular, setShowPopular] = useState(true);
 
   const {
     currentUser,
@@ -213,20 +214,14 @@ export default function Dashboard(props) {
   }, []);
 
   function popularFilter() {
-    console.log("Searching for most popular memes");
-    referencePopularPosts();
+    retrievePopularPosts();
+    setPopularPosts(popularItems);
   }
 
   function recentFilter() {
     console.log("Searching for most recent memes");
     referenceRecentPosts();
   }
-
-  useEffect(() => {
-    console.log("Detected a change in loading, refreshing now");
-    console.log(popularItems);
-    setPopularPosts(popularItems);
-  }, [popularItems]);
 
   useEffect(() => {
     console.log("Detected a change in loading, refreshing now");
