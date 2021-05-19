@@ -107,8 +107,12 @@ function referencePopularPosts() {
   console.log("Search has ended");
 }
 
+function test() {
+  admin.database().ref("");
+}
+
 exports.scheduledFunction = functions.pubsub
-  .schedule("every 1 hour")
+  .schedule("every 1 minute")
   .onRun((context) => {
     console.log("This will be run every hour");
     referenceRecentPosts();
