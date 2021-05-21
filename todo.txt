@@ -1,0 +1,8 @@
+1. Create a like/dislike system
+    - increment/ animate on client side
+    - Send the increment/decrement to the server
+2. Implement pagination
+    - query start:at where the previous query ended
+    - Using server, for any category load the top 50 posts (Increase the load as it goes)
+    - paginate 10 at a time
+

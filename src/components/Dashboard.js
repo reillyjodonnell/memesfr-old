@@ -231,6 +231,8 @@ export default function Dashboard(props) {
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  console.log(recentPosts, popularPosts)
+
   return (
     <div className={classes.root}>
       <CssBaseline />
