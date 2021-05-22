@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Meme from "../Assets/o3yck1fvhyw61.jpg";
 import "../CSS Components/Card.css";
 import { useAuth } from "../contexts/AuthContext";
+import { ThumbDown } from "@material-ui/icons";
 
 export default function Card(props) {
   console.log(props.item);
@@ -12,7 +13,7 @@ export default function Card(props) {
   const [options, expandOptions] = useState(false);
   const [pencil, expandPencil] = useState(false);
 
-  const { popularItems } = useAuth();
+  const { popularItems, likePost, dislikePost } = useAuth();
 
   const toggleHeart = () => {
     setHeart(!heart);
@@ -28,6 +29,7 @@ export default function Card(props) {
   }, [popularItems]);
 
   const toggleThumbUp = () => {
+    likePost();
     if (thumbUp == true) {
       setThumbUp(!thumbUp);
       changeLikes(likes - 1);
@@ -41,6 +43,7 @@ export default function Card(props) {
     }
   };
   const toggleThumbDown = () => {
+    dislikePost();
     if (thumbUp == true) {
       setThumbUp(!thumbUp);
       setThumbDown(!thumbDown);
@@ -61,6 +64,24 @@ export default function Card(props) {
     expandOptions(!options);
     console.log("opened");
   };
+
+  function captureUserInput(){
+    console.log("Sending user response (if any) to DB", thumbUp, thumbDown)
+    if(thumbUp)
+    {
+      //Send the thumb up to the db
+      console.log("You've liked the post, sending to DB")
+    }
+    if(thumbDown)
+    {
+      //Sent the thumb down to the db
+      console.log("You've disliked the post, sending to DB")
+    }
+    if(heart)
+    {
+      console.log("You've hearted this post, sending to db")
+    }
+  }
 
   let memeTag = "YOLO";
   let userName = "Freedom123";
@@ -96,6 +117,7 @@ export default function Card(props) {
       </div>
     );
   }
+
   /* THIS IS IF MODS/CREATORS WANT TO EDIT POST*/
   let permission = true;
   function Edit() {
@@ -182,7 +204,7 @@ export default function Card(props) {
   }
   if (props) {
     return (
-      <div className="card-area">
+      <div className="card-area" onMouseEnter={()=> console.log("Entered")} onTouchStart={() => console.log("You've entered")} onTouchEndCapture={captureUserInput} onMouseLeave={captureUserInput}>
         <div className="card">
           <div className="upper">
             <div className="upper-top-info">

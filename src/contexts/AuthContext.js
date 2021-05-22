@@ -253,6 +253,13 @@ export default function AuthProvider({ children }) {
       );
   }
 
+  function likePost(){
+    console.log("Liked this post")
+  }
+  function dislikePost(){
+    console.log("Disliked the post")
+  }
+
   function sendConfirmationEmail() {
     auth
       .sendSignInLinkToEmail(user.email, actionCodeSettings)
@@ -342,6 +349,8 @@ export default function AuthProvider({ children }) {
     recentItems,
     loadingFilter,
     retrievePopularPosts,
+    likePost,
+    dislikePost
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }
