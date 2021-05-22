@@ -81,7 +81,11 @@ export default function SelectUsername() {
   const { setProfilePicture, currentUser } = useAuth();
 
   function saveProfile() {
-    setProfilePicture(file);
+    if(file)
+    {
+      setProfilePicture(file);
+
+    }
     history.push("/");
   }
 

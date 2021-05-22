@@ -5,7 +5,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { ThumbDown } from "@material-ui/icons";
 
 export default function Card(props) {
-  console.log(props.item);
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);
@@ -204,7 +203,7 @@ export default function Card(props) {
   }
   if (props) {
     return (
-      <div className="card-area" onMouseEnter={()=> console.log("Entered")} onTouchStart={() => console.log("You've entered")} onTouchEndCapture={captureUserInput} onMouseLeave={captureUserInput}>
+      <div className="card-area" onMouseEnter={()=> console.log("Entered")} onMouseLeave={captureUserInput}>
         <div className="card">
           <div className="upper">
             <div className="upper-top-info">

@@ -112,6 +112,37 @@ export default function AuthProvider({ children }) {
           });
       }
     );
+  } 
+  async function retrieveRecentPosts(){
+    setRecentItems([]);
+    setLoadingFilter(true)
+    const recentRef = db.collection("recent").doc("recent_twenty");
+    const collections = await recentRef.get();
+    var items = collections.data();
+    console.log(items);
+
+    items.posts.map((item) => {
+      console.log(item);
+      var userid = item.id;
+      var usersname = item.userDisplay;
+      var titleName = item.title;
+      var authorName = item.author;
+      var likeNumber = item.likes;
+      var imageSource = item.image;
+      var created = item.createdAt;
+      var docData = {
+        userDisplay: usersname,
+        title: titleName,
+        author: authorName,
+        likes: likeNumber,
+        image: imageSource,
+        createdAt: created,
+      };
+      setRecentItems((prevState) => [...prevState, docData]);
+    });
+    setLoadingFilter(false);
+
+
   }
 
   async function retrievePopularPosts() {
@@ -125,7 +156,7 @@ export default function AuthProvider({ children }) {
     items.posts.map((item) => {
       console.log(item);
       var userid = item.id;
-      var usersname = item.userName;
+      var usersname = item.userDisplay;
       var titleName = item.title;
       var authorName = item.author;
       var likeNumber = item.likes;
@@ -349,6 +380,7 @@ export default function AuthProvider({ children }) {
     recentItems,
     loadingFilter,
     retrievePopularPosts,
+    retrieveRecentPosts,
     likePost,
     dislikePost
   };

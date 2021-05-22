@@ -27,6 +27,7 @@ import User from "../Assets/Icons/User.svg";
 import firebase from "firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
+import { DEFAULT_FAILURE_POLICY } from "firebase-functions";
 
 const drawerWidth = 240;
 const login = false;
@@ -140,16 +141,20 @@ export default function Dashboard(props) {
   const [expand, expandMenu] = useState(false);
   const [popularPosts, setPopularPosts] = useState([{}]);
   const [recentPosts, setRecentPosts] = useState([{}]);
-  const [showPopular, setShowPopular] = useState(true);
+
+  const [nav, setNav] = useState(0);
+
+  
 
   const {
     currentUser,
     referencePopularPosts,
     popularItems,
-    referenceRecentPosts,
+
     recentItems,
     loadingFilter,
     retrievePopularPosts,
+    retrieveRecentPosts,
   } = useAuth();
 
   const history = useHistory();
@@ -213,25 +218,43 @@ export default function Dashboard(props) {
     }
   }, []);
 
-  function popularFilter() {
+  function showPopular() {
+    console.log("Searching for popular memes")
     retrievePopularPosts();
     setPopularPosts(popularItems);
   }
 
-  function recentFilter() {
+  function showRecent() {
     console.log("Searching for most recent memes");
-    referenceRecentPosts();
+    retrieveRecentPosts();
+    setRecentPosts(recentItems);
+  }
+
+  function filterPopular(){
+    setNav(1)
+  }
+  function filterRecent(){
+    setNav(2)
   }
 
   useEffect(() => {
-    console.log("Detected a change in loading, refreshing now");
-    console.log(recentItems);
-    setRecentPosts(recentItems);
-  }, [recentItems]);
+    switch(nav){
+      case 1: 
+      console.log("On popular screen")
+      showPopular();
+      break;
+      case 2:
+        console.log("On Recent Screen")
+      showRecent();
+      break;
+      default: 
+      console.log("We are on the homescreen now")
+    }
+  }, [nav])
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
-  console.log(recentPosts, popularPosts)
+  console.log(recentPosts, popularPosts);
 
   return (
     <div className={classes.root}>
@@ -321,8 +344,8 @@ export default function Dashboard(props) {
         <Divider />
         <List>
           <MainListItems
-            recentFilter={recentFilter}
-            popularFilter={popularFilter}
+            recentFilter={filterRecent}
+            popularFilter={filterPopular}
           />
         </List>
         <Divider />
@@ -348,12 +371,12 @@ export default function Dashboard(props) {
                 </>
               ) : null}
 
-              {popularPosts
+              {popularPosts && popularPosts.length > 1
                 ? popularPosts.map((item) => {
                     return <Card popularItems={popularItems} item={item} />;
                   })
                 : null}
-              {recentPosts
+              {recentPosts && recentPosts.length > 1
                 ? recentPosts.map((item) => {
                     return <Card recentItems={recentItems} item={item} />;
                   })
