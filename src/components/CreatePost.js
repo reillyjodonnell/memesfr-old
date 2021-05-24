@@ -86,7 +86,6 @@ export default function CreatePost(props) {
   const { currentUser } = useAuth();
 
   if (currentUser) {
-    console.log(currentUser.photoURL);
     if (currentUser.photoURL == undefined) {
       var profilePicture = doge;
     } else var profilePicture = currentUser.photoURL;

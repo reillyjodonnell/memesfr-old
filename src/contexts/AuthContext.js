@@ -113,16 +113,16 @@ export default function AuthProvider({ children }) {
       }
     );
   } 
+  //Make a call to the firestore and retrieve the documents
+  //Map over all of the results and set each one to state
+  //At the end of it return the entirety of state
   async function retrieveRecentPosts(){
-    setRecentItems([]);
     setLoadingFilter(true)
     const recentRef = db.collection("recent").doc("recent_twenty");
     const collections = await recentRef.get();
     var items = collections.data();
-    console.log(items);
-
+    var results = items.posts
     items.posts.map((item) => {
-      console.log(item);
       var userid = item.id;
       var usersname = item.userDisplay;
       var titleName = item.title;
@@ -138,23 +138,17 @@ export default function AuthProvider({ children }) {
         image: imageSource,
         createdAt: created,
       };
-      setRecentItems((prevState) => [...prevState, docData]);
-    });
-    setLoadingFilter(false);
-
-
+      setLoadingFilter(false)
+    })
+    return results;
   }
-
-  async function retrievePopularPosts() {
-    setPopularItems([]);
+  async function retrievePopularPosts(){ 
     setLoadingFilter(true);
     const popRef = db.collection("popular").doc("top_twenty");
     const collections = await popRef.get();
-    var items = collections.data();
-    console.log(items);
-
-    items.posts.map((item) => {
-      console.log(item);
+      var items = collections.data();
+      var results = items.posts;
+      items.posts.map((item) => {
       var userid = item.id;
       var usersname = item.userDisplay;
       var titleName = item.title;
@@ -170,9 +164,9 @@ export default function AuthProvider({ children }) {
         image: imageSource,
         createdAt: created,
       };
-      setPopularItems((prevState) => [...prevState, docData]);
-    });
-    setLoadingFilter(false);
+      setLoadingFilter(false)
+    })
+    return results;
   }
 
   function sendToDB() {
@@ -284,11 +278,17 @@ export default function AuthProvider({ children }) {
       );
   }
 
-  function likePost(){
+  //How do we count the total number of likes on the post?
+
+  function likePost(postID){
     console.log("Liked this post")
+    //Add the like to the post object itself; id of the post liked has to match the id from the database
+    //Add the like to the users liked posts (we will read from this when loading the page and do a logic check to see if the post id is found in the liked posts)
+
   }
-  function dislikePost(){
+  function dislikePost(postID){
     console.log("Disliked the post")
+    //Add the dislike to the post object itself
   }
 
   function sendConfirmationEmail() {

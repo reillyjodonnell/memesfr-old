@@ -34,6 +34,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  font-size: 20px;
 }
 
 .username {
@@ -128,26 +129,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
 }
 
 /*End Of Pencil*/
 .meme-title {
   padding: 0.25rem;
   padding-left: 0;
+  margin: .5rem;
+
 }
 .lower {
   display: flex;
   width: 100%;
-  justify-content: space-evenly;
+  justify-content: space-around;
   margin-top: 1rem;
 }
-.lower svg:last-child {
-  justify-content: flex-end;
-}
+
 .lower img,
 .lower svg {
   cursor: pointer;
+  height: 30px;
 }
 
 /*

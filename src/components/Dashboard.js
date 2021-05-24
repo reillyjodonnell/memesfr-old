@@ -141,16 +141,14 @@ export default function Dashboard(props) {
   const [expand, expandMenu] = useState(false);
   const [popularPosts, setPopularPosts] = useState([{}]);
   const [recentPosts, setRecentPosts] = useState([{}]);
-
+  const [home, setHome] = useState(true)
   const [nav, setNav] = useState(0);
 
   
 
   const {
     currentUser,
-    referencePopularPosts,
     popularItems,
-
     recentItems,
     loadingFilter,
     retrievePopularPosts,
@@ -183,6 +181,9 @@ export default function Dashboard(props) {
     expandMenu(!expand);
   };
   useEffect(() => {
+    //Load the popular and recent posts which will show up in state
+
+
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
       // Additional state parameters can also be passed via URL.
@@ -219,17 +220,28 @@ export default function Dashboard(props) {
   }, []);
 
   function showPopular() {
-    console.log("Searching for popular memes")
-    retrievePopularPosts();
-    setPopularPosts(popularItems);
+    loadPopular().then((items) => {
+    setPopularPosts(items);
+    });
+
   }
 
-  function showRecent() {
-    console.log("Searching for most recent memes");
-    retrieveRecentPosts();
-    setRecentPosts(recentItems);
+  async function loadPopular() {
+    const popular = await retrievePopularPosts();
+    return popular
   }
 
+  function showRecent(){
+    loadRecent().then((items) => {
+      setRecentPosts(items)
+    });
+  }
+
+  async function loadRecent() {
+    const recent = await retrieveRecentPosts();
+    return recent
+  }
+ 
   function filterPopular(){
     setNav(1)
   }
@@ -253,8 +265,6 @@ export default function Dashboard(props) {
   }, [nav])
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
-  console.log(recentPosts, popularPosts);
 
   return (
     <div className={classes.root}>
@@ -361,7 +371,6 @@ export default function Dashboard(props) {
           <Grid container spacing={5}></Grid>
           <Box spacing={5} pt={4}>
             <CreatePost />
-            <Filter />
 
             <div className="main-content">
               {loadingFilter ? (
