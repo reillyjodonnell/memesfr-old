@@ -65,6 +65,27 @@ export default function AuthProvider({ children }) {
     var author = currentUser.uid;
     var ud = currentUser.displayName;
     const upload = storage.ref(`memes/${title}`).put(image);
+    var counterData = {
+      num_shards: 5,
+      shards: [
+        {
+          count: 0,
+        },
+        {
+          count: 0,
+        },
+        {
+          count: 0,
+        },
+        {
+          count: 0,
+        },
+        {
+          count: 0,
+        },
+      ],
+    };
+
     upload.on(
       "state_changed",
       (snapshot) => {},
@@ -100,6 +121,9 @@ export default function AuthProvider({ children }) {
                         data
                       ),
                     });
+                  db.collection("counters").doc(data.id).set({
+                    counterData,
+                  });
                 },
                 { merge: true }
               )

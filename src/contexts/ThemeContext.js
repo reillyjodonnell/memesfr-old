@@ -25,13 +25,13 @@ export default function ThemeProvider({ children }) {
     console.log("Activating doge");
     document.body.style.backgroundImage = `url(${Doge})`;
     document.body.style.backgroundSize = "cover";
-
     console.log(document.body.style.backgroundImage);
   }
 
   const values = {
     setDogeBackground,
     updateDoge,
+    doge,
   };
   return (
     <ThemeContext.Provider value={values}>{children}</ThemeContext.Provider>

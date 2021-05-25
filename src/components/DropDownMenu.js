@@ -14,14 +14,11 @@ export default function DropDownMenu(props) {
   const [open, openSettings] = useState(false);
   const [openFriends, manageFriends] = useState(false);
   const [openFile, expandFileSubmit] = useState(false);
-  const [doge, setDoge] = useState(false);
-
   const { currentUser, signOut, UpdateProfilePicture } = useAuth();
-  const { updateDoge } = useTheme();
+  const { updateDoge, doge } = useTheme();
 
   function activateDoge() {
     updateDoge();
-    setDoge((prevDoge) => !prevDoge);
   }
 
   function DropDownItem(props) {
