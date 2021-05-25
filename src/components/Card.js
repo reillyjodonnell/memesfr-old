@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Meme from "../Assets/o3yck1fvhyw61.jpg";
 import "../CSS Components/Card.css";
 import { useAuth } from "../contexts/AuthContext";
-import { ThumbDown } from "@material-ui/icons";
+import { useHistory } from "react-router-dom";
 
 export default function Card(props) {
   var postID = props.item.id;
@@ -13,12 +12,24 @@ export default function Card(props) {
   const [options, expandOptions] = useState(false);
   const [pencil, expandPencil] = useState(false);
   const [needSubmit, setNeedSubmit] = useState(false);
+  const [permissionToEdit, setPermissionToEdit] = useState(false);
+  const [prompt, setPrompt] = useState(false);
 
-  const { activeScreen, likePost, dislikePost } = useAuth();
+  const { activeScreen, likePost, dislikePost, currentUser } = useAuth();
+
+  const history = useHistory();
 
   const toggleHeart = () => {
     setHeart(!heart);
   };
+
+  useEffect(() => {
+    if (currentUser) {
+      if (currentUser.uid === props.item.author) {
+        setPermissionToEdit(true);
+      } else setPermissionToEdit(false);
+    } else setPermissionToEdit(false);
+  }, [activeScreen]);
 
   useEffect(() => {
     {
@@ -58,12 +69,14 @@ export default function Card(props) {
     }
   };
   function captureUserInput() {
-    if (needSubmit) {
-      if (thumbUp) {
-        likePost(postID);
-      }
-      if (thumbDown) {
-        dislikePost(postID);
+    if (currentUser) {
+      if (needSubmit) {
+        if (thumbUp) {
+          likePost(postID);
+        }
+        if (thumbDown) {
+          dislikePost(postID);
+        }
       }
     }
   }
@@ -88,9 +101,17 @@ export default function Card(props) {
     console.log("opened");
   };
 
+  function activatePrompt() {
+    history.push("/signup");
+    setPrompt((prevPrompt) => !prevPrompt);
+  }
+
   function OptionsExpanded() {
     return (
       <div className="options-expanded">
+        <div onClick={closeOptions} className="option2">
+          <span className="expanded">Close</span>
+        </div>
         <div className="option1">
           <div className="report-group">
             <span>Report</span>
@@ -109,41 +130,59 @@ export default function Card(props) {
             </svg>
           </div>
         </div>
-        <div className="option2">
-          <span className="expanded" onClick={closeOptions}>
-            Close
-          </span>
-        </div>
-        <div className="option3"></div>
+
         <div className="report-group "></div>
       </div>
     );
   }
 
   /* THIS IS IF MODS/CREATORS WANT TO EDIT POST*/
-  let permission = true;
   function Edit() {
-    return (
-      <div className="edit-mode">
-        <svg
-          onClick={ExpandPencilContainer}
-          xmlns="http://www.w3.org/2000/svg"
-          className="pencil"
-          width="44"
-          height="44"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="#000000"
-          fill="none"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
-          <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
-        </svg>
-      </div>
-    );
+    console.log(props.item.author);
+    if (pencil)
+      return (
+        <div className="edit-mode">
+          <svg
+            onClick={ExpandPencilContainer}
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon icon-tabler icon-tabler-x"
+            width="44"
+            height="44"
+            viewBox="0 0 24 24"
+            stroke-width="1.8"
+            stroke="#000000"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </div>
+      );
+    else
+      return (
+        <div className="edit-mode">
+          <svg
+            onClick={ExpandPencilContainer}
+            xmlns="http://www.w3.org/2000/svg"
+            className="pencil"
+            width="44"
+            height="44"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="#000000"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+            <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+          </svg>
+        </div>
+      );
   }
   function Options() {
     return (
@@ -204,6 +243,7 @@ export default function Card(props) {
       </div>
     );
   }
+
   if (props) {
     return (
       <div
@@ -218,8 +258,8 @@ export default function Card(props) {
                 <span> posted by </span>
                 <span className="clickable">{props.item.userDisplay}</span>
               </div>
-              {permission ? <Edit /> : <Options />}
-              {pencil ? <ExpandedPencil /> : null}
+              {permissionToEdit ? <Edit /> : <Options />}
+              {permissionToEdit && options ? <ExpandedPencil /> : null}
             </div>
             <div className="upper-top">
               <span className="meme-title">{props.item.title}</span>
@@ -227,7 +267,7 @@ export default function Card(props) {
             </div>
             <div className="image-container">
               <img
-                onDoubleClick={toggleHeart}
+                onDoubleClick={currentUser ? toggleHeart : activatePrompt}
                 className="meme-image"
                 src={props.item.image}
               ></img>
@@ -236,7 +276,7 @@ export default function Card(props) {
 
           <div className="lower">
             <svg
-              onClick={toggleHeart}
+              onClick={currentUser ? toggleHeart : activatePrompt}
               xmlns="http://www.w3.org/2000/svg"
               className={heart ? "active-heart" : "inactive-heart"}
               width="44"
@@ -252,7 +292,7 @@ export default function Card(props) {
               <path d="M19.5 13.572l-7.5 7.428l-7.5 -7.428m0 0a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
             </svg>
             <svg
-              onClick={toggleThumbUp}
+              onClick={currentUser ? toggleThumbUp : activatePrompt}
               xmlns="http://www.w3.org/2000/svg"
               className={thumbUp ? "active-thumbup" : "inactive-thumbup"}
               width="44"
@@ -268,7 +308,7 @@ export default function Card(props) {
               <path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" />
             </svg>
             <svg
-              onClick={toggleThumbDown}
+              onClick={currentUser ? toggleThumbDown : activatePrompt}
               xmlns="http://www.w3.org/2000/svg"
               className={thumbDown ? "active-thumbdown" : "inactive-thumbdown "}
               width="44"

@@ -72,6 +72,7 @@
   cursor: pointer;
   white-space: nowrap;
   padding: 2rem;
+  font-weight: 500;
 }
 .create-prompt > * {
   margin: 0.3rem;
@@ -201,6 +202,19 @@
   max-height: 100%;
   object-fit: contain;
 }
+.video-file {
+  position: relative;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -100;
+  background-size: cover;
+  overflow: hidden;
+}
+
 /*Media Queries */
 
 @media only screen and (max-width: 1200px) {
@@ -269,9 +283,21 @@
     height: 1.7rem;
   }
 }
+@media only screen and (max-height: 700px) {
+  .create-prompt {
+    flex-direction: column;
+    margin: 0.1rem;
+  }
+  .plus {
+    display: none;
+  }
+}
 @media only screen and (min-height: 750px) and (max-width: 1000px) {
   .expanded-file {
     height: 60vh;
+  }
+  .card-area {
+    width: 50vw;
   }
 }
 @media only screen and (min-height: 1024px) and (max-height: 1039px) {

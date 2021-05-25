@@ -60,31 +60,13 @@ export default function AuthProvider({ children }) {
     //Route to home screen and refresh the page plz
   }
 
-  //this currently takes up about 22 reads
   function uploadMeme(image, title) {
     var author = currentUser.uid;
     var ud = currentUser.displayName;
     const upload = storage.ref(`memes/${title}`).put(image);
-    var counterData = {
-      num_shards: 5,
-      shards: [
-        {
-          count: 0,
-        },
-        {
-          count: 0,
-        },
-        {
-          count: 0,
-        },
-        {
-          count: 0,
-        },
-        {
-          count: 0,
-        },
-      ],
-    };
+    var num_shards = 5;
+
+    var batch = db.batch();
 
     upload.on(
       "state_changed",
@@ -101,7 +83,8 @@ export default function AuthProvider({ children }) {
           .then((url) => {
             console.log(url);
             //1 read here
-            db.collection("memes")
+            var memeRef = db.collection("memes");
+            memeRef
               .add({
                 userName: ud,
                 author: author,
@@ -111,22 +94,39 @@ export default function AuthProvider({ children }) {
                 dislikes: 0,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               })
-              .then(
-                (data) => {
-                  //1 read here
-                  db.collection("users")
-                    .doc(author)
-                    .set({
-                      createdPosts: firebase.firestore.FieldValue.arrayUnion(
-                        data
-                      ),
-                    });
-                  db.collection("counters").doc(data.id).set({
-                    counterData,
+              .then((data) => {
+                console.log(data);
+                var userRef = db.collection("users").doc(author);
+                batch.set(
+                  userRef,
+                  {
+                    createdPosts: firebase.firestore.FieldValue.arrayUnion(
+                      data.id
+                    ),
+                  },
+                  { merge: true }
+                );
+                var counterRef = db.collection("counters").doc(data.id);
+                // Initialize the counter document
+                batch.set(counterRef, { num_shards: num_shards });
+                // Initialize each shard with count=0
+                for (let i = 0; i < num_shards; i++) {
+                  const shardRef = counterRef
+                    .collection("shards")
+                    .doc(i.toString());
+                  batch.set(shardRef, { count: 0 });
+                }
+
+                // Commit the write batch
+                batch
+                  .commit()
+                  .then((res) => {
+                    console.log("success", res);
+                  })
+                  .catch((err) => {
+                    console.log(err);
                   });
-                },
-                { merge: true }
-              )
+              })
               .catch((error) => {
                 console.log(error);
               });
@@ -190,32 +190,6 @@ export default function AuthProvider({ children }) {
     return results;
   }
 
-  function sendToDB() {
-    //1 read
-    console.log("Executed.. sending to DB now");
-    db.collection("cities")
-      .doc("LA")
-      .set({ name: "LA", state: "CA", Country: "USA" });
-  }
-
-  /*
-  Here the user is going to like a post 
-  Two things need to happen:
-    1. Write into the document and increment the count by 1
-    (Similiarly when the user dislikes a post we will have to retrieve the same document)
-    2. Write into a collection of the user's likes a document with the id of the id of the post (For retrieval later to see the posts/memes they've liked)
-
-
-  */
-  function increment(col, document, action) {
-    const increase = db.FieldValue.increment(1);
-    const decrease = db.FieldValue.increment(-1);
-    //Now we need to pass the current
-    const postRef = db.collection(`${col}`).doc(`${document}`);
-    postRef.update({ likes: increment });
-  }
-
-  //many many reads (exponentially increases based on the number of users and number of queries)
   async function checkUsernameAvailability(id) {
     var username = id.toLowerCase();
     //Prevent throwing error
@@ -235,9 +209,20 @@ export default function AuthProvider({ children }) {
   //1 read
   function addUsernameToDB(id) {
     var value = user.uid;
-    console.log(id);
-    console.log(value);
+    var items = [
+      {
+        createdPosts: [],
+      },
+      {
+        hearted: [],
+      },
+      {
+        likedPosts: [],
+      },
+    ];
+
     db.collection("usernames").doc(id).set({ uid: value });
+    db.collection("users").doc(value).set({ items });
   }
 
   function updateProfile(name, file) {
@@ -313,14 +298,35 @@ export default function AuthProvider({ children }) {
   }
 
   function likePost(postID) {
+    console.log("Liking post");
     var userID = currentUser.uid;
+    var num_shards = 5;
+    var ref = db.collection("counters").doc(postID);
 
-    console.log(`Adding like from post ${postID} to ${userID}'s liked`);
-    //Add the like to the post object itself; id of the post liked has to match the id from the database
-    //Add the like to the users liked posts (we will read from this when loading the page and do a logic check to see if the post id is found in the liked posts)
+    //Add it to the users' liked posts
+    var userRef = db.collection("users").doc(userID);
+    userRef.set({
+      likedPosts: firebase.firestore.FieldValue.arrayUnion(postID),
+    });
+
+    // Select a shard of the counter at random
+    const shard_id = Math.floor(Math.random() * num_shards).toString();
+    const shard_ref = ref.collection("shards").doc(shard_id);
+
+    // Update count
+    shard_ref.update("count", firebase.firestore.FieldValue.increment(1));
   }
   function dislikePost(postID) {
     var userID = currentUser.uid;
+    const num_shards = 5;
+    var ref = db.collection("counters").doc(postID);
+
+    // Select a shard of the counter at random
+    const shard_id = Math.floor(Math.random() * num_shards).toString();
+    const shard_ref = ref.collection("shards").doc(shard_id);
+
+    // Update count
+    shard_ref.update("count", firebase.firestore.FieldValue.increment(1));
 
     //Write to the shard
     console.log(`Adding dislike from post ${postID} to ${userID}'s disliked`);
@@ -403,7 +409,6 @@ export default function AuthProvider({ children }) {
     signOut,
     setUserName,
     setProfilePicture,
-    sendToDB,
     uploadMeme,
     checkUsernameAvailability,
     userExists,

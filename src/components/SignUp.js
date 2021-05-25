@@ -13,24 +13,24 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { InputAdornment } from "@material-ui/core";
-
 import Container from "@material-ui/core/Container";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import CreateProfile from "./CreateProfile";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
 function Copyright() {
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Memesfr
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
+    <>
+      <Typography variant="body2" color="textSecondary" align="center">
+        {"Copyright © "}
+        <Link color="inherit" href="https://material-ui.com/">
+          Memesfr
+        </Link>{" "}
+        {new Date().getFullYear()}
+        {"."}
+      </Typography>
+    </>
   );
 }
 
@@ -273,6 +273,11 @@ export default function SignUp() {
         <Box mt={5}>
           <Copyright />
         </Box>
+        <div className="return-home">
+          <Link onClick={() => history.push("/")} style={{ cursor: "pointer" }}>
+            Return to Home
+          </Link>
+        </div>
       </CssBaseline>
     </Container>
   );

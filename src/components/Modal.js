@@ -9,7 +9,6 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import Loading from "./Loading";
-import { SettingsOutlined } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,6 +32,7 @@ export default function Modal(props) {
   const [file, setFile] = useState("");
   const inputFile = useRef(null);
   const [uploaded, setUploaded] = useState(false);
+  const [fileError, setFileError] = useState(false);
 
   const titleRef = useRef();
 
@@ -89,7 +89,35 @@ export default function Modal(props) {
     inputFile.current.click();
   };
   const ImageThumb = ({ image }) => {
-    return <img src={URL.createObjectURL(image)} alt={image.name} />;
+    setFileError("");
+    const filesFormats = [
+      "image/jpeg",
+      "image/jpg",
+      "image/gif",
+      "image/png",
+      "video/mp4",
+    ];
+    const validFormat = filesFormats.includes(image.type);
+    if (image.type == "video/mp4") {
+      return (
+        <video
+          className="video-file"
+          src={URL.createObjectURL(image)}
+          alt={image.name}
+          autoPlay={true}
+        ></video>
+      );
+    }
+
+    if (validFormat)
+      return <img src={URL.createObjectURL(image)} alt={image.name} />;
+    else {
+      setFile("");
+      var fileType = JSON.stringify(image.type);
+      var fileEnding = fileType.slice(7, fileType.length - 1);
+      setFileError(`😢 unsupported file type .${fileEnding}`);
+      return null;
+    }
   };
 
   console.log(props);
@@ -134,7 +162,12 @@ export default function Modal(props) {
             <div className="main-section">
               <div className="image-preview">
                 {file && <ImageThumb image={file} />}
-                <input type="image" style={{ display: "none" }} image={file} />
+                <input
+                  accept=".png, .jpeg, .jpg, .gif, .mp4, .avi"
+                  type="image"
+                  style={{ display: "none" }}
+                  image={file}
+                />
               </div>
               <div
                 style={{
@@ -192,6 +225,11 @@ export default function Modal(props) {
             <>
               <img src={Upload}></img>
               <span>Drag Drop to upload or browse</span>
+              {fileError ? (
+                <span style={{ padding: "1rem", color: "red" }}>
+                  {fileError}
+                </span>
+              ) : null}
             </>
           </div>
 
