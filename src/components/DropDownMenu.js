@@ -2,32 +2,25 @@ import { React, useState } from "react";
 import { ReactComponent as Settings } from "../Assets/Icons/Assets/Settings.svg";
 import { ReactComponent as Left } from "../Assets/Icons/Assets/ArrowLeftWhite.svg";
 import "../CSS Components/DropDownMenu.css";
-import { ReactComponent as XmasTree } from "../Assets/Icons/Assets/ChristmasTree.svg";
 import { ReactComponent as AddFriend } from "../Assets/Icons/Assets/UserPlus.svg";
 import { ReactComponent as Friends } from "../Assets/Icons/Assets/Users.svg";
 import { ReactComponent as Doge } from "../Assets/doge.svg";
 import { ReactComponent as Help } from "../Assets/Icons/Help.svg";
-import plus from "../Assets/Icons/Assets/plus.svg";
-
 import { useAuth } from "../contexts/AuthContext";
+import { useTheme } from "../contexts/ThemeContext";
 import { useHistory } from "react-router";
 
 export default function DropDownMenu(props) {
   const [open, openSettings] = useState(false);
   const [openFriends, manageFriends] = useState(false);
   const [openFile, expandFileSubmit] = useState(false);
-  const [file, setFile] = useState(null);
   const [doge, setDoge] = useState(false);
 
-  const { currentUser, signOut } = useAuth();
+  const { currentUser, signOut, UpdateProfilePicture } = useAuth();
+  const { updateDoge } = useTheme();
 
   function activateDoge() {
-    console.log("Activating doge");
-    if (!doge) {
-      document.getElementById("root").style.backgroundImage =
-        "url('https://media0.giphy.com/media/Ogak8XuKHLs6PYcqlp/giphy.gif')";
-    } else
-      document.getElementById("root").style.removeProperty("background-image");
+    updateDoge();
     setDoge((prevDoge) => !prevDoge);
   }
 
@@ -57,21 +50,14 @@ export default function DropDownMenu(props) {
     );
   };
 
-  const UpdateProfilePicture = () => {
-    const fileHandler = (e) => {
-      setFile(e.target.files[0]);
-    };
-    const imageHandler = (e) => {
-      const reader = new FileReader();
-      setFile(e.target.files);
-    };
-  };
-
   function SecondaryOptions() {
     return (
       <div style={{ whiteSpace: "nowrap" }}>
         <div onClick={activateDoge}>
-          <DropDownItem Icon={<Doge />} IconText="Activate Doge" />
+          <DropDownItem
+            Icon={<Doge />}
+            IconText={doge ? "Deactivate Doge" : "Activate Doge"}
+          />
         </div>
 
         <div onClick={() => expandFileSubmit(!openFile)}>
@@ -90,7 +76,10 @@ export default function DropDownMenu(props) {
     return (
       <div style={{ whiteSpace: "nowrap" }}>
         <div onClick={activateDoge}>
-          <DropDownItem Icon={<Doge />} IconText="Activate Doge" />
+          <DropDownItem
+            Icon={<Doge />}
+            IconText={doge ? "Deactivate Doge" : "Activate Doge"}
+          />
         </div>
 
         <div onClick={() => history.push("/edit")}>

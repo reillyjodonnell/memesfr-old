@@ -53,6 +53,7 @@
 .number-of-likes {
   display: flex;
   margin-left: auto;
+  font-weight: 600;
 }
 .meme-image {
   display: flex;
@@ -67,8 +68,9 @@
   width: 100%;
 }
 .meme-identification {
-  font-size: 13px;
+  font-size: 1rem;
   white-space: nowrap;
+  color: rgb(142, 142, 142);
 }
 .image-container {
   display: flex;
@@ -135,8 +137,9 @@
 .meme-title {
   padding: 0.25rem;
   padding-left: 0;
-  margin: .5rem;
-
+  margin: 0.5rem 0;
+  font-size: 20px;
+  font-weight: 500;
 }
 .lower {
   display: flex;

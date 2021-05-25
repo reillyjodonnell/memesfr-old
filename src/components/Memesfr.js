@@ -3,6 +3,7 @@ import Login from "./Login";
 import Register from "./SignUp";
 import Home from "./Home";
 import AuthProvider from "../contexts/AuthContext";
+import ThemeProvider from "../contexts/ThemeContext";
 import ResetPassword from "./ResetPassword";
 import CreateProfile from "./CreateProfile";
 import Help from "./Help";
@@ -26,17 +27,19 @@ export default function Memesfr() {
   return (
     <div>
       <Router>
-        <AuthProvider>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/signup" component={Register} />
-            <Route path="/setup" component={CreateProfile} />
-            <Route path="/reset" component={ResetPassword} />
-            <Route path="/login" component={Login} />
-            <Route path="/help" component={Help} />
-            <Route path="/edit" component={Edit} />
-          </Switch>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/signup" component={Register} />
+              <Route path="/setup" component={CreateProfile} />
+              <Route path="/reset" component={ResetPassword} />
+              <Route path="/login" component={Login} />
+              <Route path="/help" component={Help} />
+              <Route path="/edit" component={Edit} />
+            </Switch>
+          </AuthProvider>
+        </ThemeProvider>
       </Router>
     </div>
   );

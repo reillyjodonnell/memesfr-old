@@ -124,7 +124,7 @@ export default function CreatePost(props) {
               </div>
               <div className="add-content">
                 <div onClick={OpenFilePrompt} className="create-prompt">
-                  <span>Upload Dank Meme</span>
+                  <span>Upload dank meme</span>
                   <img className="plus" src={picture} />
                 </div>
               </div>

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { auth, db, storage } from "../services/firebase";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase/app";
-import admin, { firestore } from "firebase-admin";
 
 const AuthContext = React.createContext();
 
@@ -14,9 +13,6 @@ export default function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loadUser, setLoadUser] = useState(true);
   const [userExists, setUserExists] = useState(true);
-  const [popularItems, setPopularItems] = useState([]);
-  const [recentItems, setRecentItems] = useState([]);
-
   const [loadingFilter, setLoadingFilter] = useState(false);
   const history = useHistory();
 
@@ -91,6 +87,7 @@ export default function AuthProvider({ children }) {
                 image: url,
                 title: title,
                 likes: 0,
+                dislikes: 0,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               })
               .then(
@@ -112,16 +109,16 @@ export default function AuthProvider({ children }) {
           });
       }
     );
-  } 
+  }
   //Make a call to the firestore and retrieve the documents
   //Map over all of the results and set each one to state
   //At the end of it return the entirety of state
-  async function retrieveRecentPosts(){
-    setLoadingFilter(true)
+  async function retrieveRecentPosts() {
+    setLoadingFilter(true);
     const recentRef = db.collection("recent").doc("recent_twenty");
     const collections = await recentRef.get();
     var items = collections.data();
-    var results = items.posts
+    var results = items.posts;
     items.posts.map((item) => {
       var userid = item.id;
       var usersname = item.userDisplay;
@@ -138,17 +135,17 @@ export default function AuthProvider({ children }) {
         image: imageSource,
         createdAt: created,
       };
-      setLoadingFilter(false)
-    })
+      setLoadingFilter(false);
+    });
     return results;
   }
-  async function retrievePopularPosts(){ 
+  async function retrievePopularPosts() {
     setLoadingFilter(true);
     const popRef = db.collection("popular").doc("top_twenty");
     const collections = await popRef.get();
-      var items = collections.data();
-      var results = items.posts;
-      items.posts.map((item) => {
+    var items = collections.data();
+    var results = items.posts;
+    items.posts.map((item) => {
       var userid = item.id;
       var usersname = item.userDisplay;
       var titleName = item.title;
@@ -164,8 +161,8 @@ export default function AuthProvider({ children }) {
         image: imageSource,
         createdAt: created,
       };
-      setLoadingFilter(false)
-    })
+      setLoadingFilter(false);
+    });
     return results;
   }
 
@@ -280,15 +277,29 @@ export default function AuthProvider({ children }) {
 
   //How do we count the total number of likes on the post?
 
-  function likePost(postID){
-    console.log("Liked this post")
+  function heartPost(postID) {
+    var userID = currentUser.uid;
+
+    /*
+    db.collection("users").doc(id).set({ uid: value });
+    */
+    console.log(`Adding ${postID} to ${userID}'s favorites`);
+
+    //add to the user's heart
+  }
+
+  function likePost(postID) {
+    var userID = currentUser.uid;
+
+    console.log(`Adding like from post ${postID} to ${userID}'s liked`);
     //Add the like to the post object itself; id of the post liked has to match the id from the database
     //Add the like to the users liked posts (we will read from this when loading the page and do a logic check to see if the post id is found in the liked posts)
-
   }
-  function dislikePost(postID){
-    console.log("Disliked the post")
-    //Add the dislike to the post object itself
+  function dislikePost(postID) {
+    var userID = currentUser.uid;
+
+    //Write to the shard
+    console.log(`Adding dislike from post ${postID} to ${userID}'s disliked`);
   }
 
   function sendConfirmationEmail() {
@@ -376,13 +387,12 @@ export default function AuthProvider({ children }) {
     sendConfirmationEmail,
     addUsernameToDB,
     updateProfile,
-    popularItems,
-    recentItems,
     loadingFilter,
     retrievePopularPosts,
     retrieveRecentPosts,
     likePost,
-    dislikePost
+    dislikePost,
+    heartPost,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

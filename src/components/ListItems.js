@@ -14,11 +14,13 @@ import { useAuth } from "../contexts/AuthContext";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 
 export default function MainListItems(props) {
+  console.log(props);
+
   return (
     <div>
-      <ListItem button>
+      <ListItem onClick={props.homeFilter} button>
         <ListItemIcon>
-          <HomeIcon />
+          <HomeIcon style={props.active == 0 ? { color: "red" } : null} />
         </ListItemIcon>
         <ListItemText primary="Home" />
       </ListItem>
@@ -30,13 +32,13 @@ export default function MainListItems(props) {
       </ListItem>
       <ListItem onClick={props.popularFilter} button>
         <ListItemIcon>
-          <PeopleIcon />
+          <PeopleIcon style={props.active == 1 ? { color: "red" } : null} />
         </ListItemIcon>
         <ListItemText primary="Popular" />
       </ListItem>
       <ListItem onClick={props.recentFilter} button>
         <ListItemIcon>
-          <RecentIcon />
+          <RecentIcon style={props.active == 2 ? { color: "red" } : null} />
         </ListItemIcon>
         <ListItemText primary="Recent" />
       </ListItem>

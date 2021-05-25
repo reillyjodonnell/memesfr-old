@@ -5,14 +5,16 @@ import { useAuth } from "../contexts/AuthContext";
 import { ThumbDown } from "@material-ui/icons";
 
 export default function Card(props) {
+  var postID = props.item.id;
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);
   const [likes, changeLikes] = useState(0);
   const [options, expandOptions] = useState(false);
   const [pencil, expandPencil] = useState(false);
+  const [needSubmit, setNeedSubmit] = useState(false);
 
-  const { popularItems, likePost, dislikePost } = useAuth();
+  const { activeScreen, likePost, dislikePost } = useAuth();
 
   const toggleHeart = () => {
     setHeart(!heart);
@@ -25,10 +27,10 @@ export default function Card(props) {
       }
       console.log(likes);
     }
-  }, [popularItems]);
+  }, [activeScreen]);
 
   const toggleThumbUp = () => {
-    likePost();
+    setNeedSubmit(true);
     if (thumbUp == true) {
       setThumbUp(!thumbUp);
       changeLikes(likes - 1);
@@ -42,7 +44,7 @@ export default function Card(props) {
     }
   };
   const toggleThumbDown = () => {
-    dislikePost();
+    setNeedSubmit(true);
     if (thumbUp == true) {
       setThumbUp(!thumbUp);
       setThumbDown(!thumbDown);
@@ -55,6 +57,28 @@ export default function Card(props) {
       changeLikes(likes - 1);
     }
   };
+  function captureUserInput() {
+    if (needSubmit) {
+      if (thumbUp) {
+        likePost(postID);
+      }
+      if (thumbDown) {
+        dislikePost(postID);
+      }
+    }
+  }
+  /*
+  useEffect(() => {
+    if(thumbUp)
+    {
+      likePost(postID)
+    }
+    if(thumbDown)
+    {
+      dislikePost(postID)
+    }
+  }, [thumbUp, thumbDown])
+  */
 
   const closeOptions = () => {
     expandOptions(!options);
@@ -63,27 +87,6 @@ export default function Card(props) {
     expandOptions(!options);
     console.log("opened");
   };
-
-  function captureUserInput(){
-    console.log("Sending user response (if any) to DB", thumbUp, thumbDown)
-    if(thumbUp)
-    {
-      //Send the thumb up to the db
-      console.log("You've liked the post, sending to DB")
-    }
-    if(thumbDown)
-    {
-      //Sent the thumb down to the db
-      console.log("You've disliked the post, sending to DB")
-    }
-    if(heart)
-    {
-      console.log("You've hearted this post, sending to db")
-    }
-  }
-
-  let memeTag = "YOLO";
-  let userName = "Freedom123";
 
   function OptionsExpanded() {
     return (
@@ -203,7 +206,11 @@ export default function Card(props) {
   }
   if (props) {
     return (
-      <div className="card-area" onMouseEnter={()=> console.log("Entered")} onMouseLeave={captureUserInput}>
+      <div
+        className="card-area"
+        onMouseEnter={() => console.log("Entered")}
+        onMouseLeave={captureUserInput}
+      >
         <div className="card">
           <div className="upper">
             <div className="upper-top-info">

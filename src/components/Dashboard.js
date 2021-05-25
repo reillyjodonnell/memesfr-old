@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -28,6 +28,7 @@ import firebase from "firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 import { DEFAULT_FAILURE_POLICY } from "firebase-functions";
+import { SettingsInputHdmiOutlined } from "@material-ui/icons";
 
 const drawerWidth = 240;
 const login = false;
@@ -141,15 +142,15 @@ export default function Dashboard(props) {
   const [expand, expandMenu] = useState(false);
   const [popularPosts, setPopularPosts] = useState([{}]);
   const [recentPosts, setRecentPosts] = useState([{}]);
-  const [home, setHome] = useState(true)
+  const [activeScreen, setActiveScreen] = useState([{}]);
+  const [home, setHome] = useState(false);
+
   const [nav, setNav] = useState(0);
 
-  
+  const myRef = useRef(null);
 
   const {
     currentUser,
-    popularItems,
-    recentItems,
     loadingFilter,
     retrievePopularPosts,
     retrieveRecentPosts,
@@ -158,6 +159,7 @@ export default function Dashboard(props) {
   const history = useHistory();
 
   var hide = true;
+  var active = 0;
 
   const openRegister = () => {
     console.log("opening register ");
@@ -182,7 +184,6 @@ export default function Dashboard(props) {
   };
   useEffect(() => {
     //Load the popular and recent posts which will show up in state
-
 
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
@@ -219,50 +220,74 @@ export default function Dashboard(props) {
     }
   }, []);
 
-  function showPopular() {
-    loadPopular().then((items) => {
-    setPopularPosts(items);
-    });
+  function showRandom() {}
 
+  function showPopular() {
+    setActiveScreen();
+    if (recentPosts) {
+      setRecentPosts();
+    }
+    loadPopular().then((items) => {
+      setPopularPosts(items);
+      setActiveScreen(items);
+    });
   }
 
   async function loadPopular() {
     const popular = await retrievePopularPosts();
-    return popular
+    return popular;
   }
 
-  function showRecent(){
+  function showRecent() {
+    setActiveScreen();
+    if (popularPosts) {
+      setPopularPosts();
+    }
     loadRecent().then((items) => {
-      setRecentPosts(items)
+      setRecentPosts(items);
+      setActiveScreen(items);
     });
   }
 
   async function loadRecent() {
     const recent = await retrieveRecentPosts();
-    return recent
+    return recent;
   }
- 
-  function filterPopular(){
-    setNav(1)
+
+  function filterHome() {
+    myRef.current.scrollIntoView({ behavior: "smooth" });
+    setNav(0);
   }
-  function filterRecent(){
-    setNav(2)
+
+  function filterPopular() {
+    setNav(1);
+  }
+  function filterRecent() {
+    setNav(2);
   }
 
   useEffect(() => {
-    switch(nav){
-      case 1: 
-      console.log("On popular screen")
-      showPopular();
-      break;
+    switch (nav) {
+      case 0:
+        console.log("Back Home");
+        showPopular();
+        active = 0;
+        break;
+      case 1:
+        console.log("On popular screen");
+        showPopular();
+        active = 1;
+        break;
       case 2:
-        console.log("On Recent Screen")
-      showRecent();
-      break;
-      default: 
-      console.log("We are on the homescreen now")
+        console.log("On Recent Screen");
+        showRecent();
+        active = 2;
+        break;
+      default:
+        console.log("We are on the homescreen now");
+        active = 0;
     }
-  }, [nav])
+  }, [nav]);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -354,6 +379,8 @@ export default function Dashboard(props) {
         <Divider />
         <List>
           <MainListItems
+            active={nav}
+            homeFilter={filterHome}
             recentFilter={filterRecent}
             popularFilter={filterPopular}
           />
@@ -366,7 +393,7 @@ export default function Dashboard(props) {
         )}
       </Drawer>
       <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
+        <div ref={myRef} className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={5}></Grid>
           <Box spacing={5} pt={4}>
@@ -380,14 +407,9 @@ export default function Dashboard(props) {
                 </>
               ) : null}
 
-              {popularPosts && popularPosts.length > 1
-                ? popularPosts.map((item) => {
-                    return <Card popularItems={popularItems} item={item} />;
-                  })
-                : null}
-              {recentPosts && recentPosts.length > 1
-                ? recentPosts.map((item) => {
-                    return <Card recentItems={recentItems} item={item} />;
+              {activeScreen && activeScreen.length > 1
+                ? activeScreen.map((item) => {
+                    return <Card activeScreen={activeScreen} item={item} />;
                   })
                 : null}
             </div>
