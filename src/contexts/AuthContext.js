@@ -147,6 +147,7 @@ export default function AuthProvider({ children }) {
     var items = collections.data();
     var results = items.posts;
     items.posts.map((item) => {
+      //For each item look through the shards and tally them up
       var userid = item.id;
       var usersname = item.userDisplay;
       var titleName = item.title;
