@@ -269,11 +269,19 @@ export default function Card(props) {
               <span className="number-of-likes">{likes}</span>
             </div>
             <div className="image-container">
-              <img
-                onDoubleClick={currentUser ? toggleHeart : activatePrompt}
-                className="meme-image"
-                src={props.item.image}
-              ></img>
+              {props.item.fileType === "video" ? (
+                <video
+                  onDoubleClick={currentUser ? toggleHeart : activatePrompt}
+                  className="meme-image"
+                  src={props.item.image}
+                ></video>
+              ) : (
+                <img
+                  onDoubleClick={currentUser ? toggleHeart : activatePrompt}
+                  className="meme-image"
+                  src={props.item.image}
+                ></img>
+              )}
             </div>
           </div>
 

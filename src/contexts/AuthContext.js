@@ -60,14 +60,12 @@ export default function AuthProvider({ children }) {
     //Route to home screen and refresh the page plz
   }
 
-  function uploadMeme(image, title) {
+  function uploadMeme(image, title, type) {
     var author = currentUser.uid;
     var ud = currentUser.displayName;
     const upload = storage.ref(`memes/${title}`).put(image);
     var num_shards = 5;
-
     var batch = db.batch();
-
     upload.on(
       "state_changed",
       (snapshot) => {},
@@ -80,7 +78,8 @@ export default function AuthProvider({ children }) {
           .ref("memes")
           .child(title)
           .getDownloadURL()
-          .then((url) => {
+          .then((url, id) => {
+            console.log(id);
             console.log(url);
             //1 read here
             var memeRef = db.collection("memes");
@@ -94,6 +93,7 @@ export default function AuthProvider({ children }) {
                   likes: 0,
                   dislikes: 0,
                   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                  fileType: type,
                 },
                 { merge: true }
               )

@@ -40,9 +40,12 @@ export default function Modal(props) {
 
   const uploadPost = (e) => {
     e.preventDefault();
+    console.log(file);
+    var fileType = JSON.stringify(file.type);
+    var fileEnding = fileType.slice(1, 6);
     var image = file;
     var title = titleRef.current.value;
-    uploadMeme(image, title);
+    uploadMeme(image, title, fileEnding);
     setUploaded(true);
     props.createPostFunction(false);
   };
