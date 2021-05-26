@@ -23,6 +23,8 @@ export default function Card(props) {
     setHeart(!heart);
   };
 
+  useEffect(() => {}, [likes]);
+
   useEffect(() => {
     if (currentUser) {
       if (currentUser.uid === props.item.author) {
@@ -33,6 +35,7 @@ export default function Card(props) {
 
   useEffect(() => {
     {
+      console.log(props.item.likes);
       if (props) {
         changeLikes(props.item.likes);
       }
@@ -44,14 +47,14 @@ export default function Card(props) {
     setNeedSubmit(true);
     if (thumbUp == true) {
       setThumbUp(!thumbUp);
-      changeLikes(likes - 1);
+      changeLikes((likes) => likes - 1);
     } else if (thumbDown == true) {
       setThumbDown(!thumbDown);
       setThumbUp(!thumbUp);
-      changeLikes(likes + 2);
+      changeLikes((prevLikes) => prevLikes + 2);
     } else {
       setThumbUp(!thumbUp);
-      changeLikes(likes + 1);
+      changeLikes((likes) => likes + 1);
     }
   };
   const toggleThumbDown = () => {
@@ -263,7 +266,7 @@ export default function Card(props) {
             </div>
             <div className="upper-top">
               <span className="meme-title">{props.item.title}</span>
-              <span className="number-of-likes">{props.item.likes}</span>
+              <span className="number-of-likes">{likes}</span>
             </div>
             <div className="image-container">
               <img

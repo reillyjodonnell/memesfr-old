@@ -85,15 +85,18 @@ export default function AuthProvider({ children }) {
             //1 read here
             var memeRef = db.collection("memes");
             memeRef
-              .add({
-                userName: ud,
-                author: author,
-                image: url,
-                title: title,
-                likes: 0,
-                dislikes: 0,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-              })
+              .add(
+                {
+                  userName: ud,
+                  author: author,
+                  image: url,
+                  title: title,
+                  likes: 0,
+                  dislikes: 0,
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                },
+                { merge: true }
+              )
               .then((data) => {
                 console.log(data);
                 var userRef = db.collection("users").doc(author);
@@ -295,6 +298,9 @@ export default function AuthProvider({ children }) {
     console.log(`Adding ${postID} to ${userID}'s favorites`);
 
     //add to the user's heart
+  }
+  function hasUserLikedPost(postID) {
+    console.log("Checking if user has previously liked the post");
   }
 
   function likePost(postID) {
