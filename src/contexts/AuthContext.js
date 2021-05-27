@@ -142,6 +142,17 @@ export default function AuthProvider({ children }) {
       }
     );
   }
+
+  async function hasUserLikedPost(postID) {
+    console.log(postID);
+    var currentUserID = currentUser.uid;
+    var referenceToPost = db.collection("users").doc(currentUserID);
+    var doc = await referenceToPost.get();
+    var distinct = doc.data().likedPosts;
+    console.log(distinct);
+    return distinct;
+  }
+
   //Make a call to the firestore and retrieve the documents
   //Map over all of the results and set each one to state
   //At the end of it return the entirety of state
@@ -152,14 +163,17 @@ export default function AuthProvider({ children }) {
     var items = collections.data();
     var updatedObjects = items.posts.map((item) => {
       //For each item look through the shards and tally them up
-      var shardRef = db.collection("counters").doc(item.id);
+      console.log(item);
+      var shardRef = db.collection("counters").doc(item.imageID);
       var totalLikesOnPost = shardRef
         .collection("shards")
         .get()
         .then((snapshot) => {
+          console.log(snapshot);
           let total_count = 0;
           snapshot.forEach((doc) => {
             total_count += doc.data().count;
+            console.log(total_count);
           });
           return total_count;
         });
@@ -357,9 +371,6 @@ export default function AuthProvider({ children }) {
 
     //add to the user's heart
   }
-  function hasUserLikedPost(postID) {
-    console.log("Checking if user has previously liked the post");
-  }
 
   async function likePost(postID) {
     console.log(postID);
@@ -489,6 +500,7 @@ export default function AuthProvider({ children }) {
     likePost,
     dislikePost,
     heartPost,
+    hasUserLikedPost,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

@@ -4,7 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
 export default function Card(props) {
-  var postID = props.item.id;
+  console.log(props.like);
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);
@@ -14,17 +14,36 @@ export default function Card(props) {
   const [needSubmit, setNeedSubmit] = useState(false);
   const [permissionToEdit, setPermissionToEdit] = useState(false);
   const [prompt, setPrompt] = useState(false);
+  const [UserLikedPost, setUserLikedPost] = useState(false);
 
-  const { activeScreen, likePost, dislikePost, currentUser } = useAuth();
+  const {
+    activeScreen,
+    likePost,
+    dislikePost,
+    currentUser,
+    hasUserLikedPost,
+  } = useAuth();
+
+  async function match() {
+    console.log(props.item.ID);
+    const results = await hasUserLikedPost(props.item.ID);
+    results.map((usersLikedPost) => {
+      if (props.item.ID === usersLikedPost) {
+        setThumbUp(true);
+      }
+    });
+    console.log(results);
+  }
+
+  useEffect(() => {
+    match();
+  }, []);
 
   const history = useHistory();
-
   const toggleHeart = () => {
     setHeart(!heart);
   };
-
   useEffect(() => {}, [likes]);
-
   useEffect(() => {
     if (currentUser) {
       if (currentUser.uid === props.item.author) {
@@ -32,7 +51,6 @@ export default function Card(props) {
       } else setPermissionToEdit(false);
     } else setPermissionToEdit(false);
   }, [activeScreen]);
-
   useEffect(() => {
     {
       if (props) {

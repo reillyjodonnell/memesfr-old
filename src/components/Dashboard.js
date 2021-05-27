@@ -154,6 +154,7 @@ export default function Dashboard(props) {
     loadingFilter,
     retrievePopularPosts,
     retrieveRecentPosts,
+    hasUserLikedPost,
   } = useAuth();
 
   const history = useHistory();
