@@ -4,6 +4,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
 export default function Card(props) {
+  console.log(props);
   var postID = props.item.id;
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
@@ -73,10 +74,11 @@ export default function Card(props) {
     if (currentUser) {
       if (needSubmit) {
         if (thumbUp) {
-          likePost(postID);
+          console.log(props.item.id);
+          likePost(props.item.id);
         }
         if (thumbDown) {
-          dislikePost(postID);
+          dislikePost(props.item.id);
         }
       }
     }
