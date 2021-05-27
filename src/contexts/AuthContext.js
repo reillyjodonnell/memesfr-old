@@ -303,17 +303,20 @@ export default function AuthProvider({ children }) {
     console.log("Checking if user has previously liked the post");
   }
 
-  function likePost(postID) {
-    console.log("Liking post");
+  async function likePost(postID) {
+    console.log(postID);
     var userID = currentUser.uid;
     var num_shards = 5;
     var ref = db.collection("counters").doc(postID);
 
-    //Add it to the users' liked posts
+    //Add it to the users' liked posts and merge it
     var userRef = db.collection("users").doc(userID);
-    userRef.set({
-      likedPosts: firebase.firestore.FieldValue.arrayUnion(postID),
-    });
+    await userRef.update(
+      {
+        likedPosts: firebase.firestore.FieldValue.arrayUnion(postID),
+      },
+      { merge: true }
+    );
 
     // Select a shard of the counter at random
     const shard_id = Math.floor(Math.random() * num_shards).toString();
