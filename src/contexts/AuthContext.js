@@ -83,9 +83,12 @@ export default function AuthProvider({ children }) {
             console.log(url);
             //1 read here
             var memeRef = db.collection("memes");
+            var uniqueIdentifier = memeRef.doc().id;
             memeRef
-              .add(
+              .doc(uniqueIdentifier)
+              .set(
                 {
+                  imageID: uniqueIdentifier,
                   userName: ud,
                   author: author,
                   image: url,
@@ -98,9 +101,6 @@ export default function AuthProvider({ children }) {
                 { merge: true }
               )
               .then((data) => {
-                db.collection("memes").doc(data.id).add({
-                  imageID: data.id,
-                });
                 var userRef = db.collection("users").doc(author);
                 batch.set(
                   userRef,
