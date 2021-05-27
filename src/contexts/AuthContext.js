@@ -101,17 +101,20 @@ export default function AuthProvider({ children }) {
                 { merge: true }
               )
               .then((data) => {
+                console.log(data);
                 var userRef = db.collection("users").doc(author);
                 batch.set(
                   userRef,
                   {
                     createdPosts: firebase.firestore.FieldValue.arrayUnion(
-                      data.id
+                      uniqueIdentifier
                     ),
                   },
                   { merge: true }
                 );
-                var counterRef = db.collection("counters").doc(data.id);
+                var counterRef = db
+                  .collection("counters")
+                  .doc(uniqueIdentifier);
                 // Initialize the counter document
                 batch.set(counterRef, { num_shards: num_shards });
                 // Initialize each shard with count=0
@@ -162,20 +165,14 @@ export default function AuthProvider({ children }) {
         });
       var updatedMemeObject = totalLikesOnPost
         .then((resolvedPromiseForNumberOfLikes) => {
-          var userid = item.id;
-          var usersname = item.userDisplay;
-          var titleName = item.title;
-          var authorName = item.author;
-          var likeNumber = item.likes;
-          var imageSource = item.image;
-          var created = item.createdAt;
           var docData = {
-            userDisplay: usersname,
-            title: titleName,
-            author: authorName,
+            userDisplay: item.userName,
+            title: item.title,
+            author: item.author,
             likes: resolvedPromiseForNumberOfLikes,
-            image: imageSource,
-            createdAt: created,
+            image: item.image,
+            createdAt: item.createdAt,
+            ID: item.imageID,
           };
 
           return docData;
@@ -215,6 +212,7 @@ export default function AuthProvider({ children }) {
     var results = items.posts;
 
     var updatedObjects = items.posts.map((item) => {
+      console.log(item);
       //For each item look through the shards and tally them up
       var shardRef = db.collection("counters").doc(item.id);
       var totalLikesOnPost = shardRef
@@ -229,20 +227,15 @@ export default function AuthProvider({ children }) {
         });
       var updatedMemeObject = totalLikesOnPost
         .then((resolvedPromiseForNumberOfLikes) => {
-          var userid = item.id;
-          var usersname = item.userDisplay;
-          var titleName = item.title;
-          var authorName = item.author;
-          var likeNumber = item.likes;
-          var imageSource = item.image;
-          var created = item.createdAt;
+          console.log(resolvedPromiseForNumberOfLikes);
           var docData = {
-            userDisplay: usersname,
-            title: titleName,
-            author: authorName,
+            userDisplay: item.userName,
+            title: item.title,
+            author: item.author,
             likes: resolvedPromiseForNumberOfLikes,
-            image: imageSource,
-            createdAt: created,
+            image: item.image,
+            createdAt: item.createdAt,
+            ID: item.imageID,
           };
 
           return docData;
@@ -376,7 +369,7 @@ export default function AuthProvider({ children }) {
 
     //Add it to the users' liked posts and merge it
     var userRef = db.collection("users").doc(userID);
-    const likePostRef = await userRef.update(
+    await userRef.update(
       {
         likedPosts: firebase.firestore.FieldValue.arrayUnion(postID),
       },

@@ -74,7 +74,7 @@ export default function Card(props) {
       if (needSubmit) {
         if (thumbUp) {
           console.log(props.item.id);
-          likePost(props.item.id);
+          likePost(props.item.ID);
         }
         if (thumbDown) {
           dislikePost(props.item.id);
