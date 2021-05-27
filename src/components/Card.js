@@ -35,11 +35,9 @@ export default function Card(props) {
 
   useEffect(() => {
     {
-      console.log(props.item.likes);
       if (props) {
         changeLikes(props.item.likes);
       }
-      console.log(likes);
     }
   }, [activeScreen]);
 

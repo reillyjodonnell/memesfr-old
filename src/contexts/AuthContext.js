@@ -145,53 +145,115 @@ export default function AuthProvider({ children }) {
     const recentRef = db.collection("recent").doc("recent_twenty");
     const collections = await recentRef.get();
     var items = collections.data();
-    var results = items.posts;
-    items.posts.map((item) => {
+    var updatedObjects = items.posts.map((item) => {
       //For each item look through the shards and tally them up
-      var userid = item.id;
-      var usersname = item.userDisplay;
-      var titleName = item.title;
-      var authorName = item.author;
-      var likeNumber = item.likes;
-      var imageSource = item.image;
-      var created = item.createdAt;
-      var docData = {
-        userDisplay: usersname,
-        title: titleName,
-        author: authorName,
-        likes: likeNumber,
-        image: imageSource,
-        createdAt: created,
-      };
+      var shardRef = db.collection("counters").doc(item.id);
+      var totalLikesOnPost = shardRef
+        .collection("shards")
+        .get()
+        .then((snapshot) => {
+          let total_count = 0;
+          snapshot.forEach((doc) => {
+            total_count += doc.data().count;
+          });
+          return total_count;
+        });
+      var updatedMemeObject = totalLikesOnPost
+        .then((resolvedPromiseForNumberOfLikes) => {
+          var userid = item.id;
+          var usersname = item.userDisplay;
+          var titleName = item.title;
+          var authorName = item.author;
+          var likeNumber = item.likes;
+          var imageSource = item.image;
+          var created = item.createdAt;
+          var docData = {
+            userDisplay: usersname,
+            title: titleName,
+            author: authorName,
+            likes: resolvedPromiseForNumberOfLikes,
+            image: imageSource,
+            createdAt: created,
+          };
+
+          return docData;
+        })
+        .then((updatedMemeData) => {
+          return updatedMemeData;
+        });
+
       setLoadingFilter(false);
+      return updatedMemeObject;
     });
-    return results;
+    console.log(updatedObjects);
+    return updatedObjects;
+
+    //updatedObjects is an array of promises. How do we turn each promise into an array with actual values?
   }
+
+  // async function updateLikeCount(id) {
+  //   var shardRef = db.collection("counters").doc(id);
+  //   var totalLikesOnPost = shardRef
+  //     .collection("shards")
+  //     .get()
+  //     .then((snapshot) => {
+  //       let total_count = 0;
+  //       snapshot.forEach((doc) => {
+  //         total_count += doc.data().count;
+  //       });
+  //       return total_count;
+  //     });
+  // }
+
   async function retrievePopularPosts() {
     setLoadingFilter(true);
     const popRef = db.collection("popular").doc("top_twenty");
     const collections = await popRef.get();
     var items = collections.data();
     var results = items.posts;
-    items.posts.map((item) => {
-      var userid = item.id;
-      var usersname = item.userDisplay;
-      var titleName = item.title;
-      var authorName = item.author;
-      var likeNumber = item.likes;
-      var imageSource = item.image;
-      var created = item.createdAt;
-      var docData = {
-        userDisplay: usersname,
-        title: titleName,
-        author: authorName,
-        likes: likeNumber,
-        image: imageSource,
-        createdAt: created,
-      };
+
+    var updatedObjects = items.posts.map((item) => {
+      //For each item look through the shards and tally them up
+      var shardRef = db.collection("counters").doc(item.id);
+      var totalLikesOnPost = shardRef
+        .collection("shards")
+        .get()
+        .then((snapshot) => {
+          let total_count = 0;
+          snapshot.forEach((doc) => {
+            total_count += doc.data().count;
+          });
+          return total_count;
+        });
+      var updatedMemeObject = totalLikesOnPost
+        .then((resolvedPromiseForNumberOfLikes) => {
+          var userid = item.id;
+          var usersname = item.userDisplay;
+          var titleName = item.title;
+          var authorName = item.author;
+          var likeNumber = item.likes;
+          var imageSource = item.image;
+          var created = item.createdAt;
+          var docData = {
+            userDisplay: usersname,
+            title: titleName,
+            author: authorName,
+            likes: resolvedPromiseForNumberOfLikes,
+            image: imageSource,
+            createdAt: created,
+          };
+
+          return docData;
+        })
+        .then((updatedMemeData) => {
+          return updatedMemeData;
+        });
+
       setLoadingFilter(false);
+      return updatedMemeObject;
     });
-    return results;
+    console.log(updatedObjects);
+    return updatedObjects;
   }
 
   async function checkUsernameAvailability(id) {

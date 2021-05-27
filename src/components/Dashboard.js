@@ -228,14 +228,19 @@ export default function Dashboard(props) {
       setRecentPosts();
     }
     loadPopular().then((items) => {
+      console.log(items);
       setPopularPosts(items);
       setActiveScreen(items);
     });
   }
 
   async function loadPopular() {
-    const popular = await retrievePopularPosts();
-    return popular;
+    const memeDataPromise = await retrievePopularPosts();
+    const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
+      console.log(memeData);
+      return memeData;
+    });
+    return memeDataObject;
   }
 
   function showRecent() {
@@ -250,8 +255,12 @@ export default function Dashboard(props) {
   }
 
   async function loadRecent() {
-    const recent = await retrieveRecentPosts();
-    return recent;
+    const memeDataPromise = await retrieveRecentPosts();
+    const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
+      console.log(memeData);
+      return memeData;
+    });
+    return memeDataObject;
   }
 
   function filterHome() {
