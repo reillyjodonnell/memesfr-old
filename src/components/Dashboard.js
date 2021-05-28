@@ -433,7 +433,7 @@ export default function Dashboard(props) {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  width: "40%",
+                  width: "auto",
                   border: "1px solid black",
                   padding: "1rem",
                 }}
