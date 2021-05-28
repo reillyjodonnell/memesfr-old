@@ -4,7 +4,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
 export default function Card(props) {
-  var postID = props.item.id;
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);
@@ -13,18 +12,59 @@ export default function Card(props) {
   const [pencil, expandPencil] = useState(false);
   const [needSubmit, setNeedSubmit] = useState(false);
   const [permissionToEdit, setPermissionToEdit] = useState(false);
-  const [prompt, setPrompt] = useState(false);
+  const [hasAlreadyLikedPost, setHasAlreadyLikedPost] = useState(false);
+  const [hasAlreadyHeartedPost, setHasAlreadyHeartedPost] = useState(false);
 
-  const { activeScreen, likePost, dislikePost, currentUser } = useAuth();
+  const {
+    activeScreen,
+    likePost,
+    dislikePost,
+    heartPost,
+    currentUser,
+    hasUserLikedPost,
+  } = useAuth();
+
+  function captureUserInput() {
+    if (currentUser && needSubmit) {
+      if (thumbUp && !hasAlreadyLikedPost) {
+        likePost(props.item.id);
+      }
+      if (thumbDown) {
+        dislikePost(props.item.id);
+      }
+      if (heart && !hasAlreadyHeartedPost) {
+        heartPost(props.item.id);
+      }
+    }
+  }
+
+  useEffect(() => {
+    async function match() {
+      if (currentUser) {
+        const results = await hasUserLikedPost(props.item.id);
+        let [{ likedPosts }, { heartedPosts }] = results;
+        likedPosts.map((usersLikedPost) => {
+          if (props.item.id === usersLikedPost) {
+            setThumbUp(true);
+            setHasAlreadyLikedPost(true);
+            return null;
+          }
+        });
+        heartedPosts.map((usersHeartedPost) => {
+          if (props.item.id === usersHeartedPost) {
+            setHeart(true);
+            setHasAlreadyHeartedPost(true);
+            return null;
+          }
+        });
+      }
+    }
+    match();
+  }, []);
 
   const history = useHistory();
 
-  const toggleHeart = () => {
-    setHeart(!heart);
-  };
-
   useEffect(() => {}, [likes]);
-
   useEffect(() => {
     if (currentUser) {
       if (currentUser.uid === props.item.author) {
@@ -32,14 +72,11 @@ export default function Card(props) {
       } else setPermissionToEdit(false);
     } else setPermissionToEdit(false);
   }, [activeScreen]);
-
   useEffect(() => {
     {
-      console.log(props.item.likes);
       if (props) {
         changeLikes(props.item.likes);
       }
-      console.log(likes);
     }
   }, [activeScreen]);
 
@@ -57,6 +94,12 @@ export default function Card(props) {
       changeLikes((likes) => likes + 1);
     }
   };
+  const toggleHeart = () => {
+    setNeedSubmit(true);
+    if (!heart) {
+      setHeart(true);
+    } else setHeart(false);
+  };
   const toggleThumbDown = () => {
     setNeedSubmit(true);
     if (thumbUp == true) {
@@ -71,18 +114,7 @@ export default function Card(props) {
       changeLikes(likes - 1);
     }
   };
-  function captureUserInput() {
-    if (currentUser) {
-      if (needSubmit) {
-        if (thumbUp) {
-          likePost(postID);
-        }
-        if (thumbDown) {
-          dislikePost(postID);
-        }
-      }
-    }
-  }
+
   /*
   useEffect(() => {
     if(thumbUp)
@@ -106,7 +138,6 @@ export default function Card(props) {
 
   function activatePrompt() {
     history.push("/signup");
-    setPrompt((prevPrompt) => !prevPrompt);
   }
 
   function OptionsExpanded() {
@@ -141,7 +172,6 @@ export default function Card(props) {
 
   /* THIS IS IF MODS/CREATORS WANT TO EDIT POST*/
   function Edit() {
-    console.log(props.item.author);
     if (pencil)
       return (
         <div className="edit-mode">
@@ -259,7 +289,11 @@ export default function Card(props) {
             <div className="upper-top-info">
               <div className="meme-identification">
                 <span> posted by </span>
-                <span className="clickable">{props.item.userDisplay}</span>
+                <span className="clickable">
+                  {props.item.userName === currentUser.userName
+                    ? "you"
+                    : props.item.userName}
+                </span>
               </div>
               {permissionToEdit ? <Edit /> : <Options />}
               {permissionToEdit && options ? <ExpandedPencil /> : null}
@@ -318,7 +352,7 @@ export default function Card(props) {
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3" />
             </svg>
-            <svg
+            {/* <svg
               onClick={currentUser ? toggleThumbDown : activatePrompt}
               xmlns="http://www.w3.org/2000/svg"
               className={thumbDown ? "active-thumbdown" : "inactive-thumbdown "}
@@ -333,7 +367,7 @@ export default function Card(props) {
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M7 13v-8a1 1 0 0 0 -1 -1h-2a1 1 0 0 0 -1 1v7a1 1 0 0 0 1 1h3a4 4 0 0 1 4 4v1a2 2 0 0 0 4 0v-5h3a2 2 0 0 0 2 -2l-1 -5a2 3 0 0 0 -2 -2h-7a3 3 0 0 0 -3 3" />
-            </svg>
+            </svg> */}
           </div>
           {options ? <OptionsExpanded /> : null}
         </div>

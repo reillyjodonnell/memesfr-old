@@ -137,6 +137,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard(props) {
+  console.log(props.sample);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [expand, expandMenu] = useState(false);
@@ -154,7 +155,17 @@ export default function Dashboard(props) {
     loadingFilter,
     retrievePopularPosts,
     retrieveRecentPosts,
+    recentlyUploaded,
   } = useAuth();
+  console.log(recentlyUploaded);
+
+  useEffect(() => {
+    setHome((prev) => !prev);
+    console.log(recentlyUploaded);
+    console.log(recentlyUploaded.length);
+  }, [recentlyUploaded]);
+
+  console.log(recentlyUploaded);
 
   const history = useHistory();
 
@@ -228,14 +239,19 @@ export default function Dashboard(props) {
       setRecentPosts();
     }
     loadPopular().then((items) => {
+      console.log(items);
       setPopularPosts(items);
       setActiveScreen(items);
     });
   }
 
   async function loadPopular() {
-    const popular = await retrievePopularPosts();
-    return popular;
+    const memeDataPromise = await retrievePopularPosts();
+    const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
+      console.log(memeData);
+      return memeData;
+    });
+    return memeDataObject;
   }
 
   function showRecent() {
@@ -250,8 +266,12 @@ export default function Dashboard(props) {
   }
 
   async function loadRecent() {
-    const recent = await retrieveRecentPosts();
-    return recent;
+    const memeDataPromise = await retrieveRecentPosts();
+    const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
+      console.log(memeData);
+      return memeData;
+    });
+    return memeDataObject;
   }
 
   function filterHome() {
@@ -407,9 +427,35 @@ export default function Dashboard(props) {
                 </>
               ) : null}
 
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "40%",
+                  border: "1px solid black",
+                  padding: "1rem",
+                }}
+              >
+                {recentlyUploaded.length > 0 ? (
+                  <span>
+                    Your recently posted memes
+                    {nav === 0 && recentlyUploaded.length > 0
+                      ? recentlyUploaded.map((item) => {
+                          console.log("Mapping through array");
+                          return <Card item={item}></Card>;
+                        })
+                      : null}
+                  </span>
+                ) : (
+                  <span>Get to posting</span>
+                )}
+              </div>
+
               {activeScreen && activeScreen.length > 1
                 ? activeScreen.map((item) => {
-                    return <Card activeScreen={activeScreen} item={item} />;
+                    return <Card item={item} />;
                   })
                 : null}
             </div>

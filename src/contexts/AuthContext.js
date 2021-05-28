@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { auth, db, storage } from "../services/firebase";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase/app";
+import Dashboard from "../components/Dashboard";
 
 const AuthContext = React.createContext();
 
@@ -14,6 +15,7 @@ export default function AuthProvider({ children }) {
   const [loadUser, setLoadUser] = useState(true);
   const [userExists, setUserExists] = useState(true);
   const [loadingFilter, setLoadingFilter] = useState(false);
+  const [recentlyUploaded, setRecentlyUploaded] = useState([]);
   const history = useHistory();
 
   var actionCodeSettings = {
@@ -63,6 +65,7 @@ export default function AuthProvider({ children }) {
   function uploadMeme(image, title, type) {
     var author = currentUser.uid;
     var ud = currentUser.displayName;
+
     const upload = storage.ref(`memes/${title}`).put(image);
     var num_shards = 5;
     var batch = db.batch();
@@ -79,13 +82,14 @@ export default function AuthProvider({ children }) {
           .child(title)
           .getDownloadURL()
           .then((url, id) => {
-            console.log(id);
-            console.log(url);
             //1 read here
             var memeRef = db.collection("memes");
+            var uniqueIdentifier = memeRef.doc().id;
             memeRef
-              .add(
+              .doc(uniqueIdentifier)
+              .set(
                 {
+                  id: uniqueIdentifier,
                   userName: ud,
                   author: author,
                   image: url,
@@ -97,19 +101,34 @@ export default function AuthProvider({ children }) {
                 },
                 { merge: true }
               )
-              .then((data) => {
-                console.log(data);
+
+              .then(() => {
                 var userRef = db.collection("users").doc(author);
                 batch.set(
                   userRef,
                   {
                     createdPosts: firebase.firestore.FieldValue.arrayUnion(
-                      data.id
+                      uniqueIdentifier
                     ),
                   },
                   { merge: true }
                 );
-                var counterRef = db.collection("counters").doc(data.id);
+                var sample = {
+                  id: uniqueIdentifier,
+                  userName: ud,
+                  author: author,
+                  image: url,
+                  title: title,
+                  likes: 0,
+                  dislikes: 0,
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                  fileType: type,
+                };
+                console.log(sample);
+                setRecentlyUploaded((prevState) => [sample, ...prevState]);
+                var counterRef = db
+                  .collection("counters")
+                  .doc(uniqueIdentifier);
                 // Initialize the counter document
                 batch.set(counterRef, { num_shards: num_shards });
                 // Initialize each shard with count=0
@@ -137,60 +156,121 @@ export default function AuthProvider({ children }) {
       }
     );
   }
+
+  async function hasUserLikedPost(postID) {
+    var currentUserID = currentUser.uid;
+    var referenceToPost = db.collection("users").doc(currentUserID);
+    var doc = await referenceToPost.get();
+    var likedPosts = doc.data().likedPosts;
+    var heartedPosts = doc.data().hearted;
+    var distinct = [{ likedPosts }, { heartedPosts }];
+    return distinct;
+  }
+
   //Make a call to the firestore and retrieve the documents
   //Map over all of the results and set each one to state
   //At the end of it return the entirety of state
   async function retrieveRecentPosts() {
     setLoadingFilter(true);
-    const recentRef = db.collection("recent").doc("recent_twenty");
+    const recentRef = db.collection("recent").doc("recent_fifty");
     const collections = await recentRef.get();
     var items = collections.data();
-    var results = items.posts;
-    items.posts.map((item) => {
-      var userid = item.id;
-      var usersname = item.userDisplay;
-      var titleName = item.title;
-      var authorName = item.author;
-      var likeNumber = item.likes;
-      var imageSource = item.image;
-      var created = item.createdAt;
-      var docData = {
-        userDisplay: usersname,
-        title: titleName,
-        author: authorName,
-        likes: likeNumber,
-        image: imageSource,
-        createdAt: created,
-      };
+    var updatedObjects = items.posts.map((item) => {
+      //For each item look through the shards and tally them up
+      var shardRef = db.collection("counters").doc(item.id);
+      var totalLikesOnPost = shardRef
+        .collection("shards")
+        .get()
+        .then((snapshot) => {
+          let total_count = 0;
+          snapshot.forEach((doc) => {
+            total_count += doc.data().count;
+          });
+          return total_count;
+        });
+      var updatedMemeObject = totalLikesOnPost
+        .then((resolvedPromiseForNumberOfLikes) => {
+          var docData = {
+            userName: item.userName,
+            title: item.title,
+            author: item.author,
+            likes: resolvedPromiseForNumberOfLikes,
+            image: item.image,
+            createdAt: item.createdAt,
+            id: item.id,
+          };
+
+          return docData;
+        })
+        .then((updatedMemeData) => {
+          return updatedMemeData;
+        });
+
       setLoadingFilter(false);
+      return updatedMemeObject;
     });
-    return results;
+    return updatedObjects;
+
+    //updatedObjects is an array of promises. How do we turn each promise into an array with actual values?
   }
+
+  // async function updateLikeCount(id) {
+  //   var shardRef = db.collection("counters").doc(id);
+  //   var totalLikesOnPost = shardRef
+  //     .collection("shards")
+  //     .get()
+  //     .then((snapshot) => {
+  //       let total_count = 0;
+  //       snapshot.forEach((doc) => {
+  //         total_count += doc.data().count;
+  //       });
+  //       return total_count;
+  //     });
+  // }
+
   async function retrievePopularPosts() {
     setLoadingFilter(true);
-    const popRef = db.collection("popular").doc("top_twenty");
+    const popRef = db.collection("popular").doc("top_fifty");
     const collections = await popRef.get();
     var items = collections.data();
     var results = items.posts;
-    items.posts.map((item) => {
-      var userid = item.id;
-      var usersname = item.userDisplay;
-      var titleName = item.title;
-      var authorName = item.author;
-      var likeNumber = item.likes;
-      var imageSource = item.image;
-      var created = item.createdAt;
-      var docData = {
-        userDisplay: usersname,
-        title: titleName,
-        author: authorName,
-        likes: likeNumber,
-        image: imageSource,
-        createdAt: created,
-      };
+
+    var updatedObjects = items.posts.map((item) => {
+      console.log(item);
+      //For each item look through the shards and tally them up
+      var shardRef = db.collection("counters").doc(item.id);
+      var totalLikesOnPost = shardRef
+        .collection("shards")
+        .get()
+        .then((snapshot) => {
+          let total_count = 0;
+          snapshot.forEach((doc) => {
+            total_count += doc.data().count;
+          });
+          return total_count;
+        });
+      var updatedMemeObject = totalLikesOnPost
+        .then((resolvedPromiseForNumberOfLikes) => {
+          var docData = {
+            userName: item.userName,
+            title: item.title,
+            author: item.author,
+            likes: resolvedPromiseForNumberOfLikes,
+            image: item.image,
+            createdAt: item.createdAt,
+            id: item.imageID,
+          };
+
+          return docData;
+        })
+        .then((updatedMemeData) => {
+          return updatedMemeData;
+        });
+
       setLoadingFilter(false);
+      return updatedMemeObject;
     });
-    return results;
+    return updatedObjects;
   }
 
   async function checkUsernameAvailability(id) {
@@ -199,12 +279,9 @@ export default function AuthProvider({ children }) {
     if (user && id.length >= 5) {
       var search = await db.collection("usernames").doc(username).get();
       const data = search.data();
-      console.log(data);
       if (data === undefined) {
-        console.log(`${id} available`);
         return undefined;
       } else {
-        console.log(`${id} taken`);
         return false;
       }
     }
@@ -289,8 +366,18 @@ export default function AuthProvider({ children }) {
 
   //How do we count the total number of likes on the post?
 
-  function heartPost(postID) {
+  async function heartPost(postID) {
+    console.log("Sending hearted post to DB", postID);
     var userID = currentUser.uid;
+
+    //Add it to the users' liked posts and merge it
+    var userRef = db.collection("users").doc(userID);
+    await userRef.update(
+      {
+        hearted: firebase.firestore.FieldValue.arrayUnion(postID),
+      },
+      { merge: true }
+    );
 
     /*
     db.collection("users").doc(id).set({ uid: value });
@@ -298,9 +385,6 @@ export default function AuthProvider({ children }) {
     console.log(`Adding ${postID} to ${userID}'s favorites`);
 
     //add to the user's heart
-  }
-  function hasUserLikedPost(postID) {
-    console.log("Checking if user has previously liked the post");
   }
 
   async function likePost(postID) {
@@ -378,6 +462,7 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
+        console.log(user);
         console.log(user.emailVerified);
         setCurrentUser(user);
       }
@@ -431,6 +516,8 @@ export default function AuthProvider({ children }) {
     likePost,
     dislikePost,
     heartPost,
+    hasUserLikedPost,
+    recentlyUploaded,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

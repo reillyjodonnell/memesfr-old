@@ -93,7 +93,7 @@ a {
   transition: background var(--speed);
   padding: 0.5rem;
   overflow: hidden;
-  font-weight: 700;
+  font-weight: 500;
   font-stretch: 100%;
 }
 .menu-item .icon-button {
