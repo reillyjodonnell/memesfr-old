@@ -399,20 +399,87 @@ export default function AuthProvider({ children }) {
       .get()
       .then((snapshot) => {
         if (snapshot.size > 0) {
+          var updatedValue = {};
           snapshot.forEach((doc) => {
             console.log(doc.id, "=>", doc.data());
-            return (randomMeme = doc.data());
+            //For each item look through the shards and tally them up
+            var shardRef = db.collection("counters").doc(doc.data().id);
+            var totalLikesOnPost = shardRef
+              .collection("shards")
+              .get()
+              .then((snapshot) => {
+                let total_count = 0;
+                snapshot.forEach((doc) => {
+                  total_count += doc.data().count;
+                });
+                return total_count;
+              });
+            var updatedMemeObject = totalLikesOnPost
+              .then((resolvedPromiseForNumberOfLikes) => {
+                var docData = {
+                  userName: doc.data().userName,
+                  title: doc.data().title,
+                  author: doc.data().author,
+                  likes: resolvedPromiseForNumberOfLikes,
+                  image: doc.data().image,
+                  createdAt: doc.data().createdAt,
+                  id: doc.data().id,
+                };
+                return docData;
+              })
+              .then((updatedMemeData) => {
+                return updatedMemeData;
+              });
+            setLoadingFilter(false);
+            updatedValue = updatedMemeObject;
+            return updatedMemeObject;
           });
+          console.log(updatedValue);
+          randomMeme = updatedValue;
+          return updatedValue;
         } else {
           var meme = memes
             .where(firebase.firestore.FieldPath.documentId(), "<", key)
             .limit(1)
             .get()
             .then((snapshot) => {
+              var updatedValue = {};
               snapshot.forEach((doc) => {
                 console.log(doc.id, "=>", doc.data());
-                return doc.data();
+                //For each item look through the shards and tally them up
+                var shardRef = db.collection("counters").doc(doc.data().id);
+                var totalLikesOnPost = shardRef
+                  .collection("shards")
+                  .get()
+                  .then((snapshot) => {
+                    let total_count = 0;
+                    snapshot.forEach((doc) => {
+                      total_count += doc.data().count;
+                    });
+                    return total_count;
+                  });
+                var updatedMemeObject = totalLikesOnPost
+                  .then((resolvedPromiseForNumberOfLikes) => {
+                    var docData = {
+                      userName: doc.data().userName,
+                      title: doc.data().title,
+                      author: doc.data().author,
+                      likes: resolvedPromiseForNumberOfLikes,
+                      image: doc.data().image,
+                      createdAt: doc.data().createdAt,
+                      id: doc.data().id,
+                    };
+                    return docData;
+                  })
+                  .then((updatedMemeData) => {
+                    return updatedMemeData;
+                  });
+                setLoadingFilter(false);
+                updatedValue = updatedMemeObject;
+                return updatedMemeObject;
               });
+              console.log(updatedValue);
+              return updatedValue;
             })
             .catch((error) => {
               console.log("Error getting documents: ", error);
@@ -447,7 +514,7 @@ export default function AuthProvider({ children }) {
   }
 
   async function likePost(postID) {
-    console.log(postID);
+    console.log("Adding like to the database");
     var userID = currentUser.uid;
     var num_shards = 5;
     var ref = db.collection("counters").doc(postID);

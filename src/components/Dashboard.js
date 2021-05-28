@@ -146,6 +146,7 @@ export default function Dashboard(props) {
   const [randomPosts, setRandomPosts] = useState([{}]);
   const [activeScreen, setActiveScreen] = useState([{}]);
   const [home, setHome] = useState(false);
+  const [loadAnotherRandomMeme, setLoadAnotherRandomMeme] = useState(false);
 
   const [nav, setNav] = useState(0);
 
@@ -166,8 +167,6 @@ export default function Dashboard(props) {
     console.log(recentlyUploaded);
     console.log(recentlyUploaded.length);
   }, [recentlyUploaded]);
-
-  console.log(recentlyUploaded);
 
   const history = useHistory();
 
@@ -280,6 +279,7 @@ export default function Dashboard(props) {
   }
   async function loadRandom() {
     const memeDataPromise = await retrieveRandomMeme();
+
     console.log(memeDataPromise);
 
     return memeDataPromise;
@@ -317,8 +317,8 @@ export default function Dashboard(props) {
   }
   function filterRandom() {
     setNav(4);
+    setLoadAnotherRandomMeme((prevState) => !prevState);
   }
-
   useEffect(() => {
     switch (nav) {
       case 0:
@@ -350,7 +350,7 @@ export default function Dashboard(props) {
         console.log("We are on the homescreen now");
         active = 0;
     }
-  }, [nav]);
+  }, [nav, loadAnotherRandomMeme]);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 

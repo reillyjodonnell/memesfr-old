@@ -4,8 +4,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
 export default function Card(props) {
-  console.log(props);
-  console.log(props.item.id);
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);
@@ -37,6 +35,7 @@ export default function Card(props) {
       if (heart && !hasAlreadyHeartedPost) {
         heartPost(props.item.id);
       }
+      setNeedSubmit(false);
     }
   }
   async function match() {
