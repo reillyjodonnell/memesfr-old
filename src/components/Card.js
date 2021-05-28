@@ -4,6 +4,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
 export default function Card(props) {
+  console.log(props);
+  console.log(props.item.id);
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);
@@ -37,34 +39,35 @@ export default function Card(props) {
       }
     }
   }
+  async function match() {
+    if (currentUser) {
+      const results = await hasUserLikedPost(props.item.id);
+      let [{ likedPosts }, { heartedPosts }] = results;
+      likedPosts.map((usersLikedPost) => {
+        if (props.item.id === usersLikedPost) {
+          setThumbUp(true);
+          setHasAlreadyLikedPost(true);
+          return null;
+        }
+      });
+      heartedPosts.map((usersHeartedPost) => {
+        if (props.item.id === usersHeartedPost) {
+          setHeart(true);
+          setHasAlreadyHeartedPost(true);
+          return null;
+        }
+      });
+    }
+  }
 
   useEffect(() => {
-    async function match() {
-      if (currentUser) {
-        const results = await hasUserLikedPost(props.item.id);
-        let [{ likedPosts }, { heartedPosts }] = results;
-        likedPosts.map((usersLikedPost) => {
-          if (props.item.id === usersLikedPost) {
-            setThumbUp(true);
-            setHasAlreadyLikedPost(true);
-            return null;
-          }
-        });
-        heartedPosts.map((usersHeartedPost) => {
-          if (props.item.id === usersHeartedPost) {
-            setHeart(true);
-            setHasAlreadyHeartedPost(true);
-            return null;
-          }
-        });
-      }
-    }
     match();
   }, []);
 
   const history = useHistory();
 
   useEffect(() => {}, [likes]);
+
   useEffect(() => {
     if (currentUser) {
       if (currentUser.uid === props.item.author) {
@@ -72,6 +75,7 @@ export default function Card(props) {
       } else setPermissionToEdit(false);
     } else setPermissionToEdit(false);
   }, [activeScreen]);
+
   useEffect(() => {
     {
       if (props) {

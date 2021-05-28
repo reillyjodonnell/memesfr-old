@@ -258,7 +258,7 @@ export default function AuthProvider({ children }) {
             likes: resolvedPromiseForNumberOfLikes,
             image: item.image,
             createdAt: item.createdAt,
-            id: item.imageID,
+            id: item.id,
           };
 
           return docData;
