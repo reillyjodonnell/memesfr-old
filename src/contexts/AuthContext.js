@@ -386,6 +386,26 @@ export default function AuthProvider({ children }) {
 
     //add to the user's heart
   }
+  //Grab the array of strings that the user has liked
+  //Go through the string and remove the one string that contains the passed postID
+  //Return a new string and push the array back into the user data
+  async function removeLikePost(postID) {
+    console.log(postID);
+    var userID = currentUser.uid;
+    var num_shards = 5;
+    var ref = db.collection("counters").doc(postID);
+
+    //Add it to the users' liked posts and merge it
+    var userRef = db.collection("users").doc(userID);
+    console.log(userRef);
+
+    // Select a shard of the counter at random
+    const shard_id = Math.floor(Math.random() * num_shards).toString();
+    const shard_ref = ref.collection("shards").doc(shard_id);
+
+    // Update count
+    shard_ref.update("count", firebase.firestore.FieldValue.increment(-1));
+  }
 
   async function likePost(postID) {
     console.log(postID);
