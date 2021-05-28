@@ -137,6 +137,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard(props) {
+  console.log(props.sample);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [expand, expandMenu] = useState(false);
@@ -154,8 +155,17 @@ export default function Dashboard(props) {
     loadingFilter,
     retrievePopularPosts,
     retrieveRecentPosts,
-    hasUserLikedPost,
+    recentlyUploaded,
   } = useAuth();
+  console.log(recentlyUploaded);
+
+  useEffect(() => {
+    setHome((prev) => !prev);
+    console.log(recentlyUploaded);
+    console.log(recentlyUploaded.length);
+  }, [recentlyUploaded]);
+
+  console.log(recentlyUploaded);
 
   const history = useHistory();
 
@@ -417,9 +427,35 @@ export default function Dashboard(props) {
                 </>
               ) : null}
 
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "40%",
+                  border: "1px solid black",
+                  padding: "1rem",
+                }}
+              >
+                {recentlyUploaded.length > 0 ? (
+                  <span>
+                    Your recently posted memes
+                    {nav === 0 && recentlyUploaded.length > 0
+                      ? recentlyUploaded.map((item) => {
+                          console.log("Mapping through array");
+                          return <Card item={item}></Card>;
+                        })
+                      : null}
+                  </span>
+                ) : (
+                  <span>Get to posting</span>
+                )}
+              </div>
+
               {activeScreen && activeScreen.length > 1
                 ? activeScreen.map((item) => {
-                    return <Card activeScreen={activeScreen} item={item} />;
+                    return <Card item={item} />;
                   })
                 : null}
             </div>

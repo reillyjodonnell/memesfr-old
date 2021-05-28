@@ -4,7 +4,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 
 export default function Card(props) {
-  console.log(props.like);
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);
@@ -13,36 +12,58 @@ export default function Card(props) {
   const [pencil, expandPencil] = useState(false);
   const [needSubmit, setNeedSubmit] = useState(false);
   const [permissionToEdit, setPermissionToEdit] = useState(false);
-  const [prompt, setPrompt] = useState(false);
-  const [UserLikedPost, setUserLikedPost] = useState(false);
+  const [hasAlreadyLikedPost, setHasAlreadyLikedPost] = useState(false);
+  const [hasAlreadyHeartedPost, setHasAlreadyHeartedPost] = useState(false);
 
   const {
     activeScreen,
     likePost,
     dislikePost,
+    heartPost,
     currentUser,
     hasUserLikedPost,
   } = useAuth();
 
-  async function match() {
-    console.log(props.item.ID);
-    const results = await hasUserLikedPost(props.item.ID);
-    results.map((usersLikedPost) => {
-      if (props.item.ID === usersLikedPost) {
-        setThumbUp(true);
+  function captureUserInput() {
+    if (currentUser && needSubmit) {
+      if (thumbUp && !hasAlreadyLikedPost) {
+        likePost(props.item.id);
       }
-    });
-    console.log(results);
+      if (thumbDown) {
+        dislikePost(props.item.id);
+      }
+      if (heart && !hasAlreadyHeartedPost) {
+        heartPost(props.item.id);
+      }
+    }
   }
 
   useEffect(() => {
+    async function match() {
+      if (currentUser) {
+        const results = await hasUserLikedPost(props.item.id);
+        let [{ likedPosts }, { heartedPosts }] = results;
+        likedPosts.map((usersLikedPost) => {
+          if (props.item.id === usersLikedPost) {
+            setThumbUp(true);
+            setHasAlreadyLikedPost(true);
+            return null;
+          }
+        });
+        heartedPosts.map((usersHeartedPost) => {
+          if (props.item.id === usersHeartedPost) {
+            setHeart(true);
+            setHasAlreadyHeartedPost(true);
+            return null;
+          }
+        });
+      }
+    }
     match();
   }, []);
 
   const history = useHistory();
-  const toggleHeart = () => {
-    setHeart(!heart);
-  };
+
   useEffect(() => {}, [likes]);
   useEffect(() => {
     if (currentUser) {
@@ -73,6 +94,12 @@ export default function Card(props) {
       changeLikes((likes) => likes + 1);
     }
   };
+  const toggleHeart = () => {
+    setNeedSubmit(true);
+    if (!heart) {
+      setHeart(true);
+    } else setHeart(false);
+  };
   const toggleThumbDown = () => {
     setNeedSubmit(true);
     if (thumbUp == true) {
@@ -87,19 +114,7 @@ export default function Card(props) {
       changeLikes(likes - 1);
     }
   };
-  function captureUserInput() {
-    if (currentUser) {
-      if (needSubmit) {
-        if (thumbUp) {
-          console.log(props.item.id);
-          likePost(props.item.ID);
-        }
-        if (thumbDown) {
-          dislikePost(props.item.id);
-        }
-      }
-    }
-  }
+
   /*
   useEffect(() => {
     if(thumbUp)
@@ -123,7 +138,6 @@ export default function Card(props) {
 
   function activatePrompt() {
     history.push("/signup");
-    setPrompt((prevPrompt) => !prevPrompt);
   }
 
   function OptionsExpanded() {
@@ -158,7 +172,6 @@ export default function Card(props) {
 
   /* THIS IS IF MODS/CREATORS WANT TO EDIT POST*/
   function Edit() {
-    console.log(props.item.author);
     if (pencil)
       return (
         <div className="edit-mode">
@@ -276,7 +289,11 @@ export default function Card(props) {
             <div className="upper-top-info">
               <div className="meme-identification">
                 <span> posted by </span>
-                <span className="clickable">{props.item.userDisplay}</span>
+                <span className="clickable">
+                  {props.item.userName === currentUser.userName
+                    ? "you"
+                    : props.item.userName}
+                </span>
               </div>
               {permissionToEdit ? <Edit /> : <Options />}
               {permissionToEdit && options ? <ExpandedPencil /> : null}
