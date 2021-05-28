@@ -3,6 +3,7 @@ import { auth, db, storage } from "../services/firebase";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase/app";
 import Dashboard from "../components/Dashboard";
+import { firestore } from "firebase-admin";
 
 const AuthContext = React.createContext();
 
@@ -386,6 +387,44 @@ export default function AuthProvider({ children }) {
 
     //add to the user's heart
   }
+  async function retrieveRandomMeme() {
+    console.log("beginning random meme search");
+    var memes = db.collection("memes");
+    var key = memes.doc().id;
+    console.log(key);
+    var randomMeme = {};
+    await memes
+      .where(firebase.firestore.FieldPath.documentId(), ">=", key)
+      .limit(1)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.size > 0) {
+          snapshot.forEach((doc) => {
+            console.log(doc.id, "=>", doc.data());
+            return (randomMeme = doc.data());
+          });
+        } else {
+          var meme = memes
+            .where(firebase.firestore.FieldPath.documentId(), "<", key)
+            .limit(1)
+            .get()
+            .then((snapshot) => {
+              snapshot.forEach((doc) => {
+                console.log(doc.id, "=>", doc.data());
+                return doc.data();
+              });
+            })
+            .catch((error) => {
+              console.log("Error getting documents: ", error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.log("Error getting documents", error);
+      });
+    return randomMeme;
+  }
+
   //Grab the array of strings that the user has liked
   //Go through the string and remove the one string that contains the passed postID
   //Return a new string and push the array back into the user data
@@ -538,6 +577,7 @@ export default function AuthProvider({ children }) {
     heartPost,
     hasUserLikedPost,
     recentlyUploaded,
+    retrieveRandomMeme,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

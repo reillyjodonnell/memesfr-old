@@ -24,27 +24,27 @@ export default function MainListItems(props) {
         </ListItemIcon>
         <ListItemText primary="Home" />
       </ListItem>
-      <ListItem button>
+      <ListItem onClick={props.trendingFilter} button>
         <ListItemIcon>
-          <TrendingIcon />
+          <TrendingIcon style={props.active == 1 ? { color: "red" } : null} />
         </ListItemIcon>
         <ListItemText primary="Trending" />
       </ListItem>
       <ListItem onClick={props.popularFilter} button>
         <ListItemIcon>
-          <PeopleIcon style={props.active == 1 ? { color: "red" } : null} />
+          <PeopleIcon style={props.active == 2 ? { color: "red" } : null} />
         </ListItemIcon>
         <ListItemText primary="Popular" />
       </ListItem>
       <ListItem onClick={props.recentFilter} button>
         <ListItemIcon>
-          <RecentIcon style={props.active == 2 ? { color: "red" } : null} />
+          <RecentIcon style={props.active == 3 ? { color: "red" } : null} />
         </ListItemIcon>
         <ListItemText primary="Recent" />
       </ListItem>
-      <ListItem button>
+      <ListItem onClick={props.randomFilter} button>
         <ListItemIcon>
-          <LayersIcon />
+          <LayersIcon style={props.active == 4 ? { color: "red" } : null} />
         </ListItemIcon>
         <ListItemText primary="Random meme" />
       </ListItem>

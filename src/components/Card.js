@@ -43,20 +43,24 @@ export default function Card(props) {
     if (currentUser) {
       const results = await hasUserLikedPost(props.item.id);
       let [{ likedPosts }, { heartedPosts }] = results;
-      likedPosts.map((usersLikedPost) => {
-        if (props.item.id === usersLikedPost) {
-          setThumbUp(true);
-          setHasAlreadyLikedPost(true);
-          return null;
-        }
-      });
-      heartedPosts.map((usersHeartedPost) => {
-        if (props.item.id === usersHeartedPost) {
-          setHeart(true);
-          setHasAlreadyHeartedPost(true);
-          return null;
-        }
-      });
+      if (likedPosts != undefined) {
+        likedPosts.map((usersLikedPost) => {
+          if (props.item.id === usersLikedPost) {
+            setThumbUp(true);
+            setHasAlreadyLikedPost(true);
+            return null;
+          }
+        });
+      }
+      if (heartedPosts != undefined) {
+        heartedPosts.map((usersHeartedPost) => {
+          if (props.item.id === usersHeartedPost) {
+            setHeart(true);
+            setHasAlreadyHeartedPost(true);
+            return null;
+          }
+        });
+      }
     }
   }
 
@@ -294,7 +298,7 @@ export default function Card(props) {
               <div className="meme-identification">
                 <span> posted by </span>
                 <span className="clickable">
-                  {props.item.userName === currentUser.userName
+                  {currentUser && props.item.userName === currentUser.userName
                     ? "you"
                     : props.item.userName}
                 </span>

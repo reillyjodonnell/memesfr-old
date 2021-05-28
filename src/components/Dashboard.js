@@ -143,12 +143,14 @@ export default function Dashboard(props) {
   const [expand, expandMenu] = useState(false);
   const [popularPosts, setPopularPosts] = useState([{}]);
   const [recentPosts, setRecentPosts] = useState([{}]);
+  const [randomPosts, setRandomPosts] = useState([{}]);
   const [activeScreen, setActiveScreen] = useState([{}]);
   const [home, setHome] = useState(false);
 
   const [nav, setNav] = useState(0);
 
   const myRef = useRef(null);
+  console.log(randomPosts);
 
   const {
     currentUser,
@@ -156,8 +158,8 @@ export default function Dashboard(props) {
     retrievePopularPosts,
     retrieveRecentPosts,
     recentlyUploaded,
+    retrieveRandomMeme,
   } = useAuth();
-  console.log(recentlyUploaded);
 
   useEffect(() => {
     setHome((prev) => !prev);
@@ -231,12 +233,13 @@ export default function Dashboard(props) {
     }
   }, []);
 
-  function showRandom() {}
-
   function showPopular() {
     setActiveScreen();
     if (recentPosts) {
       setRecentPosts();
+    }
+    if (randomPosts) {
+      setRandomPosts();
     }
     loadPopular().then((items) => {
       console.log(items);
@@ -253,18 +256,6 @@ export default function Dashboard(props) {
     });
     return memeDataObject;
   }
-
-  function showRecent() {
-    setActiveScreen();
-    if (popularPosts) {
-      setPopularPosts();
-    }
-    loadRecent().then((items) => {
-      setRecentPosts(items);
-      setActiveScreen(items);
-    });
-  }
-
   async function loadRecent() {
     const memeDataPromise = await retrieveRecentPosts();
     const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
@@ -274,16 +265,58 @@ export default function Dashboard(props) {
     return memeDataObject;
   }
 
+  function showRecent() {
+    setActiveScreen();
+    if (popularPosts) {
+      setPopularPosts();
+    }
+    if (randomPosts) {
+      setRandomPosts();
+    }
+    loadRecent().then((items) => {
+      setRecentPosts(items);
+      setActiveScreen(items);
+    });
+  }
+  async function loadRandom() {
+    const memeDataPromise = await retrieveRandomMeme();
+    console.log(memeDataPromise);
+
+    return memeDataPromise;
+  }
+
+  function showRandom() {
+    setActiveScreen();
+    if (popularPosts) {
+      setPopularPosts();
+    }
+    if (recentPosts) {
+      setRecentPosts();
+    }
+
+    loadRandom().then((items) => {
+      console.log(items);
+      setRandomPosts(items);
+      setActiveScreen(items);
+    });
+  }
+
   function filterHome() {
     myRef.current.scrollIntoView({ behavior: "smooth" });
     setNav(0);
   }
-
-  function filterPopular() {
+  function filterTrending() {
     setNav(1);
   }
-  function filterRecent() {
+
+  function filterPopular() {
     setNav(2);
+  }
+  function filterRecent() {
+    setNav(3);
+  }
+  function filterRandom() {
+    setNav(4);
   }
 
   useEffect(() => {
@@ -294,14 +327,24 @@ export default function Dashboard(props) {
         active = 0;
         break;
       case 1:
-        console.log("On popular screen");
+        console.log("On Trending screen");
         showPopular();
         active = 1;
         break;
       case 2:
+        console.log("On popular screen");
+        showPopular();
+        active = 2;
+        break;
+      case 3:
         console.log("On Recent Screen");
         showRecent();
-        active = 2;
+        active = 3;
+        break;
+      case 4:
+        console.log("Random meme time. nice");
+        showRandom();
+        active = 4;
         break;
       default:
         console.log("We are on the homescreen now");
@@ -401,8 +444,10 @@ export default function Dashboard(props) {
           <MainListItems
             active={nav}
             homeFilter={filterHome}
+            trendingFilter={filterTrending}
             recentFilter={filterRecent}
             popularFilter={filterPopular}
+            randomFilter={filterRandom}
           />
         </List>
         <Divider />
@@ -427,18 +472,18 @@ export default function Dashboard(props) {
                 </>
               ) : null}
 
-              <div
-                style={{
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "auto",
-                  border: "1px solid black",
-                  padding: "1rem",
-                }}
-              >
-                {recentlyUploaded.length > 0 ? (
+              {recentlyUploaded.length > 0 ? (
+                <div
+                  style={{
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "auto",
+                    border: "1px solid black",
+                    padding: "1rem",
+                  }}
+                >
                   <span>
                     Your recently posted memes
                     {nav === 0 && recentlyUploaded.length > 0
@@ -448,16 +493,16 @@ export default function Dashboard(props) {
                         })
                       : null}
                   </span>
-                ) : (
-                  <span>Get to posting</span>
-                )}
-              </div>
+                </div>
+              ) : null}
 
-              {activeScreen && activeScreen.length > 1
-                ? activeScreen.map((item) => {
-                    return <Card item={item} />;
-                  })
-                : null}
+              {activeScreen && activeScreen.length > 1 ? (
+                activeScreen.map((item) => {
+                  return <Card item={item} />;
+                })
+              ) : randomPosts != null ? (
+                <Card item={randomPosts}></Card>
+              ) : null}
             </div>
           </Box>
         </Container>
