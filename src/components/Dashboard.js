@@ -20,18 +20,14 @@ import MainListItems from "./ListItems";
 import Crown from "../Assets/Icons/Crown.svg";
 import Card from "./Card";
 import DropDownMenu from "./DropDownMenu";
-import Filter from "./Filter";
 import "../CSS Components/Dashboard.css";
 import CreatePost from "./CreatePost";
 import User from "../Assets/Icons/User.svg";
 import firebase from "firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import { DEFAULT_FAILURE_POLICY } from "firebase-functions";
-import { SettingsInputHdmiOutlined } from "@material-ui/icons";
 
 const drawerWidth = 240;
-const login = false;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -145,13 +141,12 @@ export default function Dashboard(props) {
   const [recentPosts, setRecentPosts] = useState([{}]);
   const [randomPosts, setRandomPosts] = useState([{}]);
   const [activeScreen, setActiveScreen] = useState([{}]);
-  const [home, setHome] = useState(false);
   const [loadAnotherRandomMeme, setLoadAnotherRandomMeme] = useState(false);
+  const [active, setActive] = useState(0);
 
   const [nav, setNav] = useState(0);
 
   const myRef = useRef(null);
-  console.log(randomPosts);
 
   const {
     currentUser,
@@ -163,7 +158,6 @@ export default function Dashboard(props) {
   } = useAuth();
 
   useEffect(() => {
-    setHome((prev) => !prev);
     console.log(recentlyUploaded);
     console.log(recentlyUploaded.length);
   }, [recentlyUploaded]);
@@ -171,7 +165,6 @@ export default function Dashboard(props) {
   const history = useHistory();
 
   var hide = true;
-  var active = 0;
 
   const openRegister = () => {
     console.log("opening register ");
@@ -324,35 +317,34 @@ export default function Dashboard(props) {
       case 0:
         console.log("Back Home");
         showPopular();
-        active = 0;
+        setActive(0);
         break;
       case 1:
         console.log("On Trending screen");
         showPopular();
-        active = 1;
+        setActive(1);
+
         break;
       case 2:
         console.log("On popular screen");
         showPopular();
-        active = 2;
+        setActive(2);
         break;
       case 3:
         console.log("On Recent Screen");
         showRecent();
-        active = 3;
+        setActive(3);
         break;
       case 4:
         console.log("Random meme time. nice");
         showRandom();
-        active = 4;
+        setActive(4);
         break;
       default:
         console.log("We are on the homescreen now");
-        active = 0;
+        setActive(0);
     }
-  }, [nav, loadAnotherRandomMeme]);
-
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  }, [nav, active, showPopular, showRandom, showRecent, loadAnotherRandomMeme]);
 
   return (
     <div className={classes.root}>
@@ -464,7 +456,7 @@ export default function Dashboard(props) {
           <Box spacing={5} pt={4}>
             <CreatePost />
 
-            <div className="main-content">
+            <div data-testid="post-1" className="main-content">
               {loadingFilter ? (
                 <>
                   <Skeleton className={classes.skeleton} variant="rect" />

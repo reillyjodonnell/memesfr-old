@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
-import TextField from "@material-ui/core/TextField";
+import React, { useState, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import "../CSS Components/CreateProfile.css";
@@ -71,20 +70,13 @@ function Copyright() {
 export default function SelectUsername() {
   const classes = useStyles();
   const history = useHistory();
-  const [disabled, setDisabled] = useState(true);
-  const [error, setError] = useState(false);
-
-  const [viewPhoto, viewPhotoFunction] = useState(false);
   const [file, setFile] = useState("");
   const inputFile = useRef(null);
-
   const { setProfilePicture, currentUser } = useAuth();
 
   function saveProfile() {
-    if(file)
-    {
+    if (file) {
       setProfilePicture(file);
-
     }
     history.push("/");
   }

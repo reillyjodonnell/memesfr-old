@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -69,12 +69,16 @@ function Copyright() {
 }
 export default function SelectUsername() {
   const classes = useStyles();
-  const [taken, setTaken] = useState(false);
+
   const [disabled, setDisabled] = useState(true);
   const [availableMessage, setAvailableMessage] = useState("");
   const [error, setError] = useState(false);
-
+  const [file, setFile] = useState("");
   const [name, setName] = useState("");
+
+  const inputFile = useRef(null);
+
+  const { checkUsernameAvailability, updateProfile } = useAuth();
 
   function handleChange(event) {
     console.log(event.target.value.length);
@@ -86,7 +90,7 @@ export default function SelectUsername() {
     } else if (name.length < 16) {
       checkUsernameAvailability(event.target.value).then((result) => {
         console.log(result);
-        if (result == false) {
+        if (result === false) {
           console.log(
             "Username not available from correct functional component"
           );
@@ -105,11 +109,6 @@ export default function SelectUsername() {
     }
     //We cannot call this if the event.target.value is empty
   }
-  const [viewPhoto, viewPhotoFunction] = useState(false);
-  const [file, setFile] = useState("");
-  const inputFile = useRef(null);
-
-  const { checkUsernameAvailability, updateProfile } = useAuth();
 
   function saveProfile() {
     console.log(name);
@@ -128,11 +127,6 @@ export default function SelectUsername() {
     console.log("Line 39");
     return <img src={URL.createObjectURL(image)} alt={image.name} />;
   };
-
-  function usernameTaken(test) {
-    console.log(test);
-    return test ? true : false;
-  }
 
   return (
     <Container component="main" maxWidth="xs">
