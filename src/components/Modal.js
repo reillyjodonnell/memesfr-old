@@ -61,6 +61,10 @@ export default function Modal(props) {
     }
   };
 
+  function resizeImage() {
+    var canvas = document.createElement("canvas");
+  }
+
   const handleChange = (event) => {
     event.preventDefault();
     setName(event.target.value);

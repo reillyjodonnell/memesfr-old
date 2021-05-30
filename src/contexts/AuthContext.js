@@ -67,6 +67,8 @@ export default function AuthProvider({ children }) {
     var author = currentUser.uid;
     var ud = currentUser.displayName;
 
+    //Here we are going to compress the image
+
     const upload = storage.ref(`memes/${title}`).put(image);
     var num_shards = 5;
     var batch = db.batch();
@@ -388,6 +390,7 @@ export default function AuthProvider({ children }) {
     //add to the user's heart
   }
   async function retrieveRandomMeme() {
+    setLoadingFilter(true);
     console.log("beginning random meme search");
     var memes = db.collection("memes");
     var key = memes.doc().id;
