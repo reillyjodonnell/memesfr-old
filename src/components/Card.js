@@ -22,6 +22,8 @@ export default function Card(props) {
     heartPost,
     currentUser,
     hasUserLikedPost,
+    removeLikePost,
+    removeHeartPost,
   } = useAuth();
 
   function captureUserInput() {
@@ -34,6 +36,17 @@ export default function Card(props) {
       }
       if (heart && !hasAlreadyHeartedPost) {
         heartPost(props.item.id);
+      }
+      if (hasAlreadyHeartedPost && heart === false) {
+        removeHeartPost(props.item.id);
+        console.log("removing hearted post");
+      }
+      //if the user has the liked post in their list and the like is now unliked
+      if (hasAlreadyLikedPost && thumbUp === false) {
+        removeLikePost(props.item.id);
+        console.log(
+          "The user has previously liked this post and has unliked it"
+        );
       }
       setNeedSubmit(false);
     }
@@ -80,11 +93,12 @@ export default function Card(props) {
   }, [activeScreen]);
 
   useEffect(() => {
-    {
-      if (props) {
-        changeLikes(props.item.likes);
-      }
+    if (props) {
+      changeLikes(props.item.likes);
     }
+    return () => {
+      changeLikes();
+    };
   }, [activeScreen]);
 
   const toggleThumbUp = () => {

@@ -367,26 +367,6 @@ export default function AuthProvider({ children }) {
 
   //How do we count the total number of likes on the post?
 
-  async function heartPost(postID) {
-    console.log("Sending hearted post to DB", postID);
-    var userID = currentUser.uid;
-
-    //Add it to the users' liked posts and merge it
-    var userRef = db.collection("users").doc(userID);
-    await userRef.update(
-      {
-        hearted: firebase.firestore.FieldValue.arrayUnion(postID),
-      },
-      { merge: true }
-    );
-
-    /*
-    db.collection("users").doc(id).set({ uid: value });
-    */
-    console.log(`Adding ${postID} to ${userID}'s favorites`);
-
-    //add to the user's heart
-  }
   async function retrieveRandomMeme() {
     console.log("beginning random meme search");
     var memes = db.collection("memes");
@@ -491,19 +471,52 @@ export default function AuthProvider({ children }) {
       });
     return randomMeme;
   }
+  async function removeHeartPost(postId) {
+    var userID = currentUser.uid;
+
+    //Remove it from the users' liked posts and merge it
+    var userRef = db.collection("users").doc(userID);
+    await userRef.update({
+      hearted: firebase.firestore.FieldValue.arrayRemove(postId),
+    });
+
+    console.log(`Removed ${postId} to ${userID}'s favorites`);
+  }
+  async function heartPost(postID) {
+    console.log("Sending hearted post to DB", postID);
+    var userID = currentUser.uid;
+
+    //Add it to the users' liked posts and merge it
+    var userRef = db.collection("users").doc(userID);
+    await userRef.update(
+      {
+        hearted: firebase.firestore.FieldValue.arrayUnion(postID),
+      },
+      { merge: true }
+    );
+
+    /*
+    db.collection("users").doc(id).set({ uid: value });
+    */
+    console.log(`Adding ${postID} to ${userID}'s favorites`);
+
+    //add to the user's heart
+  }
 
   //Grab the array of strings that the user has liked
   //Go through the string and remove the one string that contains the passed postID
   //Return a new string and push the array back into the user data
   async function removeLikePost(postID) {
-    console.log(postID);
+    console.log("Removing post id: ", postID);
     var userID = currentUser.uid;
     var num_shards = 5;
     var ref = db.collection("counters").doc(postID);
 
     //Add it to the users' liked posts and merge it
     var userRef = db.collection("users").doc(userID);
-    console.log(userRef);
+    await userRef.update({
+      likedPosts: firebase.firestore.FieldValue.arrayRemove(postID),
+    });
 
     // Select a shard of the counter at random
     const shard_id = Math.floor(Math.random() * num_shards).toString();
@@ -645,6 +658,8 @@ export default function AuthProvider({ children }) {
     hasUserLikedPost,
     recentlyUploaded,
     retrieveRandomMeme,
+    removeLikePost,
+    removeHeartPost,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }
