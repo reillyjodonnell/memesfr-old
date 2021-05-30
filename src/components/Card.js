@@ -15,6 +15,8 @@ export default function Card(props) {
   const [hasAlreadyLikedPost, setHasAlreadyLikedPost] = useState(false);
   const [hasAlreadyHeartedPost, setHasAlreadyHeartedPost] = useState(false);
 
+  const { id, author } = props.item;
+
   const {
     activeScreen,
     likePost,
@@ -27,72 +29,66 @@ export default function Card(props) {
   function captureUserInput() {
     if (currentUser && needSubmit) {
       if (thumbUp && !hasAlreadyLikedPost) {
-        likePost(props.item.id);
+        likePost(id);
       }
       if (thumbDown) {
-        dislikePost(props.item.id);
+        dislikePost(id);
       }
       if (heart && !hasAlreadyHeartedPost) {
-        heartPost(props.item.id);
+        heartPost(id);
       }
       setNeedSubmit(false);
     }
   }
-  async function match() {
-    if (currentUser) {
-      const results = await hasUserLikedPost(props.item.id);
-      let [{ likedPosts }, { heartedPosts }] = results;
-      if (likedPosts != undefined) {
-        likedPosts.map((usersLikedPost) => {
-          if (props.item.id === usersLikedPost) {
-            setThumbUp(true);
-            setHasAlreadyLikedPost(true);
-            return null;
-          }
-        });
-      }
-      if (heartedPosts != undefined) {
-        heartedPosts.map((usersHeartedPost) => {
-          if (props.item.id === usersHeartedPost) {
-            setHeart(true);
-            setHasAlreadyHeartedPost(true);
-            return null;
-          }
-        });
-      }
-    }
-  }
 
   useEffect(() => {
+    async function match() {
+      if (currentUser) {
+        const results = await hasUserLikedPost(id);
+        let [{ likedPosts }, { heartedPosts }] = results;
+        if (likedPosts !== undefined) {
+          likedPosts.map((usersLikedPost) => {
+            if (id === usersLikedPost) {
+              setThumbUp(true);
+              setHasAlreadyLikedPost(true);
+              return null;
+            }
+            return null;
+          });
+        }
+        if (heartedPosts !== undefined) {
+          heartedPosts.map((usersHeartedPost) => {
+            if (id === usersHeartedPost) {
+              setHeart(true);
+              setHasAlreadyHeartedPost(true);
+              return null;
+            }
+            return null;
+          });
+        }
+      }
+    }
     match();
-  }, []);
+  }, [currentUser, hasUserLikedPost, id]);
 
   const history = useHistory();
 
-  useEffect(() => {}, [likes]);
-
   useEffect(() => {
     if (currentUser) {
-      if (currentUser.uid === props.item.author) {
+      changeLikes(props.item.likes);
+
+      if (currentUser.uid === author) {
         setPermissionToEdit(true);
       } else setPermissionToEdit(false);
     } else setPermissionToEdit(false);
-  }, [activeScreen]);
-
-  useEffect(() => {
-    {
-      if (props) {
-        changeLikes(props.item.likes);
-      }
-    }
-  }, [activeScreen]);
+  }, [activeScreen, author, props.item.likes, likes, currentUser]);
 
   const toggleThumbUp = () => {
     setNeedSubmit(true);
-    if (thumbUp == true) {
+    if (thumbUp === true) {
       setThumbUp(!thumbUp);
       changeLikes((likes) => likes - 1);
-    } else if (thumbDown == true) {
+    } else if (thumbDown === true) {
       setThumbDown(!thumbDown);
       setThumbUp(!thumbUp);
       changeLikes((prevLikes) => prevLikes + 2);
@@ -107,20 +103,20 @@ export default function Card(props) {
       setHeart(true);
     } else setHeart(false);
   };
-  const toggleThumbDown = () => {
-    setNeedSubmit(true);
-    if (thumbUp == true) {
-      setThumbUp(!thumbUp);
-      setThumbDown(!thumbDown);
-      changeLikes(likes - 2);
-    } else if (thumbDown == true) {
-      setThumbDown(!thumbDown);
-      changeLikes(likes + 1);
-    } else {
-      setThumbDown(!thumbDown);
-      changeLikes(likes - 1);
-    }
-  };
+  // const toggleThumbDown = () => {
+  //   setNeedSubmit(true);
+  //   if (thumbUp === true) {
+  //     setThumbUp(!thumbUp);
+  //     setThumbDown(!thumbDown);
+  //     changeLikes(likes - 2);
+  //   } else if (thumbDown === true) {
+  //     setThumbDown(!thumbDown);
+  //     changeLikes(likes + 1);
+  //   } else {
+  //     setThumbDown(!thumbDown);
+  //     changeLikes(likes - 1);
+  //   }
+  // };
 
   /*
   useEffect(() => {
@@ -318,6 +314,7 @@ export default function Card(props) {
                 ></video>
               ) : (
                 <img
+                  alt="meme"
                   onDoubleClick={currentUser ? toggleHeart : activatePrompt}
                   className="meme-image"
                   src={props.item.image}
