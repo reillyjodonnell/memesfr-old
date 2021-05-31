@@ -36,6 +36,23 @@
   width: 100%;
   font-size: 20px;
 }
+.avatar-picture {
+  display: flex;
+  height: 52px;
+  border-radius: 20px;
+  width: 52px;
+  justify-self: center;
+  align-items: center;
+  margin-right: 1rem;
+}
+.avatar-picture img {
+  height: 100%;
+  border-radius: 50%;
+  width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
 
 .username {
   display: flex;
@@ -45,11 +62,9 @@
   width: 100%;
 }
 .clickable {
-  cursor: pointer;
+  cursor: default;
 }
-.clickable:hover {
-  border-bottom: 0.5px solid black;
-}
+
 .number-of-likes {
   display: flex;
   margin-left: auto;
@@ -63,7 +78,6 @@
 .upper-top-info {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   width: 100%;
 }

@@ -297,6 +297,16 @@ export default function Card(props) {
       </div>
     );
   }
+  const DisplayAvatar = () => {
+    var avatar = props.item.authorPic;
+    console.log(avatar);
+
+    return (
+      <div className="avatar-picture">
+        <img src={avatar} style={{ height: "100%", width: "100%" }} />
+      </div>
+    );
+  };
 
   if (props) {
     return (
@@ -308,10 +318,12 @@ export default function Card(props) {
         <div className="card">
           <div className="upper">
             <div className="upper-top-info">
+              {props.item.authorPic ? <DisplayAvatar /> : null}
               <div className="meme-identification">
                 <span> posted by </span>
                 <span className="clickable">
-                  {currentUser && props.item.userName === currentUser.userName
+                  {currentUser &&
+                  props.item.userName === currentUser.displayName
                     ? "you"
                     : props.item.userName}
                 </span>

@@ -8,6 +8,9 @@ body {
   text-align: center;
   font-family: "Roboto";
 }
+span {
+  cursor: default;
+}
 
 .App-logo {
   height: 40vmin;

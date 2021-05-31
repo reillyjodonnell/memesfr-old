@@ -354,6 +354,38 @@ export default function Dashboard(props) {
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  const RecentlyPosted = () => {
+    var saying = "";
+    if (recentlyUploaded.length === 1) {
+      var saying = "Nice work 👍 Here's what you just posted:";
+    }
+    if (recentlyUploaded.length > 1) {
+      saying = "Keep it up memelord";
+    }
+    return (
+      <div
+        style={{
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "auto",
+
+          padding: "1rem",
+        }}
+      >
+        <span style={{ fontSize: "1.2rem" }}>{saying}</span>
+        {nav === 0 && recentlyUploaded.length > 0
+          ? recentlyUploaded.map((item) => {
+              console.log("Mapping through array");
+              return <Card item={item}></Card>;
+            })
+          : null}
+      </div>
+    );
+  };
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -471,30 +503,7 @@ export default function Dashboard(props) {
                   <Skeleton className={classes.skeleton} variant="rect" />
                 </>
               ) : null}
-
-              {recentlyUploaded.length > 0 ? (
-                <div
-                  style={{
-                    height: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    width: "auto",
-                    border: "1px solid black",
-                    padding: "1rem",
-                  }}
-                >
-                  <span>
-                    Your recently posted memes
-                    {nav === 0 && recentlyUploaded.length > 0
-                      ? recentlyUploaded.map((item) => {
-                          console.log("Mapping through array");
-                          return <Card item={item}></Card>;
-                        })
-                      : null}
-                  </span>
-                </div>
-              ) : null}
+              <RecentlyPosted />
 
               {activeScreen && activeScreen.length > 1 ? (
                 activeScreen.map((item) => {

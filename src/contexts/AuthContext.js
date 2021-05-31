@@ -66,6 +66,7 @@ export default function AuthProvider({ children }) {
   function uploadMeme(image, title, type) {
     var author = currentUser.uid;
     var ud = currentUser.displayName;
+    var userPic = currentUser.photoURL;
 
     const upload = storage.ref(`memes/${title}`).put(image);
     var num_shards = 5;
@@ -93,6 +94,7 @@ export default function AuthProvider({ children }) {
                   id: uniqueIdentifier,
                   userName: ud,
                   author: author,
+                  authorPic: userPic,
                   image: url,
                   title: title,
                   likes: 0,
@@ -118,6 +120,7 @@ export default function AuthProvider({ children }) {
                   id: uniqueIdentifier,
                   userName: ud,
                   author: author,
+                  authorPic: userPic,
                   image: url,
                   title: title,
                   likes: 0,
@@ -195,6 +198,7 @@ export default function AuthProvider({ children }) {
             userName: item.userName,
             title: item.title,
             author: item.author,
+            authorPic: item.authorPic,
             likes: resolvedPromiseForNumberOfLikes,
             image: item.image,
             createdAt: item.createdAt,
@@ -256,6 +260,7 @@ export default function AuthProvider({ children }) {
             userName: item.userName,
             title: item.title,
             author: item.author,
+            authorPic: item.authorPic,
             likes: resolvedPromiseForNumberOfLikes,
             image: item.image,
             createdAt: item.createdAt,
@@ -400,6 +405,7 @@ export default function AuthProvider({ children }) {
                   userName: doc.data().userName,
                   title: doc.data().title,
                   author: doc.data().author,
+                  authorPic: doc.data().authorPic,
                   likes: resolvedPromiseForNumberOfLikes,
                   image: doc.data().image,
                   createdAt: doc.data().createdAt,
@@ -444,6 +450,7 @@ export default function AuthProvider({ children }) {
                       userName: doc.data().userName,
                       title: doc.data().title,
                       author: doc.data().author,
+                      authorPic: doc.data().authorPic,
                       likes: resolvedPromiseForNumberOfLikes,
                       image: doc.data().image,
                       createdAt: doc.data().createdAt,
