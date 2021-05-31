@@ -81,6 +81,9 @@ a {
   overflow: hidden;
   font-size: 1.2rem;
 }
+.dropdown span {
+  cursor: pointer;
+}
 
 .menu {
   width: 100%;

@@ -18,7 +18,6 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { makeStyles } from "@material-ui/core/styles";
 import Doge from "../Assets/doge.svg";
-import BuffDoge from "../Assets/buff-doge.png";
 import firebase from "../services/firebase";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";

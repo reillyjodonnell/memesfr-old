@@ -1,16 +1,17 @@
 import { React, useState } from "react";
-import { ReactComponent as Settings } from "../Assets/Icons/Assets/Settings.svg";
-import { ReactComponent as Left } from "../Assets/Icons/Assets/ArrowLeftWhite.svg";
+import { ReactComponent as Settings } from "../Assets/SVGs/settings.svg";
+import { ReactComponent as Left } from "../Assets/SVGs/arrowLeft.svg";
 import "../CSS Components/DropDownMenu.css";
-import { ReactComponent as AddFriend } from "../Assets/Icons/Assets/UserPlus.svg";
-import { ReactComponent as Friends } from "../Assets/Icons/Assets/Users.svg";
+import { ReactComponent as AddFriend } from "../Assets/SVGs/userPlus.svg";
+import { ReactComponent as Friends } from "../Assets/SVGs/users.svg";
 import { ReactComponent as Doge } from "../Assets/doge.svg";
-import { ReactComponent as Help } from "../Assets/Icons/Help.svg";
+import { ReactComponent as Help } from "../Assets/SVGs/help.svg";
+import { ReactComponent as Ball } from "../Assets/SVGs/pokeBall.svg";
 import { useAuth } from "../contexts/AuthContext";
 import { useTheme } from "../contexts/ThemeContext";
 import { useHistory } from "react-router";
 
-export default function DropDownMenu(props) {
+export default function DropDownMenu() {
   const [open, openSettings] = useState(false);
   const [openFriends, manageFriends] = useState(false);
   const [openFile, expandFileSubmit] = useState(false);
@@ -60,7 +61,7 @@ export default function DropDownMenu(props) {
         <div onClick={() => expandFileSubmit(!openFile)}>
           <DropDownItem IconText="This button is worthless" />
         </div>
-        <DropDownItem IconText="Like me" />
+        <DropDownItem IconText="Catch em all" Icon={<Ball />} />
         <div onClick={() => openSettings(!open)}>
           <DropDownItem style={{ paddingLeft: "7px" }} Icon={<Left />} />
         </div>
@@ -94,7 +95,10 @@ export default function DropDownMenu(props) {
     return (
       <>
         <div onClick={() => history.push("/help")}>
-          <DropDownItem Icon={<Help />} IconText="Help" />
+          <DropDownItem
+            Icon={<Help style={{ stroke: "white" }} />}
+            IconText="Help"
+          />
         </div>
         <div onClick={() => openSettings(!open)}>
           <DropDownItem IconText="Settings" Icon={<Settings />}></DropDownItem>
@@ -112,7 +116,7 @@ export default function DropDownMenu(props) {
           <DropDownItem IconText="Sign Out" />
         </div>
         <div onClick={() => manageFriends(!openFriends)}>
-          <DropDownItem Icon={<Friends />} IconText="Friends" />
+          <DropDownItem Icon={<Friends />} IconText="Friends (disabled 😔)" />
         </div>
         <div onClick={() => openSettings(!open)}>
           <DropDownItem IconText="Settings" Icon={<Settings />}></DropDownItem>

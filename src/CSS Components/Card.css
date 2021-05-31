@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  padding: 2rem;
+  padding: 2rem 2rem 0 2rem;
   background-color: rgba(255, 255, 255, 0.548);
   position: relative;
 }
@@ -69,8 +69,13 @@
 
 .number-of-likes {
   display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
   margin-left: auto;
   font-weight: 600;
+  padding: 1rem;
+  font-size: 1.4rem;
 }
 .meme-image {
   display: flex;
@@ -99,14 +104,12 @@
 
 /*PENCIL*/
 .edit-mode {
-  margin-left: auto;
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  display: flex;
 }
 .edit-mode svg {
   height: 40px;
   cursor: pointer;
+  stroke: rgb(49, 49, 49);
 }
 
 @keyframes appear {
@@ -122,10 +125,10 @@
   animation-name: appear;
   animation-duration: 0.3s;
   height: auto;
-  width: 300px;
+  width: 270px;
   position: absolute;
-  top: 4.5rem;
-  right: 15px;
+  bottom: 4rem;
+  right: 30pxpx;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -165,6 +168,8 @@
 .delete {
   display: flex;
   width: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
 /*End Of Pencil*/
@@ -178,8 +183,9 @@
 .lower {
   display: flex;
   width: 100%;
-  justify-content: space-evenly;
-  margin-top: 1rem;
+  justify-content: space-between;
+  margin: 1rem;
+  align-items: center;
 }
 
 .lower img,
@@ -294,7 +300,7 @@
 
 /* responsiveness <3 */
 @media only screen and (max-width: 600px) {
-  .upper-top span {
+  .meme-title {
     font-size: 1rem;
   }
   .card-area {
@@ -306,12 +312,9 @@
 }
 @media only screen and (max-width: 500px) and (max-height: 850px) {
   .card {
-    padding: 0.75rem;
+    padding: 0.75rem 0.75rem 0 0.75rem;
   }
-  .edit-mode {
-    top: 0;
-    right: 0;
-  }
+
   .lower svg {
     height: 30px;
   }
@@ -321,7 +324,15 @@
     height: 45px;
     padding: 5px;
   }
+}
+@media only screen and (max-height: 600px) and (max-width: 330px) {
   .expanded-pencil {
-    top: 2.5rem;
+    width: 230px;
+  }
+  .expanded-pencil span {
+    font-size: 1.1rem;
+  }
+  .expanded-pencil img {
+    height: 40px;
   }
 }

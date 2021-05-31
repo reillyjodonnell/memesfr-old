@@ -17,15 +17,16 @@ import Skeleton from "@material-ui/lab/Skeleton";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import { SecondaryListItems } from "./ListItems";
 import MainListItems from "./ListItems";
-import Crown from "../Assets/Icons/Crown.svg";
 import Card from "./Card";
 import DropDownMenu from "./DropDownMenu";
 import "../CSS Components/Dashboard.css";
 import CreatePost from "./CreatePost";
-import User from "../Assets/Icons/User.svg";
+import { ReactComponent as User } from "../Assets/SVGs/user.svg";
 import firebase from "firebase";
 import { useAuth } from "../contexts/AuthContext";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import { ReactComponent as Castle } from "../Assets/SVGs/castle.svg";
+import { ReactComponent as X } from "../Assets/SVGs/x.svg";
 
 const drawerWidth = 240;
 const login = false;
@@ -142,12 +143,13 @@ export default function Dashboard(props) {
   const [randomPosts, setRandomPosts] = useState([{}]);
   const [activeScreen, setActiveScreen] = useState([{}]);
   const [home, setHome] = useState(false);
+  const [firstTime, setFirstTime] = useState(false);
+  const [displayFirstTimeMessage, setDisplayFirstTimeMessage] = useState(true);
   const [loadAnotherRandomMeme, setLoadAnotherRandomMeme] = useState(false);
 
   const [nav, setNav] = useState(0);
 
   const myRef = useRef(null);
-  console.log(randomPosts);
 
   const {
     currentUser,
@@ -172,19 +174,15 @@ export default function Dashboard(props) {
   var active = 0;
 
   const openRegister = () => {
-    console.log("opening register ");
     history.push("/signup");
   };
 
   const openSignIn = () => {
-    console.log("opening sign in ");
     history.push("/login");
   };
 
   const handleDrawerOpen = () => {
-    console.log("Opening");
-
-    setOpen(true);
+    //setOpen(true);
   };
   const handleDrawerClose = () => {
     setOpen(false);
@@ -231,6 +229,58 @@ export default function Dashboard(props) {
     }
     return () => (mounted = false);
   }, []);
+
+  useEffect(() => {
+    let mount = true;
+    let visited = localStorage.getItem("firstTime");
+    if (mount) {
+      if (visited) {
+        setFirstTime(false);
+      } else {
+        setFirstTime(true);
+        localStorage.setItem("firstTime", true);
+      }
+    }
+
+    return () => {
+      mount = false;
+    };
+  }, []);
+
+  const ThanksForVisiting = () => {
+    function closeMessage() {
+      setDisplayFirstTimeMessage(false);
+    }
+    if (displayFirstTimeMessage) {
+      return (
+        <div className="thanks-box">
+          <div className="close-thanks-box">
+            <X onClick={closeMessage} />
+          </div>
+
+          <span className="thanks-title">
+            Thanks so much for visiting this site ❤️
+          </span>
+          <div className="discord-invite">
+            <span>
+              Join our discord server and be a part of the Memefr community:
+            </span>
+            <Link> https://discord.gg/234DDJUQpD</Link>
+          </div>
+
+          <span>
+            We have some awesome things planned for the future, including paying
+            crypto for awesome memes (awesome, right?) This is a beta of the
+            website, which will most likely include serious bugs. We've done
+            tons of testing, but there's bound to be plenty of bugs. If you find
+            any bugs/ have any suggestions for the site, join the Discord server
+            and post them there!
+          </span>
+        </div>
+      );
+    }
+    return null;
+  };
 
   function showPopular() {
     setActiveScreen();
@@ -448,8 +498,7 @@ export default function Dashboard(props) {
             >
               Memesfr
             </Typography>
-
-            <img className={classes.image} src={Crown}></img>
+            <Castle className={classes.image} />
           </div>
 
           {currentUser ? null : (
@@ -479,7 +528,9 @@ export default function Dashboard(props) {
 
           <IconButton style={{ marginLeft: "auto" }} color="inherit">
             <Badge badgeContent={1} color="secondary">
-              <img onClick={openMenu} src={props.activeUser ? null : User} />
+              {props.activeUser ? null : (
+                <User style={{ stroke: "white" }} onClick={openMenu} />
+              )}
             </Badge>
           </IconButton>
         </Toolbar>
@@ -521,6 +572,8 @@ export default function Dashboard(props) {
           <Grid container spacing={5}></Grid>
           <Box spacing={5} pt={4}>
             <CreatePost />
+            <ThanksForVisiting />
+            {firstTime ? <ThanksForVisiting /> : null}
 
             <div className="main-content">
               {loadingFilter ? (

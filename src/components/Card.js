@@ -171,19 +171,24 @@ export default function Card(props) {
   }
 
   function OptionsExpanded() {
-    return (
-      <>
-        <div onClick={closeOptions} className="expanded-pencil">
-          <div className="edit">
-            <span>Close</span>
+    if (permissionToEdit) {
+      return <ExpandedPencil></ExpandedPencil>;
+    }
+    if (!permissionToEdit) {
+      return (
+        <>
+          <div onClick={closeOptions} className="expanded-pencil">
+            <div className="edit">
+              <span>Close</span>
+            </div>
+            <div className="delete">
+              <span>Report Post</span>
+              <img src={report} />
+            </div>
           </div>
-          <div className="delete">
-            <span>Report Post</span>
-            <img src={report} />
-          </div>
-        </div>
-      </>
-    );
+        </>
+      );
+    }
   }
 
   /* THIS IS IF MODS/CREATORS WANT TO EDIT POST*/
@@ -256,8 +261,6 @@ export default function Card(props) {
                     : props.item.userName}
                 </span>
               </div>
-              {permissionToEdit ? <Edit /> : <Options />}
-              {permissionToEdit && pencil ? <ExpandedPencil /> : null}
             </div>
             <div className="upper-top">
               <span className="meme-title">{props.item.title}</span>
@@ -289,6 +292,7 @@ export default function Card(props) {
               className={thumbUp ? "active-thumbup" : "inactive-thumbup"}
               onClick={currentUser ? toggleThumbUp : activatePrompt}
             />
+            <Options />
           </div>
           {options ? <OptionsExpanded /> : null}
         </div>
