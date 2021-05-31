@@ -18,6 +18,8 @@ export default function DropDownMenu() {
   const { currentUser, signOut, UpdateProfilePicture } = useAuth();
   const { updateDoge, doge } = useTheme();
 
+  const discLink = "https://discord.gg/234DDJUQpD";
+
   function activateDoge() {
     updateDoge();
   }
@@ -49,6 +51,23 @@ export default function DropDownMenu() {
   };
 
   function SecondaryOptions() {
+    const RedirectToDisc = (props) => {
+      return (
+        <a
+          className="discord-link menu-item"
+          href={discLink}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span style={props.style} className="icon-button">
+            {props.IconText}
+            {props.Icon}{" "}
+          </span>
+
+          {props.children}
+        </a>
+      );
+    };
     return (
       <div style={{ whiteSpace: "nowrap" }}>
         <div onClick={activateDoge}>
@@ -57,10 +76,11 @@ export default function DropDownMenu() {
             IconText={doge ? "Deactivate Doge" : "Activate Doge"}
           />
         </div>
+        <RedirectToDisc
+          style={{ fontSize: "1.1rem" }}
+          IconText="Join our Discord server"
+        ></RedirectToDisc>
 
-        <div onClick={() => expandFileSubmit(!openFile)}>
-          <DropDownItem IconText="This button is worthless" />
-        </div>
         <DropDownItem IconText="Catch em all" Icon={<Ball />} />
         <div onClick={() => openSettings(!open)}>
           <DropDownItem style={{ paddingLeft: "7px" }} Icon={<Left />} />
