@@ -11,10 +11,14 @@ export default function ThemeProvider({ children }) {
   const [doge, setDoge] = useState(false);
 
   useEffect(() => {
-    if (doge == true) {
-      setDogeBackground();
+    let mount = true;
+    if (mount === true) {
+      if (doge == true) {
+        setDogeBackground();
+      }
+      if (doge == false) document.body.style.backgroundImage = "";
     }
-    if (doge == false) document.body.style.backgroundImage = "";
+    return () => (mount = false);
   }, [doge]);
 
   function updateDoge() {

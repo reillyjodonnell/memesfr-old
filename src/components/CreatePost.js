@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -7,7 +7,7 @@ import RightIcon from "@material-ui/icons/SubdirectoryArrowRight";
 import picture from "../Assets/Icons/Image.svg";
 import doge from "../Assets/doge.svg";
 import "../CSS Components/CreatePost.css";
-import Plus from "../Assets/Icons/Plus.svg";
+
 import Modal from "./Modal";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";

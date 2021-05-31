@@ -604,38 +604,21 @@ export default function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log(user);
-        console.log(user.emailVerified);
-        setCurrentUser(user);
-      }
+    let mount = true;
+    if (mount === true) {
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+          console.log(user);
+          console.log(user.emailVerified);
+          setCurrentUser(user);
+        }
 
-      setLoadUser(false);
-      /* THIS WILL SEND THE EMAIL
-      if (user.emailVerified == false) {
-        auth
-          .sendSignInLinkToEmail(user.email, actionCodeSettings)
-          .then(() => {
-            // The link was successfully sent. Inform the user.
-            // Save the email locally so you don't need to ask the user for it again
-            // if they open the link on the same device.
-            window.localStorage.setItem("emailForSignIn", user.email);
-            // ...
-          })
-          .catch((error) => {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-            // ...
-          });
-      }
-      */
-
-      //setCurrentUser(user);
-      console.log(currentUser);
-    });
-    return unsubscribe;
+        setLoadUser(false);
+        console.log(currentUser);
+      });
+      return unsubscribe;
+    }
+    return () => (mount = false);
   }, []);
 
   const values = {

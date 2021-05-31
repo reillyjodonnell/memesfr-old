@@ -61,7 +61,7 @@ export default function Card(props) {
 
   useEffect(() => {
     let mounted = true;
-    if (mounted) {
+    if (mounted === true) {
       async function match() {
         if (currentUser) {
           const results = await hasUserLikedPost(props.item.id);
@@ -99,7 +99,7 @@ export default function Card(props) {
 
   useEffect(() => {
     let mounted = true;
-    if (mounted == true) {
+    if (mounted === true) {
       if (currentUser) {
         if (currentUser.uid === props.item.author) {
           setPermissionToEdit(true);
@@ -111,7 +111,7 @@ export default function Card(props) {
 
   useEffect(() => {
     let mounted = true;
-    if (mounted) {
+    if (mounted === true) {
       if (props) {
         changeLikes(props.item.likes);
       }

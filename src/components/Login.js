@@ -27,12 +27,12 @@ function Copyright() {
   const history = useHistory();
 
   function redirectHome() {
-    history.push("/")
+    history.push("/");
   }
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" cursor='pointer' onClick={redirectHome}>
+      <Link color="inherit" cursor="pointer" onClick={redirectHome}>
         Memesfr
       </Link>{" "}
       {new Date().getFullYear()}
@@ -88,10 +88,14 @@ export default function SignInSide(props) {
   const { login } = useAuth();
 
   useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      setCurrentUser(user);
-    });
-    return unsubscribe;
+    let mount = true;
+    if (mount === true) {
+      const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+        setCurrentUser(user);
+      });
+      return unsubscribe;
+    }
+    return () => (mount = false);
   }, []);
 
   async function handleSubmit(e) {

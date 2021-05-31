@@ -15,9 +15,13 @@ export default function CircularIndeterminate() {
   const [displayLogo, setDisplayLogo] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setDisplayLogo(false);
-    }, 1000);
+    let mount = true;
+    {
+      setTimeout(() => {
+        if (mount === true) setDisplayLogo(false);
+      }, 1000);
+    }
+    return () => (mount = false);
   }, []);
 
   return (
