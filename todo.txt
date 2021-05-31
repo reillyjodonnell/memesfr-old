@@ -1,4 +1,4 @@
-1. Create a like/dislike system
+COMPLETE 1. Create a like/dislike system
     - increment/ animate on client side
     - Send the increment/decrement to the server
 

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import ReactDom from "react-dom";
-import X from "../Assets/Icons/X.svg";
+import x from "../Assets/SVGs/x.svg";
 import Image from "../Assets/Icons/Image.svg";
 import Video from "../Assets/Icons/Video.svg";
 import Gif from "../Assets/Icons/Gif.svg";
@@ -132,7 +132,7 @@ export default function Modal(props) {
         <>
           <div className="upper-section">
             <span>Upload Meme</span>
-            <img onClick={props.openFilePrompt} src={X} />
+            <img onClick={props.openFilePrompt} src={x} />
           </div>
           <div className="upper-middle">
             <div className="group">

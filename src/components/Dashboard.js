@@ -20,15 +20,12 @@ import MainListItems from "./ListItems";
 import Crown from "../Assets/Icons/Crown.svg";
 import Card from "./Card";
 import DropDownMenu from "./DropDownMenu";
-import Filter from "./Filter";
 import "../CSS Components/Dashboard.css";
 import CreatePost from "./CreatePost";
 import User from "../Assets/Icons/User.svg";
 import firebase from "firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-import { DEFAULT_FAILURE_POLICY } from "firebase-functions";
-import { SettingsInputHdmiOutlined } from "@material-ui/icons";
 
 const drawerWidth = 240;
 const login = false;
@@ -38,7 +35,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   toolbar: {
-    paddingRight: 24, //keep right padding when drawer closed
     backgroundColor: "#1098F7",
   },
   toolbarIcon: {
@@ -163,9 +159,11 @@ export default function Dashboard(props) {
   } = useAuth();
 
   useEffect(() => {
-    setHome((prev) => !prev);
-    console.log(recentlyUploaded);
-    console.log(recentlyUploaded.length);
+    let mounted = true;
+    if (mounted === true) {
+      setHome((prev) => !prev);
+    }
+    return () => (mounted = false);
   }, [recentlyUploaded]);
 
   const history = useHistory();
@@ -195,8 +193,6 @@ export default function Dashboard(props) {
     expandMenu(!expand);
   };
   useEffect(() => {
-    //Load the popular and recent posts which will show up in state
-
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
       // Additional state parameters can also be passed via URL.
@@ -320,36 +316,40 @@ export default function Dashboard(props) {
     setLoadAnotherRandomMeme((prevState) => !prevState);
   }
   useEffect(() => {
-    switch (nav) {
-      case 0:
-        console.log("Back Home");
-        showPopular();
-        active = 0;
-        break;
-      case 1:
-        console.log("On Trending screen");
-        showPopular();
-        active = 1;
-        break;
-      case 2:
-        console.log("On popular screen");
-        showPopular();
-        active = 2;
-        break;
-      case 3:
-        console.log("On Recent Screen");
-        showRecent();
-        active = 3;
-        break;
-      case 4:
-        console.log("Random meme time. nice");
-        showRandom();
-        active = 4;
-        break;
-      default:
-        console.log("We are on the homescreen now");
-        active = 0;
+    let mounted = true;
+    if (mounted) {
+      switch (nav) {
+        case 0:
+          console.log("Back Home");
+          showPopular();
+          active = 0;
+          break;
+        case 1:
+          console.log("On Trending screen");
+          showPopular();
+          active = 1;
+          break;
+        case 2:
+          console.log("On popular screen");
+          showPopular();
+          active = 2;
+          break;
+        case 3:
+          console.log("On Recent Screen");
+          showRecent();
+          active = 3;
+          break;
+        case 4:
+          console.log("Random meme time. nice");
+          showRandom();
+          active = 4;
+          break;
+        default:
+          console.log("We are on the homescreen now");
+          active = 0;
+      }
     }
+    return () => (mounted = false);
   }, [nav, loadAnotherRandomMeme]);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -392,7 +392,7 @@ export default function Dashboard(props) {
           {nav === 0 && recentlyUploaded.length > 0
             ? recentlyUploaded.map((item) => {
                 console.log("Mapping through array");
-                return <Card item={item}></Card>;
+                return <Card key={item.id} item={item}></Card>;
               })
             : null}
         </>
@@ -457,7 +457,6 @@ export default function Dashboard(props) {
                 component="h1"
                 variant="h6"
                 color="inherit"
-                paddingRight="auto"
                 noWrap
                 className={classes.login}
               >
@@ -522,7 +521,7 @@ export default function Dashboard(props) {
 
               {activeScreen && activeScreen.length > 1 ? (
                 activeScreen.map((item) => {
-                  return <Card item={item} />;
+                  return <Card key={item.id} item={item} />;
                 })
               ) : randomPosts != null ? (
                 <Card item={randomPosts}></Card>

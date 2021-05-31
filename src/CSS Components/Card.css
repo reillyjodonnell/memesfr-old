@@ -98,8 +98,7 @@
 
 /*PENCIL*/
 .edit-mode {
-  position: absolute;
-  right: 5px;
+  margin-left: auto;
 }
 .edit-mode svg {
   height: 25px;
@@ -152,6 +151,7 @@
   border-radius: 10px;
   cursor: pointer;
   font-size: 1rem;
+  font-weight: 500;
 }
 .edit {
   width: 100%;
