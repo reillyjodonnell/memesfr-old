@@ -2,8 +2,6 @@ import React, { useState, useEffect, useContext } from "react";
 import { auth, db, storage } from "../services/firebase";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase/app";
-import Dashboard from "../components/Dashboard";
-import { firestore } from "firebase-admin";
 
 const AuthContext = React.createContext();
 

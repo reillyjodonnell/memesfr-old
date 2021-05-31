@@ -11,6 +11,9 @@ body {
 span {
   cursor: default;
 }
+img {
+  cursor: pointer;
+}
 
 .App-logo {
   height: 40vmin;

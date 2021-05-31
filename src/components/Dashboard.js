@@ -355,35 +355,50 @@ export default function Dashboard(props) {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   const RecentlyPosted = () => {
+    console.log(recentlyUploaded);
     var saying = "";
     if (recentlyUploaded.length === 1) {
-      var saying = "Nice work 👍 Here's what you just posted:";
+      var saying = "Nice work 👍 Here's what you just posted 👇";
     }
     if (recentlyUploaded.length > 1) {
       saying = "Keep it up memelord";
     }
-    return (
-      <div
-        style={{
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "auto",
-
-          padding: "1rem",
-        }}
-      >
-        <span style={{ fontSize: "1.2rem" }}>{saying}</span>
-        {nav === 0 && recentlyUploaded.length > 0
-          ? recentlyUploaded.map((item) => {
-              console.log("Mapping through array");
-              return <Card item={item}></Card>;
-            })
-          : null}
-      </div>
-    );
+    if (recentlyUploaded.length > 0) {
+      return (
+        <>
+          <div
+            style={{
+              height: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "auto",
+              margin: "1rem",
+            }}
+          >
+            <div
+              style={{
+                display: "block",
+                backgroundColor: "white",
+                padding: "1rem",
+                height: "100%",
+                width: "100%",
+              }}
+            >
+              <span style={{ fontSize: "1.2rem" }}>{saying}</span>
+            </div>
+          </div>
+          {nav === 0 && recentlyUploaded.length > 0
+            ? recentlyUploaded.map((item) => {
+                console.log("Mapping through array");
+                return <Card item={item}></Card>;
+              })
+            : null}
+        </>
+      );
+    }
+    return null;
   };
 
   return (
