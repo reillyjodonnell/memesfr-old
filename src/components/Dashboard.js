@@ -360,12 +360,14 @@ export default function Dashboard(props) {
 
   const RecentlyPosted = () => {
     console.log(recentlyUploaded);
-    var saying = "";
+    var sayingOne = "";
+    var sayingTwo = "";
     if (recentlyUploaded.length === 1) {
-      var saying = "Nice work 👍 Here's what you just posted 👇";
+      var sayingOne = "Nice work 👍";
+      var sayingTwo = "Here's what you just posted 👇";
     }
     if (recentlyUploaded.length > 1) {
-      saying = "Keep it up memelord";
+      sayingOne = "Keep it up memelord";
     }
     if (recentlyUploaded.length > 0) {
       return (
@@ -390,7 +392,13 @@ export default function Dashboard(props) {
                 width: "100%",
               }}
             >
-              <span style={{ fontSize: "1.2rem" }}>{saying}</span>
+              <span style={{ whiteSpace: "pre-wrap", fontSize: "1.2rem" }}>
+                {sayingOne}
+              </span>
+              <br />
+              <span style={{ whiteSpace: "nowrap", fontSize: "1.2rem" }}>
+                {sayingTwo}
+              </span>
             </div>
           </div>
           {nav === 0 && recentlyUploaded.length > 0

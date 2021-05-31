@@ -15,6 +15,9 @@ span {
 img {
   cursor: pointer;
 }
+svg {
+  cursor: pointer;
+}
 
 .App-logo {
   height: 40vmin;

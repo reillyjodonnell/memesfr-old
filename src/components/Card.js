@@ -4,9 +4,9 @@ import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 import trash from "../Assets/SVGs/trash.svg";
 import report from "../Assets/SVGs/report.svg";
-import x from "../Assets/SVGs/x.svg";
-import pencilIcon from "../Assets/SVGs/pencil.svg";
-import dots from "../Assets/SVGs/dots.svg";
+import { ReactComponent as X } from "../Assets/SVGs/x.svg";
+import { ReactComponent as PencilIcon } from "../Assets/SVGs/pencil.svg";
+import { ReactComponent as Dots } from "../Assets/SVGs/dots.svg";
 import { ReactComponent as HeartIcon } from "../Assets/SVGs/heart.svg";
 import { ReactComponent as LikeIcon } from "../Assets/SVGs/thumbUp.svg";
 
@@ -191,20 +191,20 @@ export default function Card(props) {
     if (pencil)
       return (
         <div className="edit-mode" onClick={ExpandPencilContainer}>
-          <img src={x} />
+          <X />
         </div>
       );
     else
       return (
-        <div className="edit-mode" onClick={ExpandPencilContainer}>
-          <img src={pencilIcon} />
+        <div onClick={ExpandPencilContainer} className="edit-mode">
+          <PencilIcon></PencilIcon>
         </div>
       );
   }
   function Options() {
     return (
       <div className="edit-mode" onClick={openOptions}>
-        <img src={dots} />
+        <Dots />
       </div>
     );
   }

@@ -35,7 +35,7 @@
   display: flex;
   width: 35vw;
   border-radius: 20px;
-  height: 100px;
+  height: 140px;
   align-items: center;
 }
 .create-post-content {
@@ -74,6 +74,9 @@
   white-space: nowrap;
   padding: 2rem;
   font-weight: 500;
+}
+.create-prompt span {
+  cursor: pointer;
 }
 .create-prompt > * {
   margin: 0.3rem;
@@ -277,9 +280,6 @@
   }
 }
 @media only screen and (max-width: 750px) {
-  .create-prompt span {
-    font-size: 1rem;
-  }
   .plus {
     height: 1.7rem;
   }
@@ -296,9 +296,6 @@
 @media only screen and (min-height: 750px) and (max-width: 1000px) {
   .expanded-file {
     height: 60vh;
-  }
-  .card-area {
-    width: 50vw;
   }
 }
 @media only screen and (min-height: 1024px) and (max-height: 1039px) {

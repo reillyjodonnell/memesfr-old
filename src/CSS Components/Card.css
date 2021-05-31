@@ -35,7 +35,8 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  font-size: 20px;
+  font-size: 25px;
+  margin: 0 2rem;
 }
 .avatar-picture {
   display: flex;
@@ -99,11 +100,15 @@
 /*PENCIL*/
 .edit-mode {
   margin-left: auto;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 .edit-mode svg {
-  height: 25px;
+  height: 40px;
   cursor: pointer;
 }
+
 @keyframes appear {
   from {
     opacity: 80%;
@@ -117,7 +122,7 @@
   animation-name: appear;
   animation-duration: 0.3s;
   height: auto;
-  width: 210px;
+  width: 300px;
   position: absolute;
   top: 4.5rem;
   right: 15px;
@@ -150,7 +155,7 @@
   padding: 0.5rem;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 500;
 }
 .edit {
@@ -159,8 +164,7 @@
 }
 .delete {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
 }
 
 /*End Of Pencil*/
@@ -181,7 +185,7 @@
 .lower img,
 .lower svg {
   cursor: pointer;
-  height: 30px;
+  height: 40px;
 }
 
 /*
@@ -293,11 +297,31 @@
   .upper-top span {
     font-size: 1rem;
   }
-  .card-area,
-  card {
+  .card-area {
     width: 75vw;
   }
   .inactive-heart:hover {
     stroke: none;
+  }
+}
+@media only screen and (max-width: 500px) and (max-height: 850px) {
+  .card {
+    padding: 0.75rem;
+  }
+  .edit-mode {
+    top: 0;
+    right: 0;
+  }
+  .lower svg {
+    height: 30px;
+  }
+}
+@media only screen and (max-height: 850px) {
+  .edit-mode svg {
+    height: 45px;
+    padding: 5px;
+  }
+  .expanded-pencil {
+    top: 2.5rem;
   }
 }
