@@ -7,8 +7,8 @@ import report from "../Assets/SVGs/report.svg";
 import x from "../Assets/SVGs/x.svg";
 import pencilIcon from "../Assets/SVGs/pencil.svg";
 import dots from "../Assets/SVGs/dots.svg";
-import heartIcon from "../Assets/SVGs/heart.svg";
-import likeIcon from "../Assets/SVGs/thumbUp.svg";
+import { ReactComponent as HeartIcon } from "../Assets/SVGs/heart.svg";
+import { ReactComponent as LikeIcon } from "../Assets/SVGs/thumbUp.svg";
 
 export default function Card(props) {
   const [heart, setHeart] = useState(false);
@@ -58,34 +58,36 @@ export default function Card(props) {
       setNeedSubmit(false);
     }
   }
-  async function match() {
-    if (currentUser) {
-      const results = await hasUserLikedPost(props.item.id);
-      let [{ likedPosts }, { heartedPosts }] = results;
-      if (likedPosts != undefined) {
-        likedPosts.map((usersLikedPost) => {
-          if (props.item.id === usersLikedPost) {
-            setThumbUp(true);
-            setHasAlreadyLikedPost(true);
-            return null;
-          }
-        });
-      }
-      if (heartedPosts != undefined) {
-        heartedPosts.map((usersHeartedPost) => {
-          if (props.item.id === usersHeartedPost) {
-            setHeart(true);
-            setHasAlreadyHeartedPost(true);
-            return null;
-          }
-        });
-      }
-    }
-  }
 
   useEffect(() => {
     let mounted = true;
     if (mounted) {
+      async function match() {
+        if (currentUser) {
+          const results = await hasUserLikedPost(props.item.id);
+          let [{ likedPosts }, { heartedPosts }] = results;
+          if (likedPosts !== undefined) {
+            likedPosts.map((usersLikedPost) => {
+              if (props.item.id === usersLikedPost) {
+                setThumbUp(true);
+                setHasAlreadyLikedPost(true);
+                return null;
+              }
+              return null;
+            });
+          }
+          if (heartedPosts !== undefined) {
+            heartedPosts.map((usersHeartedPost) => {
+              if (props.item.id === usersHeartedPost) {
+                setHeart(true);
+                setHasAlreadyHeartedPost(true);
+                return null;
+              }
+              return null;
+            });
+          }
+        }
+      }
       match();
     }
     return () => (mounted = false);
@@ -279,15 +281,13 @@ export default function Card(props) {
           </div>
 
           <div className="lower">
-            <img
+            <HeartIcon
               className={heart ? "active-heart" : "inactive-heart"}
               onClick={currentUser ? toggleHeart : activatePrompt}
-              src={heartIcon}
             />
-            <img
+            <LikeIcon
               className={thumbUp ? "active-thumbup" : "inactive-thumbup"}
               onClick={currentUser ? toggleThumbUp : activatePrompt}
-              src={likeIcon}
             />
           </div>
           {options ? <OptionsExpanded /> : null}

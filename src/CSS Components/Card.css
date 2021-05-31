@@ -202,21 +202,24 @@
     opacity: 100%;
   }
 }
-.inactive-heart:hover {
-  stroke: red;
-}
+
 .active-heart {
   stroke: black;
   fill: red;
   animation: hearted 0.2s steps(20);
 }
+.inactive-thumbup {
+  stroke: black !important;
+  stroke-width: 1.5;
+}
 
 /* thumbs up*/
 .active-thumbup {
-  stroke: rgb(89, 89, 197);
+  stroke-width: 1.5;
+  stroke: rgb(89, 89, 197) !important;
 }
 /*Thumbs Down */
-.active-thumbdown {
+.active-thumbdown svg {
   stroke: rgb(89, 89, 197);
 }
 /*Report */
