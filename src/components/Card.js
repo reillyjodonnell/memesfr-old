@@ -163,16 +163,17 @@ export default function Card(props) {
 
   function OptionsExpanded() {
     return (
-      <div className="options-expanded">
-        <div onClick={closeOptions} className="option2">
-          <span className="expanded">Close</span>
-        </div>
-        <div className="option1">
-          <div className="report-group">
-            <span>Report</span>
+      <>
+        <div onClick={closeOptions} className="expanded-pencil">
+          <div className="edit">
+            <span>Close</span>
+          </div>
+          <div className="delete">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="report-icon report "
+              className="icon icon-tabler icon-tabler-trash"
+              width="44"
+              height="44"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="#000000"
@@ -183,11 +184,34 @@ export default function Card(props) {
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
               <path d="M5 14h14l-4.5 -4.5l4.5 -4.5h-14v16" />
             </svg>
+
+            <span>Report Post</span>
           </div>
         </div>
-
-        <div className="report-group "></div>
-      </div>
+        {/* <div className="options-expanded">
+          <div onClick={closeOptions} className="option2">
+            <span className="expanded">Close</span>
+          </div>
+          <div className="option1">
+            <div className="report-group">
+              <span>Report</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="report-icon report "
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="#000000"
+                fill="none"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M5 14h14l-4.5 -4.5l4.5 -4.5h-14v16" />
+              </svg>
+            </div>
+          </div>
+        </div> */}
+      </>
     );
   }
 
@@ -329,7 +353,7 @@ export default function Card(props) {
                 </span>
               </div>
               {permissionToEdit ? <Edit /> : <Options />}
-              {permissionToEdit && options ? <ExpandedPencil /> : null}
+              {permissionToEdit && pencil ? <ExpandedPencil /> : null}
             </div>
             <div className="upper-top">
               <span className="meme-title">{props.item.title}</span>
