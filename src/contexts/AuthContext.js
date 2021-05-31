@@ -32,14 +32,7 @@ export default function AuthProvider({ children }) {
     return auth.signInWithEmailAndPassword(email, password);
   }
   function confirmEmail(email) {
-    auth.sendSignInLinkToEmail(email, actionCodeSettings).then(
-      function () {
-        console.log("sent email");
-      },
-      function (error) {
-        console.log(error);
-      }
-    );
+    auth.sendSignInLinkToEmail(email, actionCodeSettings);
   }
   function resetPassword(email) {
     history.push("/reset");
@@ -53,9 +46,7 @@ export default function AuthProvider({ children }) {
         history.push("/");
         history.go(0);
       },
-      function (error) {
-        console.log(error);
-      }
+      function (error) {}
     );
 
     //Route to home screen and refresh the page plz
@@ -72,9 +63,7 @@ export default function AuthProvider({ children }) {
     upload.on(
       "state_changed",
       (snapshot) => {},
-      (error) => {
-        console.log(error);
-      },
+      (error) => {},
       () => {
         //This is 1 write
         storage
@@ -126,7 +115,6 @@ export default function AuthProvider({ children }) {
                   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                   fileType: type,
                 };
-                console.log(sample);
                 setRecentlyUploaded((prevState) => [sample, ...prevState]);
                 var counterRef = db
                   .collection("counters")
@@ -144,16 +132,10 @@ export default function AuthProvider({ children }) {
                 // Commit the write batch
                 batch
                   .commit()
-                  .then((res) => {
-                    console.log("success", res);
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+                  .then((res) => {})
+                  .catch((err) => {});
               })
-              .catch((error) => {
-                console.log(error);
-              });
+              .catch((error) => {});
           });
       }
     );
@@ -239,7 +221,6 @@ export default function AuthProvider({ children }) {
     var results = items.posts;
 
     var updatedObjects = items.posts.map((item) => {
-      console.log(item);
       //For each item look through the shards and tally them up
       var shardRef = db.collection("counters").doc(item.id);
       var totalLikesOnPost = shardRef
@@ -310,7 +291,6 @@ export default function AuthProvider({ children }) {
   }
 
   function updateProfile(name, file) {
-    console.log(name, file);
     addUsernameToDB(name);
     setUserName(name);
     setProfilePicture(file);
@@ -323,12 +303,8 @@ export default function AuthProvider({ children }) {
         displayName: username,
       })
       .then(
-        function () {
-          console.log("SUCCESS");
-        },
-        function (error) {
-          console.log(error);
-        }
+        function () {},
+        function (error) {}
       );
   }
 
@@ -339,9 +315,7 @@ export default function AuthProvider({ children }) {
     upload.on(
       "state_changed",
       (snapshot) => {},
-      (error) => {
-        console.log(error);
-      },
+      (error) => {},
       () => {
         storage
           .ref("users")
@@ -359,22 +333,16 @@ export default function AuthProvider({ children }) {
         photoURL: imageFile,
       })
       .then(
-        function () {
-          console.log("SUCCESS");
-        },
-        function (error) {
-          console.log(error);
-        }
+        function () {},
+        function (error) {}
       );
   }
 
   //How do we count the total number of likes on the post?
 
   async function retrieveRandomMeme() {
-    console.log("beginning random meme search");
     var memes = db.collection("memes");
     var key = memes.doc().id;
-    console.log(key);
     var randomMeme = {};
     await memes
       .where(firebase.firestore.FieldPath.documentId(), ">=", key)
@@ -384,7 +352,6 @@ export default function AuthProvider({ children }) {
         if (snapshot.size > 0) {
           var updatedValue = {};
           snapshot.forEach((doc) => {
-            console.log(doc.id, "=>", doc.data());
             //For each item look through the shards and tally them up
             var shardRef = db.collection("counters").doc(doc.data().id);
             var totalLikesOnPost = shardRef
@@ -418,7 +385,6 @@ export default function AuthProvider({ children }) {
             updatedValue = updatedMemeObject;
             return updatedMemeObject;
           });
-          console.log(updatedValue);
           randomMeme = updatedValue;
           return updatedValue;
         } else {
@@ -429,7 +395,6 @@ export default function AuthProvider({ children }) {
             .then((snapshot) => {
               var updatedValue = {};
               snapshot.forEach((doc) => {
-                console.log(doc.id, "=>", doc.data());
                 //For each item look through the shards and tally them up
                 var shardRef = db.collection("counters").doc(doc.data().id);
                 var totalLikesOnPost = shardRef
@@ -463,17 +428,12 @@ export default function AuthProvider({ children }) {
                 updatedValue = updatedMemeObject;
                 return updatedMemeObject;
               });
-              console.log(updatedValue);
               return updatedValue;
             })
-            .catch((error) => {
-              console.log("Error getting documents: ", error);
-            });
+            .catch((error) => {});
         }
       })
-      .catch((error) => {
-        console.log("Error getting documents", error);
-      });
+      .catch((error) => {});
     return randomMeme;
   }
   async function removeHeartPost(postId) {
@@ -484,11 +444,8 @@ export default function AuthProvider({ children }) {
     await userRef.update({
       hearted: firebase.firestore.FieldValue.arrayRemove(postId),
     });
-
-    console.log(`Removed ${postId} to ${userID}'s favorites`);
   }
   async function heartPost(postID) {
-    console.log("Sending hearted post to DB", postID);
     var userID = currentUser.uid;
 
     //Add it to the users' liked posts and merge it
@@ -499,40 +456,25 @@ export default function AuthProvider({ children }) {
       },
       { merge: true }
     );
-
-    /*
-    db.collection("users").doc(id).set({ uid: value });
-    */
-    console.log(`Adding ${postID} to ${userID}'s favorites`);
-
-    //add to the user's heart
   }
 
-  //Grab the array of strings that the user has liked
-  //Go through the string and remove the one string that contains the passed postID
-  //Return a new string and push the array back into the user data
   async function removeLikePost(postID) {
-    console.log("Removing post id: ", postID);
     var userID = currentUser.uid;
     var num_shards = 5;
     var ref = db.collection("counters").doc(postID);
 
-    //Add it to the users' liked posts and merge it
     var userRef = db.collection("users").doc(userID);
     await userRef.update({
       likedPosts: firebase.firestore.FieldValue.arrayRemove(postID),
     });
 
-    // Select a shard of the counter at random
     const shard_id = Math.floor(Math.random() * num_shards).toString();
     const shard_ref = ref.collection("shards").doc(shard_id);
 
-    // Update count
     shard_ref.update("count", firebase.firestore.FieldValue.increment(-1));
   }
 
   async function likePost(postID) {
-    console.log("Adding like to the database");
     var userID = currentUser.uid;
     var num_shards = 5;
     var ref = db.collection("counters").doc(postID);
@@ -566,7 +508,6 @@ export default function AuthProvider({ children }) {
     shard_ref.update("count", firebase.firestore.FieldValue.increment(1));
 
     //Write to the shard
-    console.log(`Adding dislike from post ${postID} to ${userID}'s disliked`);
   }
 
   function sendConfirmationEmail() {
@@ -577,30 +518,11 @@ export default function AuthProvider({ children }) {
         // Save the email locally so you don't need to ask the user for it again
         // if they open the link on the same device.
         window.localStorage.setItem("emailForSignIn", user.email);
-        console.log("Email successfully sent");
       })
       .catch((error) => {
         var errorCode = error.code;
         var errorMessage = error.message;
-        console.log(errorCode, errorMessage);
       });
-    /*
-    if (user.emailVerified == false) {
-      auth
-        .sendSignInLinkToEmail(user.email, actionCodeSettings)
-        .then(() => {
-          // The link was successfully sent. Inform the user.
-          // Save the email locally so you don't need to ask the user for it again
-          // if they open the link on the same device.
-          window.localStorage.setItem("emailForSignIn", user.email);
-        })
-        .catch((error) => {
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          console.log(errorCode, errorMessage);
-        });
-    }
-    */
   }
 
   useEffect(() => {
@@ -608,13 +530,10 @@ export default function AuthProvider({ children }) {
     if (mount === true) {
       const unsubscribe = auth.onAuthStateChanged((user) => {
         if (user) {
-          console.log(user);
-          console.log(user.emailVerified);
           setCurrentUser(user);
         }
 
         setLoadUser(false);
-        console.log(currentUser);
       });
       return unsubscribe;
     }
