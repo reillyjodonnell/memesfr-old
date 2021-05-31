@@ -572,7 +572,6 @@ export default function Dashboard(props) {
           <Grid container spacing={5}></Grid>
           <Box spacing={5} pt={4}>
             <CreatePost />
-            <ThanksForVisiting />
             {firstTime ? <ThanksForVisiting /> : null}
 
             <div className="main-content">
