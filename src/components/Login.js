@@ -21,6 +21,7 @@ import Doge from "../Assets/doge.svg";
 import firebase from "../services/firebase";
 import { useHistory } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import SelectUsername from "./CreateProfile";
 
 function Copyright() {
   const history = useHistory();
@@ -103,7 +104,7 @@ export default function SignInSide(props) {
     var password = passwordRef.current.value;
 
     try {
-      await login(email, password);
+      await login(email, password).then((user) => {});
       history.push("/");
     } catch {
       setError("Failed to log in");

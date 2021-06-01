@@ -12,7 +12,7 @@ import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { useAuth } from "../contexts/AuthContext";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -68,7 +68,8 @@ function Copyright() {
     </Typography>
   );
 }
-export default function SelectUsername() {
+export default function CreateProfile(props) {
+  console.log(props);
   const classes = useStyles();
   const [taken, setTaken] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -107,12 +108,14 @@ export default function SelectUsername() {
     //We cannot call this if the event.target.value is empty
   }
   const [viewPhoto, viewPhotoFunction] = useState(false);
+  const [verifiedUser, setVerifiedUser] = useState(false);
   const [file, setFile] = useState("");
   const inputFile = useRef(null);
   const history = useHistory();
+  const location = useLocation();
+  console.log(location, location.state.update);
 
   const { checkUsernameAvailability, updateProfile, currentUser } = useAuth();
-  console.log(currentUser);
 
   function saveProfile() {
     console.log(name);
@@ -136,7 +139,7 @@ export default function SelectUsername() {
     console.log(test);
     return test ? true : false;
   }
-  if (currentUser.emailVerified === true) {
+  if (location.state.verifiedUser) {
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline>

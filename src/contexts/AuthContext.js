@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { auth, db, storage } from "../services/firebase";
 import { useHistory } from "react-router-dom";
 import firebase from "firebase/app";
+import CreateProfile from "../components/CreateProfile";
 
 const AuthContext = React.createContext();
 
@@ -68,7 +69,7 @@ export default function AuthProvider({ children }) {
     console.log(currentUser);
     var ud = currentUser.displayName;
     var userPic = currentUser.photoURL;
-
+    console.log(image, title, type);
     const upload = storage.ref(`memes/${title}`).put(image);
     var num_shards = 5;
     var batch = db.batch();
@@ -248,6 +249,9 @@ export default function AuthProvider({ children }) {
         });
       var updatedMemeObject = totalLikesOnPost
         .then((resolvedPromiseForNumberOfLikes) => {
+          db.collection("memes").doc(item.id).update({
+            likes: resolvedPromiseForNumberOfLikes,
+          });
           var docData = {
             userName: item.userName,
             title: item.title,
@@ -543,12 +547,18 @@ export default function AuthProvider({ children }) {
     let mount = true;
     if (mount === true) {
       const unsubscribe = auth.onAuthStateChanged((user) => {
-        console.log(user);
         if (user.emailVerified && user.displayName != null) {
           setCurrentUser(user);
         }
         if (user.emailVerified && user.displayName === null) {
-          history.push("/setup");
+          setCurrentUser(user);
+          console.log("email verified but no username detected");
+          history.push({
+            pathname: "/setup",
+            state: {
+              verifiedUser: true,
+            },
+          });
         }
         if (!user.emailVerified) {
           console.log("user needs to verify email");

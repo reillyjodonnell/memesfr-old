@@ -36,6 +36,8 @@ export default function Card(props) {
     removeHeartPost,
   } = useAuth();
 
+  const userIsOnMobile = window.matchMedia("(max-width: 420px)");
+
   function captureUserInput() {
     if (currentUser && needSubmit) {
       if (thumbUp && !hasAlreadyLikedPost) {
@@ -245,49 +247,16 @@ export default function Card(props) {
   };
 
   const VideoPlayback = () => {
-    function toggleMute() {
-      console.log("toggling mute");
-      setMuteVideo((prevState) => !prevState);
-    }
     return (
       <>
         <video
-          autoPlay
+          controls
           loop
-          muted={muteVideo}
           onDoubleClick={currentUser ? toggleHeart : activatePrompt}
           className="meme-image"
           src={props.item.image}
         />
-        <div>
-          {muteVideo ? (
-            <Mute
-              onClick={() => setMuteVideo(false)}
-              style={{
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                width: "50px",
-                height: "50px",
-                zIndex: 5,
-                stroke: "#0000008c",
-              }}
-            />
-          ) : (
-            <Unmute
-              style={{
-                position: "absolute",
-                bottom: 0,
-                right: 0,
-                width: "50px",
-                height: "50px",
-                zIndex: 5,
-                stroke: "#0000008c",
-              }}
-              onClick={() => setMuteVideo(true)}
-            />
-          )}
-        </div>
+        <div></div>
       </>
     );
   };

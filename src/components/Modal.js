@@ -42,17 +42,22 @@ export default function Modal(props) {
   const uploadPost = (e) => {
     e.preventDefault();
     console.log(file);
-    var fileType = JSON.stringify(file.type);
-    var fileEnding = fileType.slice(1, 6);
     var image = file;
+    var JSONfileType = JSON.stringify(fileType);
     var title = titleRef.current.value;
-    uploadMeme(image, title, fileType);
+    uploadMeme(image, title, JSONfileType);
     setUploaded(true);
     props.createPostFunction(false);
   };
 
+  const titleRegex = /(?=.*[!@#$%^&*])/;
   const checkTitleError = (e) => {
     setTitleError(false);
+
+    if (e.target.value.match(titleRegex)) {
+      setTitleError(true);
+      setTitleErrorMessage("Can't have special characters'");
+    }
     if (e.target.value == "") {
       setTitleError(true);
       setTitleErrorMessage("Cannot be empty");
