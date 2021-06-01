@@ -9,7 +9,7 @@ body {
   font-family: "Roboto";
 }
 span {
-  cursor: default;
+  cursor: pointer;
 }
 
 img {

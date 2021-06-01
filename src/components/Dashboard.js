@@ -134,7 +134,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Dashboard(props) {
-  console.log(props.sample);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [expand, expandMenu] = useState(false);
@@ -158,6 +157,8 @@ export default function Dashboard(props) {
     retrieveRecentPosts,
     recentlyUploaded,
     retrieveRandomMeme,
+    remindToVerify,
+    sendAuthEmail,
   } = useAuth();
 
   useEffect(() => {
@@ -407,6 +408,37 @@ export default function Dashboard(props) {
   }, [nav, loadAnotherRandomMeme]);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  console.log(remindToVerify);
+
+  const ConfirmEmailPrompt = () => {
+    return (
+      <div
+        style={{
+          cursor: "default",
+          marginRight: "auto",
+          marginLeft: "auto",
+          display: "flex",
+          textAlign: "center",
+          height: "100%",
+          justifyContent: "center",
+          color: "black",
+          flexDirection: "column",
+          marginTop: "1rem",
+          marginBottom: "1rem",
+        }}
+      >
+        <span style={{ cursor: "default", padding: "1rem" }}>
+          Last step: confirm your email to be able to upload memes
+        </span>
+        <span
+          onClick={() => sendAuthEmail}
+          style={{ color: "red", padding: "1rem" }}
+        >
+          Didn't get it? Resend
+        </span>
+      </div>
+    );
+  };
 
   const RecentlyPosted = () => {
     console.log(recentlyUploaded);
@@ -572,8 +604,8 @@ export default function Dashboard(props) {
           <Grid container spacing={5}></Grid>
           <Box spacing={5} pt={4}>
             <CreatePost />
+            {remindToVerify ? <ConfirmEmailPrompt /> : null}
             {firstTime ? <ThanksForVisiting /> : null}
-
             <div className="main-content">
               {loadingFilter ? (
                 <>

@@ -103,7 +103,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px +2vmin);
+  font-size: 1.4rem;
 }
 
 .menu-item:hover {
@@ -123,10 +123,16 @@ a {
 }
 @media only screen and (max-width: 550px) {
   .dropdown {
-    right: -95px;
-    width: 240px;
+    right: -75px;
+    width: 200px;
+  }
+  .icon-button svg {
+    width: 35px;
   }
 }
 
-@media only screen and (max-width: 350px) {
+@media only screen and (max-width: 420px) {
+  .menu-item .icon-button {
+    font-size: 0.9rem;
+  }
 }

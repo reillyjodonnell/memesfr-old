@@ -76,10 +76,7 @@ export default function DropDownMenu() {
             IconText={doge ? "Deactivate Doge" : "Activate Doge"}
           />
         </div>
-        <RedirectToDisc
-          style={{ fontSize: "1.1rem" }}
-          IconText="Join our Discord server"
-        ></RedirectToDisc>
+        <RedirectToDisc IconText="Join our Discord server"></RedirectToDisc>
 
         <DropDownItem IconText="Catch em all" Icon={<Ball />} />
         <div onClick={() => openSettings(!open)}>
@@ -123,7 +120,7 @@ export default function DropDownMenu() {
         <div onClick={() => openSettings(!open)}>
           <DropDownItem IconText="Settings" Icon={<Settings />}></DropDownItem>
         </div>
-        <div>
+        <div onClick={() => history.push("/login")}>
           <DropDownItem IconText="Log In / Sign Up" />
         </div>
       </>

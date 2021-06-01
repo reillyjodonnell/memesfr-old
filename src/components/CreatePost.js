@@ -84,11 +84,15 @@ export default function CreatePost(props) {
   const history = useHistory();
 
   const { currentUser } = useAuth();
+  console.log(currentUser);
+
+  var promptToPost = "Login to Upload Dank Meme";
 
   if (currentUser) {
-    if (currentUser.photoURL == undefined) {
-      var profilePicture = doge;
-    } else var profilePicture = currentUser.photoURL;
+    if (currentUser.email)
+      if (currentUser.photoURL != undefined) {
+        var profilePicture = currentUser.photoURL;
+      }
   }
 
   const OpenFilePrompt = () => {
@@ -132,7 +136,7 @@ export default function CreatePost(props) {
           ) : (
             <div className="add-content">
               <div className="create-prompt" onClick={loadLoginScreen}>
-                <span>Login to Upload Dank Meme</span>
+                <span>{promptToPost}</span>
               </div>
             </div>
           )}

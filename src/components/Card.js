@@ -9,6 +9,8 @@ import { ReactComponent as PencilIcon } from "../Assets/SVGs/pencil.svg";
 import { ReactComponent as Dots } from "../Assets/SVGs/dots.svg";
 import { ReactComponent as HeartIcon } from "../Assets/SVGs/heart.svg";
 import { ReactComponent as LikeIcon } from "../Assets/SVGs/thumbUp.svg";
+import { ReactComponent as Mute } from "../Assets/SVGs/mute.svg";
+import { ReactComponent as Unmute } from "../Assets/SVGs/unmute.svg";
 
 export default function Card(props) {
   const [heart, setHeart] = useState(false);
@@ -21,6 +23,7 @@ export default function Card(props) {
   const [permissionToEdit, setPermissionToEdit] = useState(false);
   const [hasAlreadyLikedPost, setHasAlreadyLikedPost] = useState(false);
   const [hasAlreadyHeartedPost, setHasAlreadyHeartedPost] = useState(false);
+  const [muteVideo, setMuteVideo] = useState(true);
 
   const {
     activeScreen,
@@ -241,6 +244,54 @@ export default function Card(props) {
     );
   };
 
+  const VideoPlayback = () => {
+    function toggleMute() {
+      console.log("toggling mute");
+      setMuteVideo((prevState) => !prevState);
+    }
+    return (
+      <>
+        <video
+          autoPlay
+          loop
+          muted={muteVideo}
+          onDoubleClick={currentUser ? toggleHeart : activatePrompt}
+          className="meme-image"
+          src={props.item.image}
+        />
+        <div>
+          {muteVideo ? (
+            <Mute
+              onClick={() => setMuteVideo(false)}
+              style={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                width: "50px",
+                height: "50px",
+                zIndex: 5,
+                stroke: "#0000008c",
+              }}
+            />
+          ) : (
+            <Unmute
+              style={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                width: "50px",
+                height: "50px",
+                zIndex: 5,
+                stroke: "#0000008c",
+              }}
+              onClick={() => setMuteVideo(true)}
+            />
+          )}
+        </div>
+      </>
+    );
+  };
+
   if (props) {
     return (
       <div
@@ -268,11 +319,7 @@ export default function Card(props) {
             </div>
             <div className="image-container">
               {props.item.fileType === "video" ? (
-                <video
-                  onDoubleClick={currentUser ? toggleHeart : activatePrompt}
-                  className="meme-image"
-                  src={props.item.image}
-                ></video>
+                <VideoPlayback />
               ) : (
                 <img
                   onDoubleClick={currentUser ? toggleHeart : activatePrompt}

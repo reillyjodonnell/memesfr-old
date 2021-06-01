@@ -30,6 +30,7 @@ export default function Modal(props) {
   const [titleError, setTitleError] = useState(true);
   const [titleErrorMessage, setTitleErrorMessage] = useState("");
   const [file, setFile] = useState("");
+  const [fileType, setFileType] = useState("");
   const inputFile = useRef(null);
   const [uploaded, setUploaded] = useState(false);
   const [fileError, setFileError] = useState(false);
@@ -45,7 +46,7 @@ export default function Modal(props) {
     var fileEnding = fileType.slice(1, 6);
     var image = file;
     var title = titleRef.current.value;
-    uploadMeme(image, title, fileEnding);
+    uploadMeme(image, title, fileType);
     setUploaded(true);
     props.createPostFunction(false);
   };
@@ -102,6 +103,7 @@ export default function Modal(props) {
     ];
     const validFormat = filesFormats.includes(image.type);
     if (image.type == "video/mp4") {
+      setFileType("video");
       return (
         <video
           className="video-file"
@@ -112,9 +114,11 @@ export default function Modal(props) {
       );
     }
 
-    if (validFormat)
+    if (validFormat) {
+      setFileType("image");
+
       return <img src={URL.createObjectURL(image)} alt={image.name} />;
-    else {
+    } else {
       setFile("");
       var fileType = JSON.stringify(image.type);
       var fileEnding = fileType.slice(7, fileType.length - 1);

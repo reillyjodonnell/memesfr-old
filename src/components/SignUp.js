@@ -88,7 +88,7 @@ export default function SignUp() {
 
   const history = useHistory();
 
-  const { signup, confirmEmail, sendConfirmationEmail, login } = useAuth();
+  const { signup, sendAuthEmail } = useAuth();
 
   const [userCreation, setUserCreation] = useState(false);
   //when the user becomes active, that means the email and pass is valid,
@@ -104,12 +104,15 @@ export default function SignUp() {
 
     try {
       setError("");
-      await signup(email, password);
-      confirmEmail(email);
+      await signup(email, password)
+        .then(() => {
+          console.log("Success");
+        })
+        .catch((err) => console.log(err));
+
       setLoading(false);
       setUserCreation(true);
     } catch {
-      console.log("Error creating account");
       setError("Email is already in use");
       setEmailError(true);
     }

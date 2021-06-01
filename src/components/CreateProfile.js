@@ -12,6 +12,7 @@ import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { useAuth } from "../contexts/AuthContext";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -59,7 +60,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="memesfr.com/">
         Memesfr
       </Link>{" "}
       {new Date().getFullYear()}
@@ -108,8 +109,10 @@ export default function SelectUsername() {
   const [viewPhoto, viewPhotoFunction] = useState(false);
   const [file, setFile] = useState("");
   const inputFile = useRef(null);
+  const history = useHistory();
 
-  const { checkUsernameAvailability, updateProfile } = useAuth();
+  const { checkUsernameAvailability, updateProfile, currentUser } = useAuth();
+  console.log(currentUser);
 
   function saveProfile() {
     console.log(name);
@@ -133,73 +136,77 @@ export default function SelectUsername() {
     console.log(test);
     return test ? true : false;
   }
+  if (currentUser.emailVerified === true) {
+    return (
+      <Container component="main" maxWidth="xs">
+        <CssBaseline>
+          <div className={classes.paper}>
+            <Avatar className={classes.avatar}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign up
+            </Typography>
 
-  return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
+            <div className="create-profile">
+              <h2>Your Profile!</h2>
+              <div className="username">
+                <span className="username-prompt">Choose a username below</span>
 
-          <div className="create-profile">
-            <h2>Your Profile!</h2>
-            <div className="username">
-              <span className="username-prompt">Choose a username below</span>
-
-              <form className={classes.root} autoComplete="off">
-                <div>
-                  <TextField
-                    className={classes.username}
-                    onChange={(e) => handleChange(e)}
-                    required
-                    error={error}
-                    id="filled-error-helper-text"
-                    label="username"
-                    defaultValue=""
-                    helperText={availableMessage}
-                    variant="filled"
+                <form className={classes.root} autoComplete="off">
+                  <div>
+                    <TextField
+                      className={classes.username}
+                      onChange={(e) => handleChange(e)}
+                      required
+                      error={error}
+                      id="filled-error-helper-text"
+                      label="username"
+                      defaultValue=""
+                      helperText={availableMessage}
+                      variant="filled"
+                    />
+                  </div>
+                </form>
+              </div>
+              <span>Upload an avatar?</span>
+              <div className="create-avatar" onClick={onButtonClick}>
+                <button className="upload-button">
+                  Upload Here
+                  <input
+                    onChange={handleUpload}
+                    id="file"
+                    ref={inputFile}
+                    type="file"
+                    style={{ display: "none" }}
                   />
-                </div>
-              </form>
-            </div>
-            <span>Upload an avatar?</span>
-            <div className="create-avatar" onClick={onButtonClick}>
-              <button className="upload-button">
-                Upload Here
-                <input
-                  onChange={handleUpload}
-                  id="file"
-                  ref={inputFile}
-                  type="file"
-                  style={{ display: "none" }}
-                />
-              </button>
-              {file ? (
-                <div className="profile-image-preview">
-                  <ImageThumb image={file} />
-                </div>
-              ) : null}
-            </div>
-            <div className="submit-profile">
-              <Button
-                disabled={disabled}
-                onClick={saveProfile}
-                variant="contained"
-                color="primary"
-              >
-                Save Profile
-              </Button>
+                </button>
+                {file ? (
+                  <div className="profile-image-preview">
+                    <ImageThumb image={file} />
+                  </div>
+                ) : null}
+              </div>
+              <div className="submit-profile">
+                <Button
+                  disabled={disabled}
+                  onClick={saveProfile}
+                  variant="contained"
+                  color="primary"
+                >
+                  Save Profile
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-        <Box mt={5}>
-          <Copyright />
-        </Box>
-      </CssBaseline>
-    </Container>
-  );
+          <Box mt={5}>
+            <Copyright />
+          </Box>
+        </CssBaseline>
+      </Container>
+    );
+  } else {
+    history.push("/");
+    return null;
+  }
 }

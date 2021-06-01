@@ -15,24 +15,35 @@ export default function AuthProvider({ children }) {
   const [userExists, setUserExists] = useState(true);
   const [loadingFilter, setLoadingFilter] = useState(false);
   const [recentlyUploaded, setRecentlyUploaded] = useState([]);
+  const [remindToVerify, setRemindToVerify] = useState(false);
   const history = useHistory();
 
   var actionCodeSettings = {
-    url: "http://localhost:3000/setup",
+    url: "https://www.memesfr.com",
     handleCodeInApp: true,
   };
 
   var user = auth.currentUser;
 
   function signup(email, password) {
-    return auth.createUserWithEmailAndPassword(email, password);
+    return auth.createUserWithEmailAndPassword(email, password).then((user) => {
+      user.user.sendEmailVerification();
+    });
+  }
+
+  async function sendAuthEmail() {
+    await user
+      .sendEmailVerification()
+      .then(() => {
+        console.log("Successfully sent");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function login(email, password) {
     return auth.signInWithEmailAndPassword(email, password);
-  }
-  function confirmEmail(email) {
-    auth.sendSignInLinkToEmail(email, actionCodeSettings);
   }
   function resetPassword(email) {
     history.push("/reset");
@@ -54,6 +65,7 @@ export default function AuthProvider({ children }) {
 
   function uploadMeme(image, title, type) {
     var author = currentUser.uid;
+    console.log(currentUser);
     var ud = currentUser.displayName;
     var userPic = currentUser.photoURL;
 
@@ -181,6 +193,7 @@ export default function AuthProvider({ children }) {
             authorPic: item.authorPic,
             likes: resolvedPromiseForNumberOfLikes,
             image: item.image,
+            fileType: item.fileType,
             createdAt: item.createdAt,
             id: item.id,
           };
@@ -242,6 +255,7 @@ export default function AuthProvider({ children }) {
             authorPic: item.authorPic,
             likes: resolvedPromiseForNumberOfLikes,
             image: item.image,
+            fileType: item.fileType,
             createdAt: item.createdAt,
             id: item.id,
           };
@@ -529,10 +543,17 @@ export default function AuthProvider({ children }) {
     let mount = true;
     if (mount === true) {
       const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user) {
+        console.log(user);
+        if (user.emailVerified && user.displayName != null) {
           setCurrentUser(user);
         }
-
+        if (user.emailVerified && user.displayName === null) {
+          history.push("/setup");
+        }
+        if (!user.emailVerified) {
+          console.log("user needs to verify email");
+          setRemindToVerify(true);
+        }
         setLoadUser(false);
       });
       return unsubscribe;
@@ -544,7 +565,6 @@ export default function AuthProvider({ children }) {
     currentUser,
     signup,
     login,
-    confirmEmail,
     resetPassword,
     signOut,
     setUserName,
@@ -567,6 +587,8 @@ export default function AuthProvider({ children }) {
     retrieveRandomMeme,
     removeLikePost,
     removeHeartPost,
+    sendAuthEmail,
+    remindToVerify,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }
