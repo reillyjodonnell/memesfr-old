@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
+
+body {
+  font-family: "Roboto", sans-serif;
+  height: 100%;
+}
+
+.App {
+  text-align: center;
+  font-family: "Roboto";
+}
+span {
+  cursor: pointer;
+}
+
+img {
+  cursor: pointer;
+}
+svg {
+  cursor: pointer;
+}
