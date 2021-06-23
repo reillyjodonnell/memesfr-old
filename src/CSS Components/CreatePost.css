@@ -35,17 +35,33 @@
   display: flex;
   width: 35vw;
   border-radius: 20px;
-  height: 140px;
+  height: 100%;
   align-items: center;
+  flex-direction: column;
+  padding: 0 2rem;
 }
 .create-post-content {
-  width: inherit;
+  width: 100%;
   display: flex;
-  padding: 1rem 3rem;
   flex-direction: row;
   align-content: stretch;
   justify-content: normal;
   align-items: center;
+  border-bottom: 1px solid #2c2c2c12;
+}
+.create-meme-title {
+  color: #1f1f1f4d;
+}
+.create-post-icons {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+}
+.create-post-icon-svg {
+  stroke: rgb(146, 146, 146);
+  width: 30px;
 }
 .add-content {
   display: flex;
@@ -58,8 +74,11 @@
 }
 .plus {
   display: flex;
-  border-radius: 50%;
+  border-radius: 30px;
+  padding: 0.5rem 1rem;
   margin-left: auto;
+  background-color: #1098f7;
+  color: white;
 }
 .create-prompt {
   display: flex;
