@@ -130,6 +130,7 @@ export default function AuthProvider({ children }) {
                   title: title,
                   likes: 0,
                   dislikes: 0,
+                  hearts: 0,
                   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                   fileType: type,
                 },
@@ -156,12 +157,25 @@ export default function AuthProvider({ children }) {
                   title: title,
                   likes: 0,
                   dislikes: 0,
+                  hearts: 0,
                   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                   fileType: type,
                 };
                 setRecentlyUploaded((prevState) => [sample, ...prevState]);
                 var counterRef = db
                   .collection("counters")
+                  .doc(uniqueIdentifier);
+                // Initialize the counter document
+                batch.set(counterRef, { num_shards: num_shards });
+                // Initialize each shard with count=0
+                for (let i = 0; i < num_shards; i++) {
+                  const shardRef = counterRef
+                    .collection("shards")
+                    .doc(i.toString());
+                  batch.set(shardRef, { count: 0 });
+                }
+                var counterRef = db
+                  .collection("heartCounters")
                   .doc(uniqueIdentifier);
                 // Initialize the counter document
                 batch.set(counterRef, { num_shards: num_shards });
@@ -216,28 +230,48 @@ export default function AuthProvider({ children }) {
           });
           return total_count;
         });
-      var updatedMemeObject = totalLikesOnPost
-        .then((resolvedPromiseForNumberOfLikes) => {
-          var docData = {
-            userName: item.userName,
-            title: item.title,
-            author: item.author,
-            authorPic: item.authorPic,
-            likes: resolvedPromiseForNumberOfLikes,
-            image: item.image,
-            fileType: item.fileType,
-            createdAt: item.createdAt,
-            id: item.id,
-          };
+      var shardHeartRef = db.collection("heartCounters").doc(item.id);
 
-          return docData;
-        })
-        .then((updatedMemeData) => {
-          return updatedMemeData;
+      //Here we look at the amount of hearts a post has
+      var totalHeartsOnPost = shardHeartRef
+        .collection("shards")
+        .get()
+        .then((snapshot) => {
+          let total_count = 0;
+          snapshot.forEach((doc) => {
+            total_count += doc.data().count;
+          });
+          return total_count;
         });
+      totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
+        var amountOfLikes = resolvedPromiseForNumberOfLikes;
+        return amountOfLikes;
+      });
+      totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
+        var amountOfHearts = resolvedPromiseForNumberOfHearts;
+        return amountOfHearts;
+      });
+      async function documentData() {
+        var usersLikes = await totalLikesOnPost;
+        var usersHearts = await totalHeartsOnPost;
+        var docData = {
+          userName: item.userName,
+          title: item.title,
+          author: item.author,
+          authorPic: item.authorPic,
+          likes: usersLikes,
+          hearts: usersHearts,
+          image: item.image,
+          fileType: item.fileType,
+          createdAt: item.createdAt,
+          id: item.id,
+        };
+        return docData;
+      }
 
       setLoadingFilter(false);
-      return updatedMemeObject;
+
+      return documentData();
     });
     return updatedObjects;
 
@@ -278,31 +312,49 @@ export default function AuthProvider({ children }) {
           });
           return total_count;
         });
-      var updatedMemeObject = totalLikesOnPost
-        .then((resolvedPromiseForNumberOfLikes) => {
-          db.collection("memes").doc(item.id).update({
-            likes: resolvedPromiseForNumberOfLikes,
-          });
-          var docData = {
-            userName: item.userName,
-            title: item.title,
-            author: item.author,
-            authorPic: item.authorPic,
-            likes: resolvedPromiseForNumberOfLikes,
-            image: item.image,
-            fileType: item.fileType,
-            createdAt: item.createdAt,
-            id: item.id,
-          };
+      var shardHeartRef = db.collection("heartCounters").doc(item.id);
 
-          return docData;
-        })
-        .then((updatedMemeData) => {
-          return updatedMemeData;
+      //Here we look at the amount of hearts a post has
+      var totalHeartsOnPost = shardHeartRef
+        .collection("shards")
+        .get()
+        .then((snapshot) => {
+          let total_count = 0;
+          snapshot.forEach((doc) => {
+            total_count += doc.data().count;
+          });
+          return total_count;
         });
+      totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
+        var amountOfLikes = resolvedPromiseForNumberOfLikes;
+        return amountOfLikes;
+      });
+      totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
+        var amountOfHearts = resolvedPromiseForNumberOfHearts;
+        return amountOfHearts;
+      });
+      async function documentData() {
+        var usersLikes = await totalLikesOnPost;
+        var usersHearts = await totalHeartsOnPost;
+        var docData = {
+          userName: item.userName,
+          title: item.title,
+          author: item.author,
+          authorPic: item.authorPic,
+          likes: usersLikes,
+          hearts: usersHearts,
+          image: item.image,
+          fileType: item.fileType,
+          createdAt: item.createdAt,
+          id: item.id,
+        };
+        console.log(docData);
+        return docData;
+      }
 
       setLoadingFilter(false);
-      return updatedMemeObject;
+
+      return documentData();
     });
     return updatedObjects;
   }
@@ -405,15 +457,13 @@ export default function AuthProvider({ children }) {
   async function retrieveRandomMeme() {
     var memes = db.collection("memes");
     var key = memes.doc().id;
-    var randomMeme = {};
     await memes
       .where(firebase.firestore.FieldPath.documentId(), ">=", key)
       .limit(1)
       .get()
       .then((snapshot) => {
         if (snapshot.size > 0) {
-          var updatedValue = {};
-          snapshot.forEach((doc) => {
+          var updatedValue = snapshot.forEach((doc) => {
             //For each item look through the shards and tally them up
             var shardRef = db.collection("counters").doc(doc.data().id);
             var totalLikesOnPost = shardRef
@@ -426,29 +476,51 @@ export default function AuthProvider({ children }) {
                 });
                 return total_count;
               });
-            var updatedMemeObject = totalLikesOnPost
-              .then((resolvedPromiseForNumberOfLikes) => {
-                var docData = {
-                  userName: doc.data().userName,
-                  title: doc.data().title,
-                  author: doc.data().author,
-                  authorPic: doc.data().authorPic,
-                  likes: resolvedPromiseForNumberOfLikes,
-                  image: doc.data().image,
-                  createdAt: doc.data().createdAt,
-                  id: doc.data().id,
-                  fileType: doc.data().fileType,
-                };
-                return docData;
-              })
-              .then((updatedMemeData) => {
-                return updatedMemeData;
+            var shardHeartRef = db
+              .collection("heartCounters")
+              .doc(doc.data().id);
+            var totalHeartsOnPost = shardHeartRef
+              .collection("shards")
+              .get()
+              .then((snapshot) => {
+                let total_count = 0;
+                snapshot.forEach((doc) => {
+                  total_count += doc.data().count;
+                });
+                return total_count;
               });
+            totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
+              var amountOfLikes = resolvedPromiseForNumberOfLikes;
+              return amountOfLikes;
+            });
+            totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
+              var amountOfHearts = resolvedPromiseForNumberOfHearts;
+              return amountOfHearts;
+            });
+            async function documentData() {
+              var usersLikes = await totalLikesOnPost;
+              var usersHearts = await totalHeartsOnPost;
+              var docData = {
+                userName: doc.data().userName,
+                title: doc.data().title,
+                author: doc.data().author,
+                authorPic: doc.data().authorPic,
+                likes: usersLikes,
+                hearts: usersHearts,
+                image: doc.data().image,
+                fileType: doc.data().fileType,
+                createdAt: doc.data().createdAt,
+                id: doc.data().id,
+              };
+              console.log(docData);
+              return docData;
+            }
+
             setLoadingFilter(false);
-            updatedValue = updatedMemeObject;
-            return updatedMemeObject;
+
+            return documentData();
           });
-          randomMeme = updatedValue;
+          console.log(updatedValue);
           return updatedValue;
         } else {
           var meme = memes
@@ -498,7 +570,7 @@ export default function AuthProvider({ children }) {
         }
       })
       .catch((error) => {});
-    return randomMeme;
+    return null;
   }
   async function removeHeartPost(postId) {
     var userID = currentUser.uid;

@@ -1,7 +1,7 @@
 .card-area {
   display: flex;
   width: 35vw;
-  margin: 1rem;
+  margin: 2.5rem;
   max-width: 800px;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border: rgb(235, 238, 240) 1px solid;
@@ -135,8 +135,8 @@
   height: auto;
   width: 270px;
   position: absolute;
-  bottom: 4rem;
-  right: 30pxpx;
+  top: 4rem;
+  right: 30px;
   background-color: white;
   display: flex;
   flex-direction: column;
@@ -193,6 +193,7 @@
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  margin: 1rem;
 }
 
 .lower img,

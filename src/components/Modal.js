@@ -48,6 +48,7 @@ export default function Modal(props) {
     uploadMeme(image, title, fileType);
     setUploaded(true);
     props.createPostFunction(false);
+    props.openFilePrompt();
   };
 
   const titleRegex = /(?=.*[!@#$%^&*])/;

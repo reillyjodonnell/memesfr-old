@@ -330,7 +330,6 @@ export default function Dashboard(props) {
       setRandomPosts();
     }
     loadPopular().then((items) => {
-      console.log(items);
       setPopularPosts(items);
       setActiveScreen(items);
     });
@@ -515,7 +514,6 @@ export default function Dashboard(props) {
     return null;
   };
   if (activeScreen != null) {
-    console.log(activeScreen, activeScreen.length);
   }
 
   // const LoadMemes = () => {
