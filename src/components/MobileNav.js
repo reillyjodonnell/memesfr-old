@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import HomeIcon from "@material-ui/icons/Home";
-import TrendingIcon from "@material-ui/icons/TrendingUp";
-import PeopleIcon from "@material-ui/icons/Whatshot";
-import RecentIcon from "@material-ui/icons/AccessTime";
-import LayersIcon from "@material-ui/icons/Casino";
-import { ReactComponent as Plus } from "../Assets/SVGs/plus.svg";
+import { ReactComponent as Home } from "../Assets/Icons/Home.svg";
+import { ReactComponent as Trending } from "../Assets/SVGs/trending.svg";
+import { ReactComponent as Popular } from "../Assets/Icons/Popular.svg";
+import { ReactComponent as Recent } from "../Assets/Icons/Recent.svg";
+import { ReactComponent as Random } from "../Assets/Icons/Random.svg";
+import { ReactComponent as Plus } from "../Assets/Icons/Plus.svg";
+
 import "../CSS Components/MobileNav.css";
 
 import { People } from "@material-ui/icons";
@@ -13,15 +14,11 @@ export default function MobileNav(props) {
   return (
     <div className="mobile-nav-container">
       <div onClick={props.homeFilter} className="mobile-nav-icon">
-        <HomeIcon
-          style={props.active === 0 ? { fill: "#00000085" } : { fill: "white" }}
-        />
+        <Home style={props.active === 0 ? { fill: "url(#grad)" } : null} />
       </div>
 
       <div onClick={props.trendingFilter} className="mobile-nav-icon">
-        <PeopleIcon
-          style={props.active === 1 ? { fill: "#00000085" } : { fill: "white" }}
-        />
+        <Popular style={props.active === 2 ? { fill: "url(#grad)" } : null} />
       </div>
 
       <div onClick={props.createPost} className="mobile-nav-icon-primary">
@@ -31,19 +28,11 @@ export default function MobileNav(props) {
       </div>
 
       <div onClick={props.recentFilter} className="mobile-nav-icon">
-        <RecentIcon
-          style={props.active === 3 ? { fill: "#00000085" } : { fill: "white" }}
-        />
+        <Recent style={props.active === 3 ? { stroke: "url(#grad)" } : null} />
       </div>
 
       <div onClick={props.randomFilter} className="mobile-nav-icon">
-        <LayersIcon
-          style={
-            props.active === 4
-              ? { strokeWidth: "2px", fill: "#00000085" }
-              : { fill: "white" }
-          }
-        />
+        <Random style={props.active === 4 ? { fill: "url(#grad)" } : null} />
       </div>
     </div>
   );

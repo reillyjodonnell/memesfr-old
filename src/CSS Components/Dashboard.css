@@ -5,6 +5,19 @@
   flex-direction: column;
   margin-bottom: 2rem;
 }
+.dashboard-content {
+  display: flex;
+  height: 100%;
+  background-color: #4c4d62;
+}
+.section-header-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ea3788;
+  font-weight: 600;
+  font-size: 2rem;
+}
 
 .return-home {
   display: flex;

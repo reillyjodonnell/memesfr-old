@@ -5,7 +5,7 @@
   display: flex;
   position: fixed;
   top: 0;
-  background-color: #1098f7;
+  background-color: #272932;
   padding-left: 24px;
   padding-right: 10px;
   min-height: 62px;
@@ -25,8 +25,11 @@
   margin-left: 0.7rem;
   align-items: center;
   display: flex;
+  font-weight: 600;
+  font-size: 2rem;
 }
 .navbar-logo span {
+  margin-left: 1rem;
   color: white;
   font-size: 2rem;
 }

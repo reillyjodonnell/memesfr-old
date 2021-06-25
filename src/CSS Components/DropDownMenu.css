@@ -1,13 +1,12 @@
 .settings {
   position: absolute;
   top: 0;
-  background-color: grey;
   width: 300px;
   height: 100px;
   z-index: 2;
 }
 :root {
-  --bg: #1098f7;
+  --bg: #272932;
   --bg-accent: #b74f6f;
   --text-color: #eeeeee;
   --nav-size: 80px;

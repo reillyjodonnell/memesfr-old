@@ -1,38 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Drawer from "@material-ui/core/Drawer";
 import Box from "@material-ui/core/Box";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Skeleton from "@material-ui/lab/Skeleton";
-import { SecondaryListItems } from "./ListItems";
-import MainListItems from "./ListItems";
 import Card from "./Card";
-import DropDownMenu from "./DropDownMenu";
-import NavbarItem from "./NavbarItem";
 import "../CSS Components/Dashboard.css";
 import CreatePost from "./CreatePost";
 import MobileHeader from "./MobileHeader";
-
+import Sidebar from "./Sidebar";
 import firebase from "firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { useMobile } from "../contexts/MobileContext";
 import { Link, useHistory } from "react-router-dom";
-
-import { ReactComponent as User } from "../Assets/SVGs/user.svg";
-import { ReactComponent as Castle } from "../Assets/SVGs/castle.svg";
 import { ReactComponent as X } from "../Assets/SVGs/x.svg";
 import MobileNav from "./MobileNav";
-import Modal from "./Modal";
+import SectionHeader from "./SectionHeader";
 
 const drawerWidth = 240;
 const login = false;
@@ -104,6 +88,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: "100%",
     overflowX: "hidden",
+    backgroundColor: "#4C4D62",
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -183,6 +168,11 @@ export default function Dashboard(props) {
   }, [recentlyUploaded]);
 
   const history = useHistory();
+
+  if (currentUser) {
+    var username = currentUser.displayName;
+    var avatar = currentUser.photoURL;
+  }
 
   var hide = true;
   var active = 0;
@@ -545,13 +535,7 @@ export default function Dashboard(props) {
   // };
 
   return (
-    <div className={classes.root}>
-      {createPost ? (
-        <CreatePost
-          createPostFunction={createPostFunction}
-          createPost={createPost}
-        />
-      ) : null}
+    <div className="dashboard-content" style={{ backgroundColor: "#4c4d62" }}>
       {isMobile ? (
         <>
           <MobileHeader activeUser={currentUser} />
@@ -566,112 +550,17 @@ export default function Dashboard(props) {
           />
         </>
       ) : (
-        <>
-          <CssBaseline />
-          <AppBar
-            position="fixed"
-            className={clsx(classes.appBar, open && classes.appBarShift)}
-          >
-            <Toolbar className={classes.toolbar}>
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                className={clsx(
-                  classes.menuButton,
-                  open && classes.menuButtonHidden
-                )}
-              ></IconButton>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginRight: "auto",
-                }}
-              >
-                <Castle className={classes.image} />
-
-                <Typography
-                  component="h1"
-                  variant="h6"
-                  color="inherit"
-                  noWrap
-                  className={classes.title}
-                >
-                  Memesfr
-                </Typography>
-              </div>
-
-              {currentUser ? null : (
-                <div className={classes.loginregister}>
-                  <Typography
-                    onClick={openSignIn}
-                    component="h1"
-                    variant="h6"
-                    color="inherit"
-                    noWrap
-                    className={classes.register}
-                  >
-                    Log In
-                  </Typography>
-                  <Typography
-                    onClick={openRegister}
-                    component="h1"
-                    variant="h6"
-                    color="inherit"
-                    noWrap
-                    className={classes.login}
-                  >
-                    Register
-                  </Typography>
-                </div>
-              )}
-
-              <IconButton
-                disableRipple
-                style={{ marginLeft: "auto", backgroundColor: "transparent" }}
-                color="inherit"
-              >
-                <Badge badgeContent={1} color="secondary">
-                  <NavbarItem disableRipple icon={<User />}>
-                    <DropDownMenu activeUser={currentUser} />
-                  </NavbarItem>
-                </Badge>
-              </IconButton>
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            variant="permanent"
-            classes={{
-              root: classes.drawerRoot,
-              paper: clsx(
-                classes.drawerPaper,
-                !open && classes.drawerPaperClose
-              ),
-            }}
-            open={open}
-          >
-            <Divider />
-            <List>
-              <MainListItems
-                active={nav}
-                homeFilter={filterHome}
-                trendingFilter={filterTrending}
-                recentFilter={filterRecent}
-                popularFilter={filterPopular}
-                randomFilter={filterRandom}
-              />
-            </List>
-            <Divider />
-            {hide ? null : (
-              <List>
-                <SecondaryListItems />
-              </List>
-            )}
-          </Drawer>
-        </>
+        <Sidebar
+          homeFilter={filterHome}
+          trendingFilter={filterTrending}
+          recentFilter={filterRecent}
+          popularFilter={filterPopular}
+          randomFilter={filterRandom}
+          createPost={createMemePost}
+          active={nav}
+          username={username}
+          avatar={avatar}
+        />
       )}
 
       <main className={classes.content}>
@@ -679,45 +568,8 @@ export default function Dashboard(props) {
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={5}></Grid>
           <Box spacing={5} pt={4}>
-            {nav === 0 ? (
-              <CreatePost
-                createPostFunction={createPostFunction}
-                createPost={createPost}
-              />
-            ) : nav === 1 ? (
-              <span
-                style={{
-                  marginLeft: "1.4rem",
-                  letterSpacing: ".2px",
-                  fontSize: "1.2rem",
-                  fontWeight: 600,
-                }}
-              >
-                Popular
-              </span>
-            ) : nav === 3 ? (
-              <span
-                style={{
-                  marginLeft: "1.4rem",
-                  letterSpacing: ".2px",
-                  fontSize: "1.2rem",
-                  fontWeight: 600,
-                }}
-              >
-                Recent
-              </span>
-            ) : nav === 4 ? (
-              <span
-                style={{
-                  marginLeft: "1.4rem",
-                  letterSpacing: ".2px",
-                  fontSize: "1.2rem",
-                  fontWeight: 600,
-                }}
-              >
-                Random
-              </span>
-            ) : null}
+            <SectionHeader nav={nav} />
+
             {notConfirmedEmail ? <ConfirmEmailPrompt /> : null}
             <div className="main-content">
               {loadingFilter ? (
@@ -730,7 +582,7 @@ export default function Dashboard(props) {
               {activeScreen
                 ? activeScreen.length != undefined &&
                   activeScreen.map((item) => {
-                    console.log(item);
+                    console.log(item.id, usersLikedPosts);
                     var liked = false;
                     var hearted = false;
                     if (usersLikedPosts.includes(item.id)) {
@@ -751,6 +603,12 @@ export default function Dashboard(props) {
                     );
                   })
                 : null}
+              {createPost ? (
+                <CreatePost
+                  createPostFunction={createPostFunction}
+                  createPost={createPost}
+                />
+              ) : null}
             </div>
           </Box>
         </Container>

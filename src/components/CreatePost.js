@@ -69,6 +69,7 @@ export default function CreatePost(props) {
               <div className="create-post-content">
                 {props.createPost === true ? (
                   <Modal
+                    avatar={currentUser.photoURL}
                     createPostFunction={props.createPostFunction}
                     openFilePrompt={OpenFilePrompt}
                   />

@@ -9,6 +9,7 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import Loading from "./Loading";
+import "../CSS Components/Modal.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,6 +68,11 @@ export default function Modal(props) {
       setTitleError(false);
     }
   };
+  function removeFile() {
+    window.alert("Removing file");
+    setFileError("");
+    setFile("");
+  }
 
   const handleChange = (event) => {
     event.preventDefault();
@@ -111,22 +117,34 @@ export default function Modal(props) {
     if (image.type == "video/mp4") {
       setFileType("video");
       return (
-        <video
-          loop="true"
-          className="video-file"
-          src={URL.createObjectURL(image)}
-          alt={image.name}
-          autoPlay="true"
-          controls
-          style={{ objectFit: "contain" }}
-        ></video>
+        <div className="meme-image-preview">
+          <video
+            loop="true"
+            className=" meme-image-preview"
+            src={URL.createObjectURL(image)}
+            alt={image.name}
+            autoPlay="true"
+            controls="true"
+            style={{ objectFit: "contain" }}
+          ></video>
+          <img onClick={removeFile} className="cancel-meme" src={x} />
+        </div>
       );
     }
 
     if (validFormat) {
       setFileType("image");
 
-      return <img src={URL.createObjectURL(image)} alt={image.name} />;
+      return (
+        <div className="meme-image-preview">
+          <img
+            src={URL.createObjectURL(image)}
+            className="meme-image-preview"
+            alt={image.name}
+          ></img>
+          <img onClick={removeFile} className="cancel-meme" src={x} />
+        </div>
+      );
     } else {
       setFile("");
       var fileType = JSON.stringify(image.type);
@@ -143,67 +161,49 @@ export default function Modal(props) {
       ) : (
         <>
           <div className="upper-section">
-            <span>Upload Meme</span>
-            <img onClick={props.openFilePrompt} src={x} />
+            <img style={{}} onClick={props.openFilePrompt} src={x} />
           </div>
-          <div className="upper-middle">
-            <div className="group">
-              <img src={Image}></img>
-              <div className="details">
-                <span className="title">Photos</span>
-                <span className="description">PNG, JPG, GIF </span>
-              </div>
+          <div className="upper-post-section">
+            <div className="upper-post-avatar-container">
+              <img className="sidebar-avatar" src={props.avatar} />
             </div>
-            <div className="group">
-              <img src={Gif}></img>
-              <div className="details">
-                <span className="title">Gifs</span>
-                <span className="description">800x600 or 400x300 </span>
-              </div>
-            </div>
-            <div className="group">
-              <img src={Video}></img>
-              <div className="details">
-                <span className="title">Videos</span>
-                <span className="description">800x600 or 400x300 </span>
-              </div>
-            </div>
+            <input
+              id="input"
+              className="upper-post-section-meme-title"
+              placeholder="Meme title"
+              inputRef={titleRef}
+              onChange={(e) => checkTitleError(e)}
+              required
+              maxLength="40"
+              label="Title"
+              autoComplete="off"
+              helperText={titleErrorMessage}
+              error={titleError}
+            ></input>
           </div>
         </>
       )}
       {file ? (
         <>
           <form className="main-section-form" onSubmit={uploadPost}>
-            <div className="main-section">
+            <div
+              style={file ? { border: "none" } : null}
+              className="main-section"
+            >
               <div className="image-preview">
-                {file && <ImageThumb image={file} />}
+                {file && (
+                  <>
+                    <ImageThumb
+                      className="meme-image-preview"
+                      image={file}
+                    ></ImageThumb>
+                  </>
+                )}
                 <input
                   accept=".png, .jpeg, .jpg, .gif, .mp4, .avi"
                   type="image"
                   style={{ display: "none" }}
                   image={file}
-                />
-              </div>
-              <div
-                style={{
-                  flex: 0,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  display: "flex",
-                  width: "100%",
-                  flexGrow: 0,
-                }}
-              >
-                <TextField
-                  inputRef={titleRef}
-                  onChange={(e) => checkTitleError(e)}
-                  required
-                  className={classes.input}
-                  id="outlined-name"
-                  label="Title"
-                  variant="outlined"
-                  helperText={titleErrorMessage}
-                  error={titleError}
                 />
               </div>
             </div>
@@ -238,8 +238,20 @@ export default function Modal(props) {
             className="main-section"
           >
             <>
-              <img src={Upload}></img>
-              <span>Drag Drop to upload or browse</span>
+              <input
+                onChange={handleUpload}
+                type="file"
+                id="file"
+                ref={inputFile}
+                style={{
+                  display: "none",
+                  opacity: 0,
+                }}
+              />
+              <span onClick={onButtonClick} className="upload-meme-prompt">
+                Choose dank meme
+              </span>
+
               {fileError ? (
                 <span style={{ padding: "1rem", color: "red" }}>
                   {fileError}
@@ -249,18 +261,7 @@ export default function Modal(props) {
           </div>
 
           <div className="lower-section">
-            <>
-              <button onClick={onButtonClick}>
-                <input
-                  onChange={handleUpload}
-                  type="file"
-                  id="file"
-                  ref={inputFile}
-                  style={{ display: "none" }}
-                />
-                Browse
-              </button>
-            </>
+            <></>
           </div>
         </>
       )}

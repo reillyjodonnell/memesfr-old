@@ -1,10 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home-2" width="44" height="44" viewBox="0 0 24 24"  fill="white" stroke-linecap="round" stroke-linejoin="round">
-  <defs>
-  <linearGradient id="grad" gradientTransform="rotate(90)">
+<path d="M0 0h24v24H0z"  fill="none"/>
+<linearGradient id="grad" gradientTransform="rotate(90)">
     <stop offset="5%"  stop-color="#EA3788" />
     <stop offset="95%" stop-color="#00A7E1" />
   </linearGradient>
-  </defs>
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+<path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
 </svg>

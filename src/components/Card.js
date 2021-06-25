@@ -226,8 +226,6 @@ export default function Card(props) {
           <img
             src={buffDoge}
             style={{
-              padding: "2px",
-              border: "1px solid #00000036",
               height: "100%",
               width: "100%",
             }}
@@ -273,17 +271,7 @@ export default function Card(props) {
         <div className="card">
           <div className="upper">
             <div className="upper-top-info">
-              <DisplayAvatar />
-              <div className="meme-identification">
-                <span className="clickable">
-                  {currentUser &&
-                  props.item.userName === currentUser.displayName
-                    ? "you"
-                    : memeAuthor()}
-                </span>
-                <span className="hashtag-identifier">#general</span>
-              </div>
-              <Options />
+              <span className="meme-title">{props.item.title}</span>
             </div>
 
             <div className="image-container">
@@ -297,12 +285,15 @@ export default function Card(props) {
                 ></img>
               )}
             </div>
-            <div className="upper-top">
-              <span className="meme-title">{props.item.title}</span>
-            </div>
+            <div className="upper-top"></div>
           </div>
 
           <div className="lower">
+            <DisplayAvatar />
+            <div className="meme-identification">
+              <span className="clickable">@{memeAuthor()}</span>
+              <span className="hashtag-identifier"></span>
+            </div>
             <div className="heart-container">
               <HeartIcon
                 className={
@@ -323,6 +314,7 @@ export default function Card(props) {
 
             <div className="like-container">
               <LikeIcon
+                style={thumbUp ? { fill: "url(#thumb-grad)" } : null}
                 className={thumbUp ? "active-thumbup" : "inactive-thumbup"}
                 onClick={currentUser ? toggleThumbUp : activatePrompt}
               />
