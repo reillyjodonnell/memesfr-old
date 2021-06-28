@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ReactDom from "react-dom";
 import x from "../Assets/SVGs/x.svg";
 import { makeStyles } from "@material-ui/core/styles";
@@ -35,6 +35,13 @@ export default function Modal(props) {
   const titleRef = useRef();
 
   const { uploadMeme } = useAuth();
+
+  useEffect(() => {
+    var mount = true;
+    if (mount) {
+      window.alert("Rerendering");
+    }
+  }, [file]);
 
   const uploadPost = (e) => {
     e.preventDefault();
@@ -175,7 +182,24 @@ export default function Modal(props) {
               <span>
                 By clicking upload you agree to abide by our Community Policy.
               </span>
-              <ModalUpload onButtonClick={onButtonClick} />
+              <button
+                className={
+                  titleError
+                    ? "modal-upload-button-disabled"
+                    : "modal-upload-button"
+                }
+                type="submit"
+                disabled={titleError}
+                onClick={props.onButtonClick}
+              >
+                <input
+                  type="submit"
+                  id="file"
+                  ref={inputFile}
+                  style={{ display: "none" }}
+                />
+                Upload
+              </button>
             </div>
           </form>
         </>
