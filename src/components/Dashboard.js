@@ -88,7 +88,6 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     height: "100%",
     overflowX: "hidden",
-    backgroundColor: "#4C4D62",
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -132,6 +131,7 @@ export default function Dashboard(props) {
   const [recentPosts, setRecentPosts] = useState([{}]);
   const [randomPosts, setRandomPosts] = useState([{}]);
   const [activeScreen, setActiveScreen] = useState([{}]);
+  const [loadingFilter, setLoadingFilter] = useState(false);
   const [home, setHome] = useState(false);
   const [createPost, createPostFunction] = useState(false);
   const [firstTime, setFirstTime] = useState(false);
@@ -148,7 +148,6 @@ export default function Dashboard(props) {
 
   const {
     currentUser,
-    loadingFilter,
     retrievePopularPosts,
     retrieveRecentPosts,
     recentlyUploaded,
@@ -174,7 +173,6 @@ export default function Dashboard(props) {
     var avatar = currentUser.photoURL;
   }
 
-  var hide = true;
   var active = 0;
 
   const createMemePost = () => {
@@ -187,13 +185,6 @@ export default function Dashboard(props) {
 
   const openSignIn = () => {
     history.push("/login");
-  };
-
-  const handleDrawerOpen = () => {
-    //setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
   };
 
   //Runs three times
@@ -312,6 +303,7 @@ export default function Dashboard(props) {
   };
 
   function showPopular() {
+    setLoadingFilter(true);
     setActiveScreen();
     if (recentPosts) {
       setRecentPosts();
@@ -322,6 +314,7 @@ export default function Dashboard(props) {
     loadPopular().then((items) => {
       setPopularPosts(items);
       setActiveScreen(items);
+      setLoadingFilter(false);
     });
   }
 
@@ -351,6 +344,7 @@ export default function Dashboard(props) {
     loadRecent().then((items) => {
       setRecentPosts(items);
       setActiveScreen(items);
+      setLoadingFilter(false);
     });
   }
   async function loadRandom() {
@@ -359,6 +353,8 @@ export default function Dashboard(props) {
   }
 
   function showRandom() {
+    setLoadingFilter(true);
+
     setActiveScreen();
     if (popularPosts) {
       setPopularPosts();
@@ -370,24 +366,37 @@ export default function Dashboard(props) {
     loadRandom().then((items) => {
       setRandomPosts(items);
       setActiveScreen([items]);
+      setLoadingFilter(false);
     });
   }
 
   function filterHome() {
+    setLoadingFilter(true);
     myRef.current.scrollIntoView({ behavior: "smooth" });
     setNav(0);
   }
   function filterTrending() {
+    setLoadingFilter(true);
+    myRef.current.scrollIntoView({ behavior: "smooth" });
+
     setNav(1);
   }
 
   function filterPopular() {
+    setLoadingFilter(true);
+    myRef.current.scrollIntoView({ behavior: "smooth" });
+
     setNav(2);
   }
   function filterRecent() {
+    setLoadingFilter(true);
+    myRef.current.scrollIntoView({ behavior: "smooth" });
+
     setNav(3);
   }
   function filterRandom() {
+    setLoadingFilter(true);
+
     setNav(4);
     setLoadAnotherRandomMeme((prevState) => !prevState);
   }
@@ -453,11 +462,34 @@ export default function Dashboard(props) {
     );
   };
 
+  const ShowSkeletons = () => {
+    return (
+      <>
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+      </>
+    );
+  };
+
   const RecentlyPosted = () => {
     var sayingOne = "";
     var sayingTwo = "";
     if (recentlyUploaded.length === 1) {
-      var sayingOne = "Nice work 👍";
       var sayingTwo = "Here's what you just posted 👇";
     }
     if (recentlyUploaded.length > 1) {
@@ -479,9 +511,10 @@ export default function Dashboard(props) {
           >
             <div
               style={{
+                textAlign: "center",
                 display: "block",
-                backgroundColor: "white",
                 padding: "1rem",
+                color: "white",
                 height: "100%",
                 width: "100%",
               }}
@@ -505,37 +538,8 @@ export default function Dashboard(props) {
   };
   if (activeScreen != null) {
   }
-
-  // const LoadMemes = () => {
-  //   console.log("Executing");
-  //   //This is expensive. Everytime we call this useEffect it is rerendered for each individual card
-  //   //So it's an extra x reads (amount of hearted content * number of posts in the category)
-
-  //   async function match() {
-  //     if (currentUser) {
-  //       const results = await hasUserLikedPost();
-  //       let [{ likedPosts }, { heartedPosts }] = results;
-  //       setUsersLikedPosts(likedPosts);
-  //       setUsersHeartedPosts(heartedPosts);
-  //     }
-  //   }
-  //   match();
-
-  //   activeScreen.map((item) => {
-  //     return (
-  //       <Card
-  //         key={item.id}
-  //         likedPosts={usersLikedPosts}
-  //         heartedPosts={usersHeartedPosts}
-  //         item={item}
-  //       />
-  //     );
-  //   });
-  //   return <span>Test</span>;
-  // };
-
   return (
-    <div className="dashboard-content" style={{ backgroundColor: "#4c4d62" }}>
+    <div className="dashboard-content">
       {isMobile ? (
         <>
           <MobileHeader activeUser={currentUser} />
@@ -564,25 +568,18 @@ export default function Dashboard(props) {
       )}
 
       <main className={classes.content}>
-        <div ref={myRef} className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={5}></Grid>
           <Box spacing={5} pt={4}>
-            <SectionHeader nav={nav} />
+            <div ref={myRef}></div>
 
             {notConfirmedEmail ? <ConfirmEmailPrompt /> : null}
             <div className="main-content">
-              {loadingFilter ? (
-                <>
-                  <Skeleton className={classes.skeleton} variant="rect" />
-                  <Skeleton className={classes.skeleton} variant="rect" />
-                </>
-              ) : null}
+              {loadingFilter && <ShowSkeletons />}
               <RecentlyPosted />
               {activeScreen
                 ? activeScreen.length != undefined &&
                   activeScreen.map((item) => {
-                    console.log(item.id, usersLikedPosts);
                     var liked = false;
                     var hearted = false;
                     if (usersLikedPosts.includes(item.id)) {
@@ -609,6 +606,12 @@ export default function Dashboard(props) {
                   createPost={createPost}
                 />
               ) : null}
+              {loadingFilter === false ||
+                (nav != 4 && (
+                  <div className="end-of-memes">
+                    <span>End of the memes 😢</span>
+                  </div>
+                ))}
             </div>
           </Box>
         </Container>

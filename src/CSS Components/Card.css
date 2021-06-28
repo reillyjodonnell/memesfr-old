@@ -1,8 +1,10 @@
 .card-area {
   display: flex;
   width: 35vw;
-  margin: 2.5rem;
+  margin: 1rem 2.5rem;
   max-width: 800px;
+  justify-content: center;
+  align-items: center;
   /* DISABLED FOR NON MOBILE
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border: rgb(235, 238, 240) 1px solid;

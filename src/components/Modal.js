@@ -1,15 +1,12 @@
 import React, { useState, useRef } from "react";
 import ReactDom from "react-dom";
 import x from "../Assets/SVGs/x.svg";
-import Image from "../Assets/Icons/Image.svg";
-import Video from "../Assets/Icons/Video.svg";
-import Gif from "../Assets/Icons/Gif.svg";
-import Upload from "../Assets/Icons/CloudUpload.svg";
-import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import Loading from "./Loading";
 import "../CSS Components/Modal.css";
+import ModalTitle from "./ModalTitle";
+import ModalUpload from "./ModalUpload";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,13 +25,12 @@ export default function Modal(props) {
   const [name, setName] = useState("Use The Memes, Luke");
   const [viewPhoto, viewPhotoFunction] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [titleError, setTitleError] = useState(true);
-  const [titleErrorMessage, setTitleErrorMessage] = useState("");
   const [file, setFile] = useState("");
   const [fileType, setFileType] = useState("");
   const inputFile = useRef(null);
   const [uploaded, setUploaded] = useState(false);
   const [fileError, setFileError] = useState(false);
+  const [titleError, setTitleError] = useState(true);
 
   const titleRef = useRef();
 
@@ -42,9 +38,7 @@ export default function Modal(props) {
 
   const uploadPost = (e) => {
     e.preventDefault();
-    console.log(file);
     var image = file;
-    console.log(fileType);
     var title = titleRef.current.value;
     uploadMeme(image, title, fileType);
     setUploaded(true);
@@ -52,22 +46,6 @@ export default function Modal(props) {
     props.openFilePrompt();
   };
 
-  const titleRegex = /(?=.*[!@#$%^&*])/;
-  const checkTitleError = (e) => {
-    setTitleError(false);
-
-    if (e.target.value.match(titleRegex)) {
-      setTitleError(true);
-      setTitleErrorMessage("Can't have special characters'");
-    }
-    if (e.target.value == "") {
-      setTitleError(true);
-      setTitleErrorMessage("Cannot be empty");
-    } else {
-      setTitleErrorMessage("");
-      setTitleError(false);
-    }
-  };
   function removeFile() {
     window.alert("Removing file");
     setFileError("");
@@ -167,19 +145,7 @@ export default function Modal(props) {
             <div className="upper-post-avatar-container">
               <img className="sidebar-avatar" src={props.avatar} />
             </div>
-            <input
-              id="input"
-              className="upper-post-section-meme-title"
-              placeholder="Meme title"
-              inputRef={titleRef}
-              onChange={(e) => checkTitleError(e)}
-              required
-              maxLength="40"
-              label="Title"
-              autoComplete="off"
-              helperText={titleErrorMessage}
-              error={titleError}
-            ></input>
+            <ModalTitle setTitleError={setTitleError} titleError={titleError} />
           </div>
         </>
       )}
@@ -192,12 +158,10 @@ export default function Modal(props) {
             >
               <div className="image-preview">
                 {file && (
-                  <>
-                    <ImageThumb
-                      className="meme-image-preview"
-                      image={file}
-                    ></ImageThumb>
-                  </>
+                  <ImageThumb
+                    className="meme-image-preview"
+                    image={file}
+                  ></ImageThumb>
                 )}
                 <input
                   accept=".png, .jpeg, .jpg, .gif, .mp4, .avi"
@@ -211,19 +175,7 @@ export default function Modal(props) {
               <span>
                 By clicking upload you agree to abide by our Community Policy.
               </span>
-              <button
-                type="submit"
-                disabled={titleError}
-                onClick={onButtonClick}
-              >
-                <input
-                  type="submit"
-                  id="file"
-                  ref={inputFile}
-                  style={{ display: "none" }}
-                />
-                Upload
-              </button>
+              <ModalUpload onButtonClick={onButtonClick} />
             </div>
           </form>
         </>

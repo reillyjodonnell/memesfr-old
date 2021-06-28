@@ -5,6 +5,19 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
+  z-index: 1000;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background-color: #272932;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgb(177, 177, 177);
+  border-radius: 20px;
+  background-clip: content-box;
 }
 
 code {

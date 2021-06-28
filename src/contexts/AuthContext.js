@@ -14,7 +14,6 @@ export default function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loadUser, setLoadUser] = useState(true);
   const [userExists, setUserExists] = useState(true);
-  const [loadingFilter, setLoadingFilter] = useState(false);
   const [recentlyUploaded, setRecentlyUploaded] = useState([]);
   const [notConfirmedEmail, setNotConfirmedEmail] = useState(false);
   const history = useHistory();
@@ -34,7 +33,7 @@ export default function AuthProvider({ children }) {
           userData.user.sendEmailVerification();
         }
       })
-      .catch((err) => { });
+      .catch((err) => {});
   }
 
   async function completeSignInWithEmail() {
@@ -91,7 +90,7 @@ export default function AuthProvider({ children }) {
         history.push("/");
         history.go(0);
       },
-      function (error) { }
+      function (error) {}
     );
 
     //Route to home screen and refresh the page plz
@@ -106,8 +105,8 @@ export default function AuthProvider({ children }) {
     var batch = db.batch();
     upload.on(
       "state_changed",
-      (snapshot) => { },
-      (error) => { },
+      (snapshot) => {},
+      (error) => {},
       () => {
         //This is 1 write
         storage
@@ -190,10 +189,10 @@ export default function AuthProvider({ children }) {
                 // Commit the write batch
                 batch
                   .commit()
-                  .then((res) => { })
-                  .catch((err) => { });
+                  .then((res) => {})
+                  .catch((err) => {});
               })
-              .catch((error) => { });
+              .catch((error) => {});
           });
       }
     );
@@ -213,7 +212,6 @@ export default function AuthProvider({ children }) {
   //Map over all of the results and set each one to state
   //At the end of it return the entirety of state
   async function retrieveRecentPosts() {
-    setLoadingFilter(true);
     const recentRef = db.collection("recent").doc("recent_fifty");
     const collections = await recentRef.get();
     var items = collections.data();
@@ -269,8 +267,6 @@ export default function AuthProvider({ children }) {
         return docData;
       }
 
-      setLoadingFilter(false);
-
       return documentData();
     });
     return updatedObjects;
@@ -293,7 +289,6 @@ export default function AuthProvider({ children }) {
   // }
 
   async function retrievePopularPosts() {
-    setLoadingFilter(true);
     const popRef = db.collection("popular").doc("top_fifty");
     const collections = await popRef.get();
     var items = collections.data();
@@ -351,8 +346,6 @@ export default function AuthProvider({ children }) {
         return docData;
       }
 
-      setLoadingFilter(false);
-
       return documentData();
     });
     return updatedObjects;
@@ -409,8 +402,8 @@ export default function AuthProvider({ children }) {
         displayName: username,
       })
       .then(
-        function () { },
-        function (error) { }
+        function () {},
+        function (error) {}
       );
   }
 
@@ -427,8 +420,8 @@ export default function AuthProvider({ children }) {
     const upload = storage.ref(`users/${id}`).put(file);
     upload.on(
       "state_changed",
-      (snapshot) => { },
-      (error) => { },
+      (snapshot) => {},
+      (error) => {},
       () => {
         storage
           .ref("users")
@@ -446,8 +439,8 @@ export default function AuthProvider({ children }) {
         photoURL: imageFile,
       })
       .then(
-        function () { },
-        function (error) { }
+        function () {},
+        function (error) {}
       );
   }
 
@@ -517,13 +510,12 @@ export default function AuthProvider({ children }) {
               return docData;
             }
 
-            setLoadingFilter(false);
             memeObject = documentData();
             return documentData();
           });
-          console.log(memeObject)
+          console.log(memeObject);
 
-          return memeObject
+          return memeObject;
         } else {
           var meme = memes
             .where(firebase.firestore.FieldPath.documentId(), "<", key)
@@ -584,17 +576,16 @@ export default function AuthProvider({ children }) {
                   return docData;
                 }
 
-                setLoadingFilter(false);
                 memeObject = documentData();
                 return documentData();
               });
-              console.log(memeObject)
+              console.log(memeObject);
 
-              return memeObject
-            })
+              return memeObject;
+            });
         }
       })
-      .catch((error) => { });
+      .catch((error) => {});
     return memeObject;
   }
   async function removeHeartPost(postId) {
@@ -747,7 +738,6 @@ export default function AuthProvider({ children }) {
     sendConfirmationEmail,
     addUsernameToDB,
     updateProfile,
-    loadingFilter,
     retrievePopularPosts,
     retrieveRecentPosts,
     likePost,

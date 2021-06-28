@@ -8,15 +8,24 @@
 .dashboard-content {
   display: flex;
   height: 100%;
-  background-color: #4c4d62;
 }
-.section-header-title {
+.section-header-area {
   display: flex;
   justify-content: center;
+  align-items: center;
+  padding: 0 2.5rem;
+}
+.section-header-title {
+  max-width: 800px;
+  padding: 0.5rem 0;
+  width: 35vw;
+  display: flex;
+  justify-content: flex-start;
   align-items: center;
   color: #ea3788;
   font-weight: 600;
   font-size: 2rem;
+  border-bottom: 1px solid #b9b9b91c;
 }
 
 .return-home {
@@ -72,6 +81,12 @@
   top: 0;
   right: 0;
   margin: 0.25rem;
+}
+.end-of-memes {
+  font-size: 1.4rem;
+  color: white;
+  margin: 2rem;
+  font-weight: 500;
 }
 @media only screen and (max-height: 825px) and (max-width: 500px) {
   .thanks-box {
