@@ -177,11 +177,12 @@
   position: relative;
   top: 0;
   left: 0;
-  height: 100%;
+  width: 100%;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
   border-radius: 10px;
+  background-color: rgba(190, 190, 190, 0.021);
 }
 .video-file {
   position: relative;

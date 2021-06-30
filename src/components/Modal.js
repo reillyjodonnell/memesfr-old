@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import ReactDom from "react-dom";
 import x from "../Assets/SVGs/x.svg";
 import { makeStyles } from "@material-ui/core/styles";
@@ -7,6 +7,7 @@ import Loading from "./Loading";
 import "../CSS Components/Modal.css";
 import ModalTitle from "./ModalTitle";
 import ModalUpload from "./ModalUpload";
+import ImageThumb from "./ImageThumb";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,27 +22,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 const accept = "images";
 export default function Modal(props) {
+  console.log("Component is rendering");
   const classes = useStyles();
   const [name, setName] = useState("Use The Memes, Luke");
   const [viewPhoto, viewPhotoFunction] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [file, setFile] = useState("");
   const [fileType, setFileType] = useState("");
-  const inputFile = useRef(null);
   const [uploaded, setUploaded] = useState(false);
   const [fileError, setFileError] = useState(false);
   const [titleError, setTitleError] = useState(true);
 
   const titleRef = useRef();
+  const inputFile = useRef();
 
   const { uploadMeme } = useAuth();
 
-  useEffect(() => {
-    var mount = true;
-    if (mount) {
-      window.alert("Rerendering");
+  const [titleErrorMessage, setTitleErrorMessage] = useState("");
+
+  const titleRegex = /(?=.*[!@#$%^&*])/;
+  const checkTitleError = (e) => {
+    setTitleError(false);
+
+    if (e.target.value.match(titleRegex)) {
+      setTitleError(true);
+      setTitleErrorMessage("Can't have special characters'");
     }
-  }, [file]);
+    if (e.target.value == "") {
+      setTitleError(true);
+      setTitleErrorMessage("Cannot be empty");
+    } else {
+      setTitleErrorMessage("");
+      setTitleError(false);
+    }
+  };
 
   const uploadPost = (e) => {
     e.preventDefault();
@@ -54,7 +68,6 @@ export default function Modal(props) {
   };
 
   function removeFile() {
-    window.alert("Removing file");
     setFileError("");
     setFile("");
   }
@@ -66,77 +79,13 @@ export default function Modal(props) {
       setDisabled(false);
     } else setDisabled(true);
   };
-  const handleDragEnter = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
+
   const handleUpload = (event) => {
     setFile(event.target.files[0]);
   };
   const onButtonClick = () => {
     // `current` points to the mounted file input element
     inputFile.current.click();
-  };
-  const ImageThumb = ({ image }) => {
-    setFileError("");
-    const filesFormats = [
-      "image/jpeg",
-      "image/jpg",
-      "image/gif",
-      "image/png",
-      "video/mp4",
-    ];
-    const validFormat = filesFormats.includes(image.type);
-    if (image.type == "video/mp4") {
-      setFileType("video");
-      return (
-        <div className="meme-image-preview">
-          <video
-            loop="true"
-            className=" meme-image-preview"
-            src={URL.createObjectURL(image)}
-            alt={image.name}
-            autoPlay="true"
-            controls="true"
-            style={{ objectFit: "contain" }}
-          ></video>
-          <img onClick={removeFile} className="cancel-meme" src={x} />
-        </div>
-      );
-    }
-
-    if (validFormat) {
-      setFileType("image");
-
-      return (
-        <div className="meme-image-preview">
-          <img
-            src={URL.createObjectURL(image)}
-            className="meme-image-preview"
-            alt={image.name}
-          ></img>
-          <img onClick={removeFile} className="cancel-meme" src={x} />
-        </div>
-      );
-    } else {
-      setFile("");
-      var fileType = JSON.stringify(image.type);
-      var fileEnding = fileType.slice(7, fileType.length - 1);
-      setFileError(`😢 unsupported file type .${fileEnding}`);
-      return null;
-    }
   };
 
   return ReactDom.createPortal(
@@ -152,7 +101,20 @@ export default function Modal(props) {
             <div className="upper-post-avatar-container">
               <img className="sidebar-avatar" src={props.avatar} />
             </div>
-            <ModalTitle setTitleError={setTitleError} titleError={titleError} />
+            <input
+              id="input"
+              className="upper-post-section-meme-title"
+              autoFocus
+              placeholder="Meme title"
+              ref={titleRef}
+              onChange={(e) => checkTitleError(e)}
+              required
+              maxLength="40"
+              label="Title"
+              autoComplete="off"
+              helperText={titleErrorMessage}
+              error={props.titleError}
+            ></input>
           </div>
         </>
       )}
@@ -166,8 +128,13 @@ export default function Modal(props) {
               <div className="image-preview">
                 {file && (
                   <ImageThumb
+                    setFileType={setFileType}
+                    setFile={setFile}
+                    removeFile={removeFile}
+                    setFileType={setFileType}
+                    setFileError={setFileError}
                     className="meme-image-preview"
-                    image={file}
+                    file={file}
                   ></ImageThumb>
                 )}
                 <input
@@ -205,39 +172,24 @@ export default function Modal(props) {
         </>
       ) : (
         <>
-          <div
-            onDrop={(e) => handleDrop(e)}
-            onDragOver={(e) => handleDragOver(e)}
-            onDragEnter={(e) => handleDragEnter(e)}
-            onDragLeave={(e) => handleDragLeave(e)}
-            draggable="true"
-            className="main-section"
-          >
-            <>
-              <input
-                onChange={handleUpload}
-                type="file"
-                id="file"
-                ref={inputFile}
-                style={{
-                  display: "none",
-                  opacity: 0,
-                }}
-              />
-              <span onClick={onButtonClick} className="upload-meme-prompt">
-                Choose dank meme
-              </span>
+          <div className="main-section">
+            <input
+              onChange={handleUpload}
+              type="file"
+              id="file"
+              ref={inputFile}
+              style={{
+                display: "none",
+                opacity: 0,
+              }}
+            />
+            <span onClick={onButtonClick} className="upload-meme-prompt">
+              Choose dank meme
+            </span>
 
-              {fileError ? (
-                <span style={{ padding: "1rem", color: "red" }}>
-                  {fileError}
-                </span>
-              ) : null}
-            </>
-          </div>
-
-          <div className="lower-section">
-            <></>
+            {fileError ? (
+              <span style={{ padding: "1rem", color: "red" }}>{fileError}</span>
+            ) : null}
           </div>
         </>
       )}

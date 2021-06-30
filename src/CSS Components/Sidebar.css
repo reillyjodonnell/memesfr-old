@@ -110,7 +110,6 @@
   width: 100%;
   right: 0;
   padding-right: 28px;
-
   border-right: 3px solid green;
   border-radius: 20px;
   border-image: linear-gradient(#ea3788, #00a7e1) 2 stretch;
@@ -162,6 +161,7 @@
 
 /*Settings components*/
 .sidebar-navigation-settings-header {
+  cursor: pointer;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -216,4 +216,14 @@
   position: absolute;
   transform: translateX(140%);
   transition: all var(--speed) ease;
+}
+
+@media only screen and (min-height: 900px) {
+  .navigation-group-text {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  .navigation-group {
+    margin: 1.25rem 0;
+  }
 }

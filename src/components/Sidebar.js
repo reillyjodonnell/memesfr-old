@@ -181,8 +181,11 @@ export default function Sidebar(props) {
             onEnter={calcHeight}
           >
             <div>
-              <div className="sidebar-navigation-settings-header">
-                <LeftArrow onClick={() => setActiveMenu("main")} />
+              <div
+                onClick={() => setActiveMenu("main")}
+                className="sidebar-navigation-settings-header"
+              >
+                <LeftArrow />
                 <span style={{ color: "white" }}>Settings</span>
               </div>
 
