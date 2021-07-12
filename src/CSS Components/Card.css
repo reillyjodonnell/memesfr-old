@@ -370,7 +370,10 @@
     height: 26px;
   }
 }
-@media only screen and (max-height: 850px) {
+@media only screen and (max-height: 570px) and (max-width: 330px) {
+  .like-container {
+    margin-left: 0px;
+  }
 }
 @media only screen and (max-height: 600px) and (max-width: 330px) {
   .expanded-pencil {

@@ -158,6 +158,11 @@
   padding: 2px;
   stroke: white;
 }
+.logout-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 /*Settings components*/
 .sidebar-navigation-settings-header {

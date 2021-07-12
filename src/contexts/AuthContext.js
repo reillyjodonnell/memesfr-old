@@ -79,10 +79,9 @@ export default function AuthProvider({ children }) {
   function login(email, password) {
     return auth.signInWithEmailAndPassword(email, password);
   }
-  function resetPassword(email) {
+  function resetPassword() {
     history.push("/reset");
-
-    return auth.sendPasswordResetEmail(email);
+    return auth.sendPasswordResetEmail(user.email);
   }
   function signOut() {
     auth.signOut().then(

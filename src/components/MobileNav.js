@@ -18,7 +18,7 @@ export default function MobileNav(props) {
       </div>
 
       <div onClick={props.trendingFilter} className="mobile-nav-icon">
-        <Popular style={props.active === 2 ? { fill: "url(#grad)" } : null} />
+        <Popular style={props.active === 1 ? { fill: "url(#grad)" } : null} />
       </div>
 
       <div onClick={props.createPost} className="mobile-nav-icon-primary">

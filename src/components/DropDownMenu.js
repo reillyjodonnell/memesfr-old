@@ -26,12 +26,20 @@ export default function DropDownMenu(props) {
   const { isMobile } = useMobile();
   const [activeMenu, setActiveMenu] = useState("main");
   const [menuHeight, setMenuHeight] = useState(null);
+  const [firstTime, setFirstTime] = useState(true);
   const dropdownRef = useRef(null);
   const history = useHistory();
 
   function calcHeight(el) {
-    var height = el.offsetHeight + 20;
+    if (firstTime === true && !isMobile) {
+      var height = el.offsetHeight + 20;
+      setMenuHeight(height);
+    } else if (isMobile) {
+      var height = el.offsetHeight;
+      setMenuHeight(height);
+    } else var height = el.offsetHeight;
     setMenuHeight(height);
+    setFirstTime(false);
   }
 
   const discLink = "https://discord.gg/234DDJUQpD";

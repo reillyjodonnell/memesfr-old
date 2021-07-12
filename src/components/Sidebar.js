@@ -42,6 +42,9 @@ export default function Sidebar(props) {
     var height = el.offsetHeight + 20;
     setMenuHeight(height);
   }
+  function goToLogin() {
+    history.push("/login");
+  }
 
   const discLink = "https://discord.gg/234DDJUQpD";
 
@@ -157,17 +160,17 @@ export default function Sidebar(props) {
               </div>
               <div className="sidebar-login ">
                 {props.avatar !== undefined ? (
-                  <>
+                  <div className="logout-container" onClick={signOut}>
                     <Logout />
                     <span className="navigation-group-text">Logout</span>
-                  </>
+                  </div>
                 ) : (
-                  <>
+                  <div onClick={goToLogin} className={"navigation-group"}>
                     <Logout />
                     <span className="navigation-group-text">
                       Sign in/ Sign up
                     </span>
-                  </>
+                  </div>
                 )}
               </div>
             </div>
@@ -210,7 +213,10 @@ export default function Sidebar(props) {
                 </a>
               </div>
               <div className={"navigation-group"}>
-                <div className="navigation-group-items navigation-settings-icon">
+                <div
+                  onClick={props.resetPassword}
+                  className="navigation-group-items navigation-settings-icon"
+                >
                   <Password />
                   <span className="navigation-group-text">Change Password</span>
                 </div>

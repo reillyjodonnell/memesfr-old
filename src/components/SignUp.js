@@ -18,6 +18,8 @@ import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
+import { ReactComponent as Castle } from "../Assets/SVGs/castle.svg";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 
 function Copyright() {
   return (
@@ -34,17 +36,45 @@ function Copyright() {
   );
 }
 
+const theme = createMuiTheme({
+  palette: {
+    background: {
+      default: "#272932",
+    },
+  },
+  overrides: {
+    MuiOutlinedInput: {
+      root: {
+        "& $notchedOutline": {
+          borderColor: "white",
+          backgroundColor: "#e3e3e34a",
+          color: "black",
+        },
+        "&:hover $notchedOutline": {
+          borderColor: "white",
+        },
+        "&$focused $notchedOutline": {
+          borderColor: "white",
+        },
+      },
+    },
+  },
+});
+
 const useStyles = makeStyles((theme) => ({
+  root: {
+    height: "100vh",
+    "& .MuiPaper-root": {
+      backgroundColor: "#272932",
+    },
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
+
   form: {
     width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
@@ -52,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
     height: "48px",
+    background: "linear-gradient(350deg,  #EA3788, #00A7E1)",
   },
   orparent: {
     display: "flex",
@@ -63,6 +94,17 @@ const useStyles = makeStyles((theme) => ({
     justifySelf: "center",
     alignSelf: "center",
     textAlign: "center",
+  },
+  textfield: {
+    color: "white",
+    "& $notchedOutline": {
+      //add this nested selector
+      borderColor: "red",
+    },
+
+    "&$cssFocused $notchedOutline": {
+      borderColor: "green",
+    },
   },
 }));
 
@@ -174,116 +216,126 @@ export default function SignUp() {
   // 2. If not, they need to confirm it's theirs by confirming via email
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline>
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          {alert && (
-            <span style={{ paddingTop: "1rem", color: "red" }}>{error}</span>
-          )}
-          {userCreation ? (
-            <ConfirmEmailAddress />
-          ) : (
-            <>
-              <form onSubmit={handleSubmit} className={classes.form} noValidate>
-                <Grid container spacing={2}>
-                  <Grid item xs={12}>
-                    <TextField
-                      inputRef={emailRef}
-                      variant="outlined"
-                      required
-                      fullWidth
-                      value={email}
-                      onChange={(e) => checkEmailError(e)}
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
-                      helperText={emailErrorMessage}
-                      error={emailError}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <TextField
-                      inputRef={passwordRef}
-                      variant="outlined"
-                      required
-                      fullWidth
-                      onChange={(e) => checkPasswordError(e)}
-                      value={password}
-                      name="password"
-                      label="Password"
-                      type={showPassword ? "text" : "password"}
-                      id="password"
-                      autoComplete="current-password"
-                      helperText={passwordErrorMessage}
-                      error={passwordError}
-                      InputProps={{
-                        endAdornment: (
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              edge="end"
-                              onClick={enablePassword}
-                            >
-                              {showPassword ? (
-                                <Visibility />
-                              ) : (
-                                <VisibilityOff />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox value="allowExtraEmails" color="primary" />
-                      }
-                      label="I want to receive inspirational memes via email ❤️"
-                    />
-                  </Grid>
-                </Grid>
-                <Button
-                  disabled={loading}
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  color="primary"
-                  className={classes.submit}
+    <MuiThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline>
+          <div className={classes.paper}>
+            <div className="login-logo">
+              <Castle />
+              <span>Memesfr</span>
+            </div>
+            <Typography component="h1" variant="h5">
+              Sign up
+            </Typography>
+            {alert && (
+              <span style={{ paddingTop: "1rem", color: "red" }}>{error}</span>
+            )}
+            {userCreation ? (
+              <ConfirmEmailAddress />
+            ) : (
+              <>
+                <form
+                  onSubmit={handleSubmit}
+                  className={classes.form}
+                  noValidate
                 >
-                  Sign Up
-                </Button>
-
-                <div className={classes.social}></div>
-
-                <Grid container justify="flex-end">
-                  <Grid item>
-                    <Link onClick={redirectToLogin} href="#" variant="body2">
-                      Already have an account? Sign in
-                    </Link>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        inputRef={emailRef}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        value={email}
+                        onChange={(e) => checkEmailError(e)}
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                        helperText={emailErrorMessage}
+                        error={emailError}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        inputRef={passwordRef}
+                        variant="outlined"
+                        required
+                        fullWidth
+                        onChange={(e) => checkPasswordError(e)}
+                        value={password}
+                        name="password"
+                        label="Password"
+                        type={showPassword ? "text" : "password"}
+                        id="password"
+                        autoComplete="current-password"
+                        helperText={passwordErrorMessage}
+                        error={passwordError}
+                        InputProps={{
+                          endAdornment: (
+                            <InputAdornment position="end">
+                              <IconButton
+                                aria-label="toggle password visibility"
+                                edge="end"
+                                onClick={enablePassword}
+                              >
+                                {showPassword ? (
+                                  <Visibility />
+                                ) : (
+                                  <VisibilityOff />
+                                )}
+                              </IconButton>
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox value="allowExtraEmails" color="primary" />
+                        }
+                        label="I want to receive inspirational memes via email ❤️"
+                      />
+                    </Grid>
                   </Grid>
-                </Grid>
-              </form>
-            </>
-          )}
-        </div>
-        <Box mt={5}>
-          <Copyright />
-        </Box>
-        <div className="return-home">
-          <Link onClick={() => history.push("/")} style={{ cursor: "pointer" }}>
-            Return to Home
-          </Link>
-        </div>
-      </CssBaseline>
-    </Container>
+                  <Button
+                    disabled={loading}
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    color="primary"
+                    className={classes.submit}
+                  >
+                    Sign Up
+                  </Button>
+
+                  <div className={classes.social}></div>
+
+                  <Grid container justify="flex-end">
+                    <Grid item>
+                      <Link onClick={redirectToLogin} href="#" variant="body2">
+                        Already have an account? Sign in
+                      </Link>
+                    </Grid>
+                  </Grid>
+                </form>
+              </>
+            )}
+          </div>
+          <Box mt={5}>
+            <Copyright />
+          </Box>
+          <div className="return-home">
+            <Link
+              onClick={() => history.push("/")}
+              style={{ cursor: "pointer" }}
+            >
+              Return to Home
+            </Link>
+          </div>
+        </CssBaseline>
+      </Container>
+    </MuiThemeProvider>
   );
 }

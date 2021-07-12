@@ -5,8 +5,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useAuth } from "../contexts/AuthContext";
 import Loading from "./Loading";
 import "../CSS Components/Modal.css";
-import ModalTitle from "./ModalTitle";
-import ModalUpload from "./ModalUpload";
 import ImageThumb from "./ImageThumb";
 
 const useStyles = makeStyles((theme) => ({

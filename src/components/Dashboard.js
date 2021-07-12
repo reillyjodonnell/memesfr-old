@@ -17,9 +17,9 @@ import { Link, useHistory } from "react-router-dom";
 import { ReactComponent as X } from "../Assets/SVGs/x.svg";
 import MobileNav from "./MobileNav";
 import SectionHeader from "./SectionHeader";
+import PasswordModal from "./PasswordModal";
 
 const drawerWidth = 240;
-const login = false;
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -119,8 +119,10 @@ const useStyles = makeStyles((theme) => ({
   },
   skeleton: {
     margin: "1rem",
+
     width: "40vw",
-    height: "40vh",
+    minWidth: "300px",
+    height: "35vh",
   },
 }));
 
@@ -137,6 +139,7 @@ export default function Dashboard(props) {
   const [firstTime, setFirstTime] = useState(false);
   const [displayFirstTimeMessage, setDisplayFirstTimeMessage] = useState(true);
   const [loadAnotherRandomMeme, setLoadAnotherRandomMeme] = useState(false);
+  const [resetPassword, resetPasswordFunction] = useState(false);
   const [usersLikedPosts, setUsersLikedPosts] = useState([]);
   const [usersHeartedPosts, setUsersHeartedPosts] = useState([]);
 
@@ -178,13 +181,9 @@ export default function Dashboard(props) {
   const createMemePost = () => {
     createPostFunction(!createPost);
   };
-
-  const openRegister = () => {
-    history.push("/signup");
-  };
-
-  const openSignIn = () => {
-    history.push("/login");
+  const resetUserPassword = () => {
+    document.getElementById("root").style.filter = "";
+    resetPasswordFunction(!resetPassword);
   };
 
   //Runs three times
@@ -551,6 +550,7 @@ export default function Dashboard(props) {
             popularFilter={filterPopular}
             randomFilter={filterRandom}
             createPost={createMemePost}
+            resetPassword={resetUserPassword}
           />
         </>
       ) : (
@@ -564,6 +564,7 @@ export default function Dashboard(props) {
           active={nav}
           username={username}
           avatar={avatar}
+          resetPassword={resetUserPassword}
         />
       )}
 
@@ -606,12 +607,17 @@ export default function Dashboard(props) {
                   createPost={createPost}
                 />
               ) : null}
-              {loadingFilter === false ||
-                (nav != 4 && (
-                  <div className="end-of-memes">
-                    <span>End of the memes 😢</span>
-                  </div>
-                ))}
+              {resetPassword ? (
+                <PasswordModal
+                  resetPassword={resetPassword}
+                  closePrompt={resetUserPassword}
+                />
+              ) : null}
+              {!loadingFilter && nav != 4 && (
+                <div className="end-of-memes">
+                  <span>End of the memes 😢</span>
+                </div>
+              )}
             </div>
           </Box>
         </Container>

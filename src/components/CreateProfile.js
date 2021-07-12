@@ -11,6 +11,7 @@ import Link from "@material-ui/core/Link";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory, useLocation } from "react-router-dom";
+import { ReactComponent as Castle } from "../Assets/SVGs/castle.svg";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -48,10 +49,34 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       width: 200,
     },
+    "& .MuiInputBase-root": {
+      color: "white",
+      "&.Mui-focused": {
+        color: "white",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      "&.Mui-focused": {
+        color: "#bebebee3",
+      },
+    },
+    "& .MuiInputBase-root": {
+      color: "white",
+      "&.Mui-focused": {
+        color: "white",
+      },
+    },
+    "& .MuiFilledInput-underline:after": {
+      borderBottom: "2px solid  #EA3788",
+    },
   },
   username: {
     margin: 0,
     width: "100%",
+    color: "white !important",
+  },
+  button: {
+    background: "linear-gradient(350deg,  #EA3788, #00A7E1)",
   },
 }));
 function Copyright() {
@@ -124,83 +149,82 @@ export default function CreateProfile(props) {
   const ImageThumb = ({ image }) => {
     if (image) {
       return <img src={URL.createObjectURL(image)} alt={image.name} />;
-    } else
-      return (
-        <img
-          style={{ height: "100%", width: "100%", borderRadius: "30%" }}
-          src={defaultAvatar}
-        />
-      );
+    } else return <img src={defaultAvatar} />;
   };
 
   if (location.state) {
     if (location.state.verifiedUser) {
-      return (
-        <CssBaseline>
-          <div className="create-profile">
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Your profile
-            </Typography>
-            <div className="username">
-              <span className="username-prompt">Choose a username below</span>
+      {
+        return (
+          <div className="create-profile-container">
+            <div className="create-profile">
+              <div
+                className="sidebar-logo"
+                style={{ padding: "2rem", justifyContent: "center" }}
+              >
+                <Castle />
+                <span style={{ color: "white" }}>Memesfr</span>
+              </div>
 
-              <form className={classes.root} autoComplete="off">
-                <div>
-                  <TextField
-                    className={classes.username}
-                    onChange={(e) => checkUserNameError(e)}
-                    required
-                    error={error}
-                    id="filled-error-helper-text"
-                    label="username"
-                    defaultValue=""
-                    helperText={availableMessage}
-                    variant="filled"
-                  />
-                </div>
-              </form>
-            </div>
-            {file ? null : (
-              <span className="username-prompt change-avatar">
-                Don't like the default avatar? change it below
-              </span>
-            )}
-            <div className="create-avatar" onClick={onButtonClick}>
-              <button className="upload-button">
-                <span>Change image</span>
+              <div className="username">
+                <span className="username-prompt">Choose a username below</span>
 
-                <input
-                  onChange={handleUpload}
-                  id="file"
-                  ref={inputFile}
-                  type="file"
-                  style={{ display: "none" }}
-                />
-              </button>
+                <form className={classes.root} autoComplete="off">
+                  <div>
+                    <TextField
+                      className={classes.username}
+                      onChange={(e) => checkUserNameError(e)}
+                      required
+                      error={error}
+                      id="filled-error-helper-text"
+                      label="username"
+                      defaultValue=""
+                      helperText={availableMessage}
+                      variant="filled"
+                      inputProps={{
+                        classes: {
+                          focused: classes.focused,
+                        },
+                      }}
+                    />
+                  </div>
+                </form>
+              </div>
               <div className="profile-image-preview">
                 <ImageThumb image={file} />
               </div>
-            </div>
-            <div className="submit-profile">
-              <Button
-                disabled={disabled}
-                onClick={saveProfile}
-                variant="contained"
-                color="primary"
-              >
-                Save Profile
-              </Button>
-            </div>
-          </div>
 
-          <Box mt={5}>
-            <Copyright />
-          </Box>
-        </CssBaseline>
-      );
+              <div className="create-avatar" onClick={onButtonClick}>
+                <button className="upload-button">
+                  <span>Change image</span>
+
+                  <input
+                    onChange={handleUpload}
+                    id="file"
+                    ref={inputFile}
+                    type="file"
+                    style={{ display: "none" }}
+                  />
+                </button>
+              </div>
+              <div className="submit-profile">
+                <Button
+                  disabled={disabled}
+                  onClick={saveProfile}
+                  variant="contained"
+                  className={disabled ? null : classes.button}
+                >
+                  Save Profile
+                </Button>
+              </div>
+            </div>
+
+            <Box mt={5}>
+              <Copyright />
+            </Box>
+          </div>
+        );
+      }
     }
   } else {
     history.push("/");
