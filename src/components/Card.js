@@ -9,10 +9,13 @@ import { ReactComponent as PencilIcon } from "../Assets/SVGs/pencil.svg";
 import { ReactComponent as Dots } from "../Assets/SVGs/dots.svg";
 import { ReactComponent as HeartIcon } from "../Assets/SVGs/heart.svg";
 import { ReactComponent as LikeIcon } from "../Assets/SVGs/thumbUp.svg";
-import { ReactComponent as Mute } from "../Assets/SVGs/mute.svg";
-import { ReactComponent as Unmute } from "../Assets/SVGs/unmute.svg";
+import { ReactComponent as VerticalDots } from "../Assets/SVGs/verticalDots.svg";
+import buffDoge from "../Assets/buff-doge.jpg";
+
+import { useMobile } from "../contexts/MobileContext";
 
 export default function Card(props) {
+  console.log("rendering");
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);
@@ -23,7 +26,8 @@ export default function Card(props) {
   const [permissionToEdit, setPermissionToEdit] = useState(false);
   const [hasAlreadyLikedPost, setHasAlreadyLikedPost] = useState(false);
   const [hasAlreadyHeartedPost, setHasAlreadyHeartedPost] = useState(false);
-  const [muteVideo, setMuteVideo] = useState(true);
+
+  const { isMobile } = useMobile();
 
   const {
     activeScreen,
@@ -31,12 +35,9 @@ export default function Card(props) {
     dislikePost,
     heartPost,
     currentUser,
-    hasUserLikedPost,
     removeLikePost,
     removeHeartPost,
   } = useAuth();
-
-  const userIsOnMobile = window.matchMedia("(max-width: 420px)");
 
   function captureUserInput() {
     if (currentUser && needSubmit) {
@@ -51,52 +52,14 @@ export default function Card(props) {
       }
       if (hasAlreadyHeartedPost && heart === false) {
         removeHeartPost(props.item.id);
-        console.log("removing hearted post");
       }
       //if the user has the liked post in their list and the like is now unliked
       if (hasAlreadyLikedPost && thumbUp === false) {
         removeLikePost(props.item.id);
-        console.log(
-          "The user has previously liked this post and has unliked it"
-        );
       }
       setNeedSubmit(false);
     }
   }
-
-  useEffect(() => {
-    let mounted = true;
-    if (mounted === true) {
-      async function match() {
-        if (currentUser) {
-          const results = await hasUserLikedPost(props.item.id);
-          let [{ likedPosts }, { heartedPosts }] = results;
-          if (likedPosts !== undefined) {
-            likedPosts.map((usersLikedPost) => {
-              if (props.item.id === usersLikedPost) {
-                setThumbUp(true);
-                setHasAlreadyLikedPost(true);
-                return null;
-              }
-              return null;
-            });
-          }
-          if (heartedPosts !== undefined) {
-            heartedPosts.map((usersHeartedPost) => {
-              if (props.item.id === usersHeartedPost) {
-                setHeart(true);
-                setHasAlreadyHeartedPost(true);
-                return null;
-              }
-              return null;
-            });
-          }
-        }
-      }
-      match();
-    }
-    return () => (mounted = false);
-  }, []);
 
   const history = useHistory();
 
@@ -168,12 +131,29 @@ export default function Card(props) {
   };
   const openOptions = () => {
     expandOptions(!options);
-    console.log("opened");
   };
 
   function activatePrompt() {
     history.push("/signup");
   }
+  useEffect(() => {
+    let mounted = true;
+    if (mounted) {
+      if (props.liked === true) {
+        setThumbUp(true);
+        setHasAlreadyLikedPost(true);
+      }
+      if (props.hearted === true) {
+        setHeart(true);
+        setHasAlreadyHeartedPost(true);
+      }
+      return null;
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [props]);
 
   function OptionsExpanded() {
     if (permissionToEdit) {
@@ -214,7 +194,7 @@ export default function Card(props) {
   function Options() {
     return (
       <div className="edit-mode" onClick={openOptions}>
-        <Dots />
+        <VerticalDots />
       </div>
     );
   }
@@ -237,11 +217,20 @@ export default function Card(props) {
   }
   const DisplayAvatar = () => {
     var avatar = props.item.authorPic;
-    console.log(avatar);
 
     return (
       <div className="avatar-picture">
-        <img src={avatar} style={{ height: "100%", width: "100%" }} />
+        {avatar ? (
+          <img src={avatar} style={{ height: "100%", width: "100%" }} />
+        ) : (
+          <img
+            src={buffDoge}
+            style={{
+              height: "100%",
+              width: "100%",
+            }}
+          />
+        )}
       </div>
     );
   };
@@ -250,10 +239,13 @@ export default function Card(props) {
     return (
       <>
         <video
+          type="video/mp4"
+          style={{ objectFit: "cover" }}
           controls
           loop
           onDoubleClick={currentUser ? toggleHeart : activatePrompt}
           className="meme-image"
+          poster={props.item.poster}
           src={props.item.image}
         />
         <div></div>
@@ -261,31 +253,27 @@ export default function Card(props) {
     );
   };
 
+  function memeAuthor() {
+    var memeAuthorUsername = props.item.userName;
+    if (props.item.userName) {
+      return memeAuthorUsername;
+    } else return "anonymous";
+  }
+
   if (props) {
     return (
       <div
         className="card-area"
-        onMouseEnter={() => console.log("Entered")}
+        style={isMobile ? { width: "100%" } : null}
         onMouseLeave={captureUserInput}
+        onScrollCapture={isMobile ? captureUserInput : null}
       >
         <div className="card">
           <div className="upper">
             <div className="upper-top-info">
-              {props.item.authorPic ? <DisplayAvatar /> : null}
-              <div className="meme-identification">
-                <span> posted by </span>
-                <span className="clickable">
-                  {currentUser &&
-                  props.item.userName === currentUser.displayName
-                    ? "you"
-                    : props.item.userName}
-                </span>
-              </div>
-            </div>
-            <div className="upper-top">
               <span className="meme-title">{props.item.title}</span>
-              <span className="number-of-likes">{likes}</span>
             </div>
+
             <div className="image-container">
               {props.item.fileType === "video" ? (
                 <VideoPlayback />
@@ -297,18 +285,47 @@ export default function Card(props) {
                 ></img>
               )}
             </div>
+            <div className="upper-top"></div>
           </div>
 
           <div className="lower">
-            <HeartIcon
-              className={heart ? "active-heart" : "inactive-heart"}
-              onClick={currentUser ? toggleHeart : activatePrompt}
-            />
-            <LikeIcon
-              className={thumbUp ? "active-thumbup" : "inactive-thumbup"}
-              onClick={currentUser ? toggleThumbUp : activatePrompt}
-            />
-            <Options />
+            <DisplayAvatar />
+            <div className="meme-identification">
+              <span className="clickable">@{memeAuthor()}</span>
+              <span className="hashtag-identifier"></span>
+            </div>
+            <div className="heart-container">
+              <HeartIcon
+                className={
+                  heart
+                    ? "active-heart heart-icon"
+                    : "heart-icon inactive-heart"
+                }
+                onClick={currentUser ? toggleHeart : activatePrompt}
+              />
+              <span
+                className={
+                  heart ? "active-heart number-of-likes" : "number-of-likes"
+                }
+              >
+                1
+              </span>
+            </div>
+
+            <div className="like-container">
+              <LikeIcon
+                style={thumbUp ? { fill: "url(#thumb-grad)" } : null}
+                className={thumbUp ? "active-thumbup" : "inactive-thumbup"}
+                onClick={currentUser ? toggleThumbUp : activatePrompt}
+              />
+              <span
+                className={
+                  thumbUp ? "active-thumbUp number-of-likes" : "number-of-likes"
+                }
+              >
+                {likes}
+              </span>
+            </div>
           </div>
           {options ? <OptionsExpanded /> : null}
         </div>

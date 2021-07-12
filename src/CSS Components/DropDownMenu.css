@@ -1,19 +1,18 @@
 .settings {
   position: absolute;
   top: 0;
-  background-color: grey;
   width: 300px;
   height: 100px;
   z-index: 2;
 }
 :root {
-  --bg: #1098f7;
+  --bg: #272932;
   --bg-accent: #b74f6f;
   --text-color: #eeeeee;
   --nav-size: 80px;
-  --border: 1px solid grey;
+  --border: 2px solid rgba(70, 70, 70, 0.342);
   --border-radius: 8px;
-  --speed: 500ms;
+  --speed: 300ms;
   --window-width: 100vw;
 }
 ul {
@@ -49,11 +48,28 @@ a {
   align-items: center;
   justify-content: center;
 }
-.icon-button img {
+.icon-text {
+  margin-right: auto;
+  font-size: 1rem;
+}
+.menu {
+  width: 100%;
+}
+.menu-icon-text {
+  margin-right: auto;
+  font-size: 1.4rem;
+}
+.icon-text-nav {
+  font-weight: 600;
+}
+.icon-button {
+  padding-right: 1rem;
+}
+.icon-button {
   --button-size: calc(var(--nav-size) * 0.5);
   width: var(--button-size);
   height: var(--button-size);
-  background-color: #484a4d;
+  background-color: #f7f7f731;
   border-radius: 50%;
   padding: 5px;
   margin: 2px;
@@ -61,8 +77,49 @@ a {
   align-items: center;
   justify-content: center;
   transition: filter 300ms;
+  margin-right: 1rem;
+  transform: translateX(-5px);
+}
+.icon-button-right {
+  position: relative;
+  --button-size: calc(var(--nav-size) * 0.5);
+  width: var(--button-size);
+  height: var(--button-size);
+  border-radius: 50%;
+  padding: 5px;
+  margin: 2px;
+  display: flex;
+  transition: filter 300ms;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+.icon-button svg,
+.menu-icon-button svg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .icon-button:hover {
+  filter: brightness(1.2);
+}
+
+.menu-icon-button {
+  --button-size: calc(var(--nav-size) * 0.5);
+  width: var(--button-size);
+  height: var(--button-size);
+  border-radius: 50%;
+  padding: 5px;
+  margin: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 300ms;
+  margin-right: 1rem;
+  transform: translateX(-5px);
+}
+
+.menu-icon-button:hover {
   filter: brightness(1.2);
 }
 
@@ -70,24 +127,23 @@ a {
 
 .dropdown {
   position: absolute;
-  top: 4rem;
-  right: -100px;
+  top: 3.6rem;
+  right: -150px;
   width: 300px;
+  max-height: 2000rem;
   transform: translateX(-45%);
   background-color: var(--bg);
   border: var(--border);
   border-radius: var(--border-radius);
-  padding: 1rem;
+  padding: 10px;
   overflow: hidden;
   font-size: 1.2rem;
+  transition: 300ms ease;
 }
 .dropdown span {
   cursor: pointer;
 }
 
-.menu {
-  width: 100%;
-}
 .menu-item {
   height: 50px;
   display: flex;
@@ -95,9 +151,9 @@ a {
   border-radius: var(--border-radius);
   transition: background var(--speed);
   padding: 0.5rem;
-  overflow: hidden;
   font-weight: 500;
   font-stretch: 100%;
+  justify-content: space-between;
 }
 .menu-item .icon-button {
   display: flex;
@@ -111,11 +167,39 @@ a {
   background-color: #4b6b81d5;
 }
 
-.icon-button svg {
-  padding-left: 10px;
-}
 .discord-link {
   width: 100%;
+}
+
+/*CSS Transition*/
+.menu-primary-enter {
+  position: absolute;
+  transform: translateX(-110%);
+}
+.menu-primary-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+}
+.menu-primary-exit {
+  position: absolute;
+}
+.menu-primary-exit-active {
+  transform: translateX(-110%);
+  transition: all var(--speed) ease;
+}
+
+.menu-secondary-enter {
+  transform: translateX(110%);
+}
+.menu-secondary-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+}
+.menu-secondary-exit {
+}
+.menu-secondary-exit-active {
+  transform: translateX(110%);
+  transition: all var(--speed) ease;
 }
 
 /* Media queries */
@@ -123,16 +207,32 @@ a {
 }
 @media only screen and (max-width: 550px) {
   .dropdown {
-    right: -75px;
-    width: 200px;
+    left: 63%;
+    width: 220px !important;
   }
   .icon-button svg {
     width: 35px;
   }
 }
+/*iPhone 5/se*/
+@media only screen and (max-width: 321px) and (max-height: 570px) {
+  .dropdown {
+    right: -113px;
+    width: 230px;
+  }
+  .icon-text {
+    font-size: 0.95rem;
+  }
+}
 
 @media only screen and (max-width: 420px) {
   .menu-item .icon-button {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
+  }
+}
+/*Target desktops*/
+@media only screen and (min-width: 541px) and (min-height: 900px) {
+  .dropdown {
+    right: -171px;
   }
 }

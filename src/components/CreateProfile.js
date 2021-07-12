@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -8,11 +8,10 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Link from "@material-ui/core/Link";
-import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
-
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory, useLocation } from "react-router-dom";
+import { ReactComponent as Castle } from "../Assets/SVGs/castle.svg";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -50,10 +49,34 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       width: 200,
     },
+    "& .MuiInputBase-root": {
+      color: "white",
+      "&.Mui-focused": {
+        color: "white",
+      },
+    },
+    "& .MuiInputLabel-root": {
+      "&.Mui-focused": {
+        color: "#bebebee3",
+      },
+    },
+    "& .MuiInputBase-root": {
+      color: "white",
+      "&.Mui-focused": {
+        color: "white",
+      },
+    },
+    "& .MuiFilledInput-underline:after": {
+      borderBottom: "2px solid  #EA3788",
+    },
   },
   username: {
     margin: 0,
     width: "100%",
+    color: "white !important",
+  },
+  button: {
+    background: "linear-gradient(350deg,  #EA3788, #00A7E1)",
   },
 }));
 function Copyright() {
@@ -69,57 +92,51 @@ function Copyright() {
   );
 }
 export default function CreateProfile(props) {
-  console.log(props);
   const classes = useStyles();
-  const [taken, setTaken] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [availableMessage, setAvailableMessage] = useState("");
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(true);
+  const [file, setFile] = useState();
+  const inputFile = useRef(null);
+  const history = useHistory();
+  const location = useLocation();
+  const { checkUsernameAvailability, updateProfile } = useAuth();
+  const [userName, setUserName] = useState("");
 
-  const [name, setName] = useState("");
+  var defaultAvatar =
+    "https://firebasestorage.googleapis.com/v0/b/memes-30d06.appspot.com/o/croppedDoge.jpg?alt=media&token=331b914f-da56-419d-8d28-d4188a15158c";
 
-  function handleChange(event) {
-    console.log(event.target.value.length);
-    setName(event.target.value);
-    if (event.target.value.length < 5) {
+  const checkUserNameError = (e) => {
+    setUserName(e.target.value);
+    if (e.target.value.length < 5) {
       setAvailableMessage("");
       setError(true);
       setDisabled(true);
-    } else if (name.length < 16) {
-      checkUsernameAvailability(event.target.value).then((result) => {
-        console.log(result);
+    } else if (e.target.value.length < 16) {
+      checkUsernameAvailability(e.target.value).then((result) => {
         if (result == false) {
-          console.log(
-            "Username not available from correct functional component"
-          );
           setAvailableMessage("Username taken");
           setDisabled(true);
           setError(true);
         } else {
           setAvailableMessage("Username Available");
+          var userNameToLowerCase = e.target.value.toLowerCase();
+          setUserName(userNameToLowerCase);
           setError(false);
-          console.log(
-            "Username is available from correct functional component"
-          );
           setDisabled(false);
         }
       });
     }
-    //We cannot call this if the event.target.value is empty
-  }
-  const [viewPhoto, viewPhotoFunction] = useState(false);
-  const [verifiedUser, setVerifiedUser] = useState(false);
-  const [file, setFile] = useState("");
-  const inputFile = useRef(null);
-  const history = useHistory();
-  const location = useLocation();
-  console.log(location, location.state.update);
-
-  const { checkUsernameAvailability, updateProfile, currentUser } = useAuth();
+    return userName;
+  };
 
   function saveProfile() {
-    console.log(name);
-    updateProfile(name, file);
+    if (!file) {
+      updateProfile(userName, defaultAvatar, true);
+    }
+    if (file) {
+      updateProfile(userName, file, false);
+    }
   }
 
   const handleUpload = (event) => {
@@ -128,31 +145,27 @@ export default function CreateProfile(props) {
   const onButtonClick = () => {
     // `current` points to the mounted file input element
     inputFile.current.click();
-    console.log("Line 36");
   };
   const ImageThumb = ({ image }) => {
-    console.log("Line 39");
-    return <img src={URL.createObjectURL(image)} alt={image.name} />;
+    if (image) {
+      return <img src={URL.createObjectURL(image)} alt={image.name} />;
+    } else return <img src={defaultAvatar} />;
   };
 
-  function usernameTaken(test) {
-    console.log(test);
-    return test ? true : false;
-  }
-  if (location.state.verifiedUser) {
-    return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline>
-          <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign up
-            </Typography>
-
+  if (location.state) {
+    if (location.state.verifiedUser) {
+      {
+        return (
+          <div className="create-profile-container">
             <div className="create-profile">
-              <h2>Your Profile!</h2>
+              <div
+                className="sidebar-logo"
+                style={{ padding: "2rem", justifyContent: "center" }}
+              >
+                <Castle />
+                <span style={{ color: "white" }}>Memesfr</span>
+              </div>
+
               <div className="username">
                 <span className="username-prompt">Choose a username below</span>
 
@@ -160,7 +173,7 @@ export default function CreateProfile(props) {
                   <div>
                     <TextField
                       className={classes.username}
-                      onChange={(e) => handleChange(e)}
+                      onChange={(e) => checkUserNameError(e)}
                       required
                       error={error}
                       id="filled-error-helper-text"
@@ -168,14 +181,23 @@ export default function CreateProfile(props) {
                       defaultValue=""
                       helperText={availableMessage}
                       variant="filled"
+                      inputProps={{
+                        classes: {
+                          focused: classes.focused,
+                        },
+                      }}
                     />
                   </div>
                 </form>
               </div>
-              <span>Upload an avatar?</span>
+              <div className="profile-image-preview">
+                <ImageThumb image={file} />
+              </div>
+
               <div className="create-avatar" onClick={onButtonClick}>
                 <button className="upload-button">
-                  Upload Here
+                  <span>Change image</span>
+
                   <input
                     onChange={handleUpload}
                     id="file"
@@ -184,30 +206,26 @@ export default function CreateProfile(props) {
                     style={{ display: "none" }}
                   />
                 </button>
-                {file ? (
-                  <div className="profile-image-preview">
-                    <ImageThumb image={file} />
-                  </div>
-                ) : null}
               </div>
               <div className="submit-profile">
                 <Button
                   disabled={disabled}
                   onClick={saveProfile}
                   variant="contained"
-                  color="primary"
+                  className={disabled ? null : classes.button}
                 >
                   Save Profile
                 </Button>
               </div>
             </div>
+
+            <Box mt={5}>
+              <Copyright />
+            </Box>
           </div>
-          <Box mt={5}>
-            <Copyright />
-          </Box>
-        </CssBaseline>
-      </Container>
-    );
+        );
+      }
+    }
   } else {
     history.push("/");
     return null;

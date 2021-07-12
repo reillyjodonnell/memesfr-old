@@ -28,8 +28,7 @@ export default function ThemeProvider({ children }) {
   function setDogeBackground() {
     console.log("Activating doge");
     document.body.style.backgroundImage = `url(${Doge})`;
-    document.body.style.backgroundSize = "cover";
-    console.log(document.body.style.backgroundImage);
+    document.body.style.backgroundSize = "contain";
   }
 
   const values = {

@@ -4,7 +4,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import RightIcon from "@material-ui/icons/SubdirectoryArrowRight";
-import picture from "../Assets/Icons/Image.svg";
+import { ReactComponent as Picture } from "../Assets/Icons/Image.svg";
+import { ReactComponent as Gif } from "../Assets/Icons/Gif.svg";
 import doge from "../Assets/doge.svg";
 import "../CSS Components/CreatePost.css";
 
@@ -33,58 +34,10 @@ const useStyles = makeStyles((theme) => ({
     height: "4rem",
   },
 }));
-const DeleteButton = (props) => {
-  const classes = useStyles();
-
-  return (
-    <Button
-      onClick={props.OpenFilePrompt}
-      variant="contained"
-      color="secondary"
-      className={classes.button}
-      startIcon={<DeleteIcon />}
-    >
-      Delete
-    </Button>
-  );
-};
-const SendButton = () => {
-  const classes = useStyles();
-  return (
-    <Button
-      variant="contained"
-      color="primary"
-      className={classes.button}
-      startIcon={<RightIcon />}
-    >
-      Send
-    </Button>
-  );
-};
-const UploadButton = () => {
-  const classes = useStyles();
-
-  return (
-    <Button
-      variant="contained"
-      color="default"
-      className={classes.button}
-      startIcon={<CloudUploadIcon />}
-    >
-      Upload
-    </Button>
-  );
-};
 
 export default function CreatePost(props) {
-  const classes = useStyles();
-  const [createPost, createPostFunction] = useState(false);
-  const [user, setUser] = useState(false);
-
   const history = useHistory();
-
   const { currentUser } = useAuth();
-  console.log(currentUser);
 
   var promptToPost = "Login to Upload Dank Meme";
 
@@ -96,8 +49,8 @@ export default function CreatePost(props) {
   }
 
   const OpenFilePrompt = () => {
-    createPostFunction(!createPost);
-    console.log("Time to make your first post");
+    document.getElementById("root").style.filter = "";
+    props.createPostFunction(!props.createPost);
   };
 
   function loadLoginScreen() {
@@ -105,34 +58,41 @@ export default function CreatePost(props) {
   }
 
   const CreateNewPost = () => {
-    {
-      if (createPost === true) {
-        document.getElementById("root").style.filter = "blur(5px)";
-      } else document.getElementById("root").style.filter = "blur(0px)";
+    if (props.createPost === true) {
+      document.getElementById("root").style.filter = "blur(5px)";
     }
     return (
       <div className="outer-post-box">
         <div className="create-post-preview">
           {currentUser ? (
-            <div className="create-post-content">
-              {createPost ? (
-                <Modal
-                  createPostFunction={createPostFunction}
-                  openFilePrompt={OpenFilePrompt}
-                />
-              ) : null}
-              <div className="avatar-container">
-                <div className="avatar">
-                  <img src={`${profilePicture}`} />
+            <>
+              <div className="create-post-content">
+                {props.createPost === true ? (
+                  <Modal
+                    avatar={currentUser.photoURL}
+                    createPostFunction={props.createPostFunction}
+                    openFilePrompt={OpenFilePrompt}
+                  />
+                ) : null}
+                <div className="avatar-container">
+                  <div className="avatar">
+                    <img src={`${profilePicture}`} />
+                  </div>
+                </div>
+                <div className="add-content">
+                  <div onClick={OpenFilePrompt} className="create-prompt">
+                    <span className="create-meme-title">
+                      Dank Meme Title . . .{" "}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="add-content">
-                <div onClick={OpenFilePrompt} className="create-prompt">
-                  <span>Upload dank meme</span>
-                  <img className="plus" src={picture} />
-                </div>
+              <div className="create-post-icons">
+                <Picture className="create-post-icon-svg"></Picture>
+                <Gif className="create-post-icon-svg"></Gif>
+                <span className="plus">Post</span>
               </div>
-            </div>
+            </>
           ) : (
             <div className="add-content">
               <div className="create-prompt" onClick={loadLoginScreen}>

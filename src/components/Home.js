@@ -22,9 +22,9 @@ export default function Home() {
       {loading ? (
         <Loading />
       ) : (
-        <div>
+        <>
           <Dashboard />
-        </div>
+        </>
       )}
     </>
   );

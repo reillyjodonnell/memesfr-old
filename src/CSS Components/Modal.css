@@ -1,0 +1,231 @@
+/*Expanded file*/
+.expanded-file {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  width: 35vw;
+  max-width: 1000px;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  background-color: #272932;
+  border: 2px solid black;
+  z-index: 100;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: -35px -35px 0 0;
+  padding: 2rem;
+  border-radius: 20px;
+}
+.upper-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  position: relative;
+  font-size: 2rem;
+  top: 0;
+  color: rgb(230, 230, 230);
+  white-space: nowrap;
+}
+.upper-section img {
+  margin-left: auto;
+  cursor: pointer;
+}
+.upper-post-section {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+}
+.upper-post-section-avatar img {
+  margin-right: 20px;
+  flex-shrink: 1;
+}
+.upper-post-avatar-container {
+  display: flex;
+  height: 52px;
+  border-radius: 20px;
+  width: 52px;
+  justify-self: center;
+  align-items: center;
+}
+.upper-post-section-meme-title {
+  display: flex;
+  width: 100%;
+  flex-shrink: 2;
+  margin-left: 1rem;
+  font-size: 1.8rem;
+  background-color: rgba(211, 211, 211, 0);
+  border: none;
+  color: white;
+}
+.upper-post-section-meme-title:focus {
+  outline: none;
+}
+.upper-post-section-meme-title input {
+  height: 100%;
+  width: 100%;
+}
+.upload-meme-prompt {
+  color: white;
+  background-color: #4c4d62;
+  padding: 1rem;
+  border-radius: 30px;
+  border: 1px solid black;
+}
+.upper-middle {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem;
+  height: auto;
+}
+.upper-middle > div {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: row;
+}
+.group img {
+  border: 2px solid black;
+  border-radius: 50%;
+  width: 3rem;
+  padding: 1px;
+}
+.details {
+  padding-left: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  height: 20%;
+}
+.title {
+  font-size: large;
+}
+.description {
+  font-size: 0.7rem;
+  white-space: nowrap;
+}
+.main-section-form {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.main-section {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  border: 2px dashed rgba(116, 116, 116, 0.247);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+.lower-section {
+  display: flex;
+  width: 100%;
+  padding-top: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+.lower-section span {
+  color: #dbdada8f;
+}
+.lower-section button {
+  margin-left: auto;
+}
+.image-preview {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  width: 100%;
+  max-height: 100%;
+  flex: 1;
+  min-height: 50%;
+  height: 100%;
+  min-height: 100%;
+}
+.cancel-meme {
+  position: absolute;
+  width: 30px;
+  stroke: black;
+  top: 0;
+  right: 0;
+  background-color: black;
+  border-radius: 50%;
+  margin: 5px;
+}
+.image-preview span {
+  width: 100%;
+  font-size: 3rem;
+}
+.meme-image-preview {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 10px;
+  background-color: rgba(190, 190, 190, 0.021);
+}
+.video-file {
+  position: relative;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: 100%;
+  height: auto;
+  z-index: -100;
+  background-size: cover;
+  overflow: hidden;
+}
+.modal-upload-button {
+  cursor: pointer;
+  display: flex;
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+  color: white;
+  font-size: 0.9rem;
+  border-radius: 20px;
+  border: 2px solid black;
+  transition: all 0.4s ease;
+  /*
+  background-image: linear-gradient(#ea3788, #00a7e1);
+  */
+  background-color: #4c4d62 !important;
+}
+.modal-upload-button-disabled {
+  transition: all 0.4s ease;
+
+  cursor: pointer;
+  display: flex;
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+  color: rgb(87, 87, 87);
+  font-size: 0.9rem;
+  border-radius: 20px;
+  border: 2px solid black;
+  /*
+  background-image: linear-gradient(#ea3788, #00a7e1);
+  */
+  background-color: #525252b2 !important;
+}

@@ -1,40 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import Drawer from "@material-ui/core/Drawer";
 import Box from "@material-ui/core/Box";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import List from "@material-ui/core/List";
-import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Skeleton from "@material-ui/lab/Skeleton";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import { SecondaryListItems } from "./ListItems";
-import MainListItems from "./ListItems";
 import Card from "./Card";
-import DropDownMenu from "./DropDownMenu";
 import "../CSS Components/Dashboard.css";
 import CreatePost from "./CreatePost";
-import { ReactComponent as User } from "../Assets/SVGs/user.svg";
+import MobileHeader from "./MobileHeader";
+import Sidebar from "./Sidebar";
 import firebase from "firebase";
 import { useAuth } from "../contexts/AuthContext";
+import { useMobile } from "../contexts/MobileContext";
 import { Link, useHistory } from "react-router-dom";
-import { ReactComponent as Castle } from "../Assets/SVGs/castle.svg";
 import { ReactComponent as X } from "../Assets/SVGs/x.svg";
+import MobileNav from "./MobileNav";
+import SectionHeader from "./SectionHeader";
+import PasswordModal from "./PasswordModal";
 
 const drawerWidth = 240;
-const login = false;
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-  },
   toolbar: {
     backgroundColor: "#1098F7",
   },
@@ -72,8 +59,12 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "auto",
     overflow: "visible",
   },
+  drawerRoot: {
+    position: "sticky",
+    left: 0,
+  },
   drawerPaper: {
-    position: "relative",
+    top: "74px",
     whiteSpace: "nowrap",
     width: drawerWidth,
     transition: theme.transitions.create("width", {
@@ -95,8 +86,8 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: "100vh",
-    overflow: "auto",
+    height: "100%",
+    overflowX: "hidden",
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -128,37 +119,46 @@ const useStyles = makeStyles((theme) => ({
   },
   skeleton: {
     margin: "1rem",
+
     width: "40vw",
-    height: "40vh",
+    minWidth: "300px",
+    height: "35vh",
   },
 }));
 
 export default function Dashboard(props) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [expand, expandMenu] = useState(false);
   const [popularPosts, setPopularPosts] = useState([{}]);
   const [recentPosts, setRecentPosts] = useState([{}]);
   const [randomPosts, setRandomPosts] = useState([{}]);
   const [activeScreen, setActiveScreen] = useState([{}]);
+  const [loadingFilter, setLoadingFilter] = useState(false);
   const [home, setHome] = useState(false);
+  const [createPost, createPostFunction] = useState(false);
   const [firstTime, setFirstTime] = useState(false);
   const [displayFirstTimeMessage, setDisplayFirstTimeMessage] = useState(true);
   const [loadAnotherRandomMeme, setLoadAnotherRandomMeme] = useState(false);
+  const [resetPassword, resetPasswordFunction] = useState(false);
+  const [usersLikedPosts, setUsersLikedPosts] = useState([]);
+  const [usersHeartedPosts, setUsersHeartedPosts] = useState([]);
 
   const [nav, setNav] = useState(0);
 
   const myRef = useRef(null);
 
+  const { isMobile } = useMobile();
+
   const {
     currentUser,
-    loadingFilter,
     retrievePopularPosts,
     retrieveRecentPosts,
     recentlyUploaded,
     retrieveRandomMeme,
-    remindToVerify,
     sendAuthEmail,
+    hasUserLikedPost,
+    setCurrentUser,
+    notConfirmedEmail,
   } = useAuth();
 
   useEffect(() => {
@@ -171,64 +171,82 @@ export default function Dashboard(props) {
 
   const history = useHistory();
 
-  var hide = true;
+  if (currentUser) {
+    var username = currentUser.displayName;
+    var avatar = currentUser.photoURL;
+  }
+
   var active = 0;
 
-  const openRegister = () => {
-    history.push("/signup");
+  const createMemePost = () => {
+    createPostFunction(!createPost);
+  };
+  const resetUserPassword = () => {
+    document.getElementById("root").style.filter = "";
+    resetPasswordFunction(!resetPassword);
   };
 
-  const openSignIn = () => {
-    history.push("/login");
-  };
-
-  const handleDrawerOpen = () => {
-    //setOpen(true);
-  };
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
-  const openMenu = () => {
-    expandMenu(!expand);
-  };
+  //Runs three times
   useEffect(() => {
     let mounted = true;
-    if (mounted === true) {
-      // Confirm the link is a sign-in with email link.
-      if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-        // Additional state parameters can also be passed via URL.
-        // This can be used to continue the user's intended action before triggering
-        // the sign-in operation.
-        // Get the email if available. This should be available if the user completes
-        // the flow on the same device where they started it.
-        var email = window.localStorage.getItem("emailForSignIn");
-        if (!email) {
-          // User opened the link on a different device. To prevent session fixation
-          // attacks, ask the user to provide the associated email again. For example:
-          email = window.prompt("Please provide your email for confirmation");
+    if (mounted) {
+      async function match() {
+        if (currentUser) {
+          const results = await hasUserLikedPost();
+          let [{ likedPosts }, { heartedPosts }] = results;
+          setUsersLikedPosts(likedPosts);
+          setUsersHeartedPosts(heartedPosts);
         }
-        // The client SDK will parse the code from the link for you.
+      }
+      match();
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [activeScreen]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    // Confirm the link is a sign-in with email link.
+    if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+      // Additional state parameters can also be passed via URL.
+      // This can be used to continue the user's intended action before triggering
+      // the sign-in operation.
+      // Get the email if available. This should be available if the user completes
+      // the flow on the same device where they started it.
+      var email = window.localStorage.getItem("emailForSignIn");
+      if (!email) {
+        // User opened the link on a different device. To prevent session fixation
+        // attacks, ask the user to provide the associated email again. For example:
+      }
+      // The client SDK will parse the code from the link for you.
+      if (mounted)
         firebase
           .auth()
           .signInWithEmailLink(email, window.location.href)
           .then((result) => {
             // Clear email from storage.
             window.localStorage.removeItem("emailForSignIn");
-            console.log(result);
             // You can access the new user via result.user
             // Additional user info profile not available via:
             // result.additionalUserInfo.profile == null
             // You can check if the user is new or existing:
             // result.additionalUserInfo.isNewUser
+            setCurrentUser(result.user);
+            history.push({
+              pathname: "/setup",
+              state: {
+                verifiedUser: result.user.emailVerified,
+              },
+            });
           })
           .catch((error) => {
-            console.log(error);
             // Some error occurred, you can inspect the code: error.code
             // Common errors could be invalid email and invalid or expired OTPs.
           });
-      }
+      return () => (mounted = false);
     }
-    return () => (mounted = false);
   }, []);
 
   useEffect(() => {
@@ -284,6 +302,7 @@ export default function Dashboard(props) {
   };
 
   function showPopular() {
+    setLoadingFilter(true);
     setActiveScreen();
     if (recentPosts) {
       setRecentPosts();
@@ -292,16 +311,15 @@ export default function Dashboard(props) {
       setRandomPosts();
     }
     loadPopular().then((items) => {
-      console.log(items);
       setPopularPosts(items);
       setActiveScreen(items);
+      setLoadingFilter(false);
     });
   }
 
   async function loadPopular() {
     const memeDataPromise = await retrievePopularPosts();
     const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
-      console.log(memeData);
       return memeData;
     });
     return memeDataObject;
@@ -309,7 +327,6 @@ export default function Dashboard(props) {
   async function loadRecent() {
     const memeDataPromise = await retrieveRecentPosts();
     const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
-      console.log(memeData);
       return memeData;
     });
     return memeDataObject;
@@ -326,17 +343,17 @@ export default function Dashboard(props) {
     loadRecent().then((items) => {
       setRecentPosts(items);
       setActiveScreen(items);
+      setLoadingFilter(false);
     });
   }
   async function loadRandom() {
     const memeDataPromise = await retrieveRandomMeme();
-
-    console.log(memeDataPromise);
-
     return memeDataPromise;
   }
 
   function showRandom() {
+    setLoadingFilter(true);
+
     setActiveScreen();
     if (popularPosts) {
       setPopularPosts();
@@ -346,27 +363,39 @@ export default function Dashboard(props) {
     }
 
     loadRandom().then((items) => {
-      console.log(items);
       setRandomPosts(items);
-      setActiveScreen(items);
+      setActiveScreen([items]);
+      setLoadingFilter(false);
     });
   }
 
   function filterHome() {
+    setLoadingFilter(true);
     myRef.current.scrollIntoView({ behavior: "smooth" });
     setNav(0);
   }
   function filterTrending() {
+    setLoadingFilter(true);
+    myRef.current.scrollIntoView({ behavior: "smooth" });
+
     setNav(1);
   }
 
   function filterPopular() {
+    setLoadingFilter(true);
+    myRef.current.scrollIntoView({ behavior: "smooth" });
+
     setNav(2);
   }
   function filterRecent() {
+    setLoadingFilter(true);
+    myRef.current.scrollIntoView({ behavior: "smooth" });
+
     setNav(3);
   }
   function filterRandom() {
+    setLoadingFilter(true);
+
     setNav(4);
     setLoadAnotherRandomMeme((prevState) => !prevState);
   }
@@ -375,32 +404,26 @@ export default function Dashboard(props) {
     if (mounted === true) {
       switch (nav) {
         case 0:
-          console.log("Back Home");
           showPopular();
           active = 0;
           break;
         case 1:
-          console.log("On Trending screen");
           showPopular();
           active = 1;
           break;
         case 2:
-          console.log("On popular screen");
           showPopular();
           active = 2;
           break;
         case 3:
-          console.log("On Recent Screen");
           showRecent();
           active = 3;
           break;
         case 4:
-          console.log("Random meme time. nice");
           showRandom();
           active = 4;
           break;
         default:
-          console.log("We are on the homescreen now");
           active = 0;
       }
     }
@@ -408,8 +431,6 @@ export default function Dashboard(props) {
   }, [nav, loadAnotherRandomMeme]);
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-  console.log(remindToVerify);
-
   const ConfirmEmailPrompt = () => {
     return (
       <div
@@ -431,7 +452,7 @@ export default function Dashboard(props) {
           Last step: confirm your email to be able to upload memes
         </span>
         <span
-          onClick={() => sendAuthEmail}
+          onClick={() => sendAuthEmail(currentUser.email)}
           style={{ color: "red", padding: "1rem" }}
         >
           Didn't get it? Resend
@@ -440,18 +461,40 @@ export default function Dashboard(props) {
     );
   };
 
+  const ShowSkeletons = () => {
+    return (
+      <>
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+      </>
+    );
+  };
+
   const RecentlyPosted = () => {
-    console.log(recentlyUploaded);
     var sayingOne = "";
     var sayingTwo = "";
     if (recentlyUploaded.length === 1) {
-      var sayingOne = "Nice work 👍";
       var sayingTwo = "Here's what you just posted 👇";
     }
     if (recentlyUploaded.length > 1) {
       sayingOne = "Keep it up memelord";
     }
-    if (recentlyUploaded.length > 0) {
+    if (nav === 0 && recentlyUploaded.length > 0) {
       return (
         <>
           <div
@@ -467,9 +510,10 @@ export default function Dashboard(props) {
           >
             <div
               style={{
+                textAlign: "center",
                 display: "block",
-                backgroundColor: "white",
                 padding: "1rem",
+                color: "white",
                 height: "100%",
                 width: "100%",
               }}
@@ -483,149 +527,100 @@ export default function Dashboard(props) {
               </span>
             </div>
           </div>
-          {nav === 0 && recentlyUploaded.length > 0
-            ? recentlyUploaded.map((item) => {
-                console.log("Mapping through array");
-                return <Card key={item.id} item={item}></Card>;
-              })
-            : null}
+          {recentlyUploaded.map((item) => {
+            return <Card key={item.id} item={item}></Card>;
+          })}
         </>
       );
     }
     return null;
   };
-
+  if (activeScreen != null) {
+  }
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
-      >
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(
-              classes.menuButton,
-              open && classes.menuButtonHidden
-            )}
-          ></IconButton>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginRight: "auto",
-            }}
-          >
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              className={classes.title}
-            >
-              Memesfr
-            </Typography>
-            <Castle className={classes.image} />
-          </div>
-
-          {currentUser ? null : (
-            <div className={classes.loginregister}>
-              <Typography
-                onClick={openSignIn}
-                component="h1"
-                variant="h6"
-                color="inherit"
-                noWrap
-                className={classes.register}
-              >
-                Log In
-              </Typography>
-              <Typography
-                onClick={openRegister}
-                component="h1"
-                variant="h6"
-                color="inherit"
-                noWrap
-                className={classes.login}
-              >
-                Register
-              </Typography>
-            </div>
-          )}
-
-          <IconButton style={{ marginLeft: "auto" }} color="inherit">
-            <Badge badgeContent={1} color="secondary">
-              {props.activeUser ? null : (
-                <User style={{ stroke: "white" }} onClick={openMenu} />
-              )}
-            </Badge>
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>
-          <MainListItems
+    <div className="dashboard-content">
+      {isMobile ? (
+        <>
+          <MobileHeader activeUser={currentUser} />
+          <MobileNav
             active={nav}
             homeFilter={filterHome}
             trendingFilter={filterTrending}
             recentFilter={filterRecent}
             popularFilter={filterPopular}
             randomFilter={filterRandom}
+            createPost={createMemePost}
+            resetPassword={resetUserPassword}
           />
-        </List>
-        <Divider />
-        {hide ? null : (
-          <List>
-            <SecondaryListItems />
-          </List>
-        )}
-      </Drawer>
+        </>
+      ) : (
+        <Sidebar
+          homeFilter={filterHome}
+          trendingFilter={filterTrending}
+          recentFilter={filterRecent}
+          popularFilter={filterPopular}
+          randomFilter={filterRandom}
+          createPost={createMemePost}
+          active={nav}
+          username={username}
+          avatar={avatar}
+          resetPassword={resetUserPassword}
+        />
+      )}
+
       <main className={classes.content}>
-        <div ref={myRef} className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={5}></Grid>
           <Box spacing={5} pt={4}>
-            <CreatePost />
-            {remindToVerify ? <ConfirmEmailPrompt /> : null}
-            {firstTime ? <ThanksForVisiting /> : null}
-            <div className="main-content">
-              {loadingFilter ? (
-                <>
-                  <Skeleton className={classes.skeleton} variant="rect" />
-                  <Skeleton className={classes.skeleton} variant="rect" />
-                </>
-              ) : null}
-              <RecentlyPosted />
+            <div ref={myRef}></div>
 
-              {activeScreen && activeScreen.length > 1 ? (
-                activeScreen.map((item) => {
-                  return <Card key={item.id} item={item} />;
-                })
-              ) : randomPosts != null ? (
-                <Card item={randomPosts}></Card>
+            {notConfirmedEmail ? <ConfirmEmailPrompt /> : null}
+            <div className="main-content">
+              {loadingFilter && <ShowSkeletons />}
+              <RecentlyPosted />
+              {activeScreen
+                ? activeScreen.length != undefined &&
+                  activeScreen.map((item) => {
+                    var liked = false;
+                    var hearted = false;
+                    if (usersLikedPosts.includes(item.id)) {
+                      liked = true;
+                    }
+                    if (usersHeartedPosts.includes(item.id)) {
+                      hearted = true;
+                    }
+                    return (
+                      <Card
+                        hearted={hearted}
+                        liked={liked}
+                        key={item.id}
+                        likedPosts={usersLikedPosts}
+                        heartedPosts={usersHeartedPosts}
+                        item={item}
+                      ></Card>
+                    );
+                  })
+                : null}
+              {createPost ? (
+                <CreatePost
+                  createPostFunction={createPostFunction}
+                  createPost={createPost}
+                />
               ) : null}
+              {resetPassword ? (
+                <PasswordModal
+                  resetPassword={resetPassword}
+                  closePrompt={resetUserPassword}
+                />
+              ) : null}
+              {!loadingFilter && nav != 4 && (
+                <div className="end-of-memes">
+                  <span>End of the memes 😢</span>
+                </div>
+              )}
             </div>
           </Box>
         </Container>
-        {expand ? <DropDownMenu /> : null}
       </main>
     </div>
   );

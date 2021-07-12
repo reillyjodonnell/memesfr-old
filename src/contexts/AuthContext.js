@@ -14,47 +14,78 @@ export default function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loadUser, setLoadUser] = useState(true);
   const [userExists, setUserExists] = useState(true);
-  const [loadingFilter, setLoadingFilter] = useState(false);
   const [recentlyUploaded, setRecentlyUploaded] = useState([]);
-  const [remindToVerify, setRemindToVerify] = useState(false);
+  const [notConfirmedEmail, setNotConfirmedEmail] = useState(false);
   const history = useHistory();
 
   var actionCodeSettings = {
-    url: "https://www.memesfr.com",
+    url: "https://memesfr.com/",
     handleCodeInApp: true,
   };
 
   var user = auth.currentUser;
 
   function signup(email, password) {
-    return auth.createUserWithEmailAndPassword(email, password).then((user) => {
-      user.user.sendEmailVerification();
-    });
+    return auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userData) => {
+        if (userData != null) {
+          userData.user.sendEmailVerification();
+        }
+      })
+      .catch((err) => {});
   }
 
-  async function sendAuthEmail() {
-    await user
-      .sendEmailVerification()
-      .then(() => {
-        console.log("Successfully sent");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  async function completeSignInWithEmail() {
+    // Confirm the link is a sign-in with email link.
+    if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
+      // Additional state parameters can also be passed via URL.
+      // This can be used to continue the user's intended action before triggering
+      // the sign-in operation.
+      // Get the email if available. This should be available if the user completes
+      // the flow on the same device where they started it.
+      var email = window.localStorage.getItem("emailForSignIn");
+      if (!email) {
+      }
+      // The client SDK will parse the code from the link for you.
+      firebase
+        .auth()
+        .signInWithEmailLink(email, window.location.href)
+        .then((result) => {
+          // Clear email from storage.
+          window.localStorage.removeItem("emailForSignIn");
+          if (result.user) {
+            setCurrentUser(result.user);
+            history.push({
+              pathname: "/setup",
+              state: {
+                verifiedUser: true,
+              },
+            });
+          }
+          // You can access the new user via result.user
+          // Additional user info profile not available via:
+          // result.additionalUserInfo.profile == null
+          // You can check if the user is new or existing:
+          // result.additionalUserInfo.isNewUser
+        })
+        .catch((error) => {
+          // Some error occurred, you can inspect the code: error.code
+          // Common errors could be invalid email and invalid or expired OTPs.
+        });
+    }
   }
 
   function login(email, password) {
     return auth.signInWithEmailAndPassword(email, password);
   }
-  function resetPassword(email) {
+  function resetPassword() {
     history.push("/reset");
-
-    return auth.sendPasswordResetEmail(email);
+    return auth.sendPasswordResetEmail(user.email);
   }
   function signOut() {
     auth.signOut().then(
       function () {
-        console.log("Signed out");
         history.push("/");
         history.go(0);
       },
@@ -66,10 +97,8 @@ export default function AuthProvider({ children }) {
 
   function uploadMeme(image, title, type) {
     var author = currentUser.uid;
-    console.log(currentUser);
     var ud = currentUser.displayName;
     var userPic = currentUser.photoURL;
-    console.log(image, title, type);
     const upload = storage.ref(`memes/${title}`).put(image);
     var num_shards = 5;
     var batch = db.batch();
@@ -99,6 +128,7 @@ export default function AuthProvider({ children }) {
                   title: title,
                   likes: 0,
                   dislikes: 0,
+                  hearts: 0,
                   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                   fileType: type,
                 },
@@ -125,12 +155,25 @@ export default function AuthProvider({ children }) {
                   title: title,
                   likes: 0,
                   dislikes: 0,
+                  hearts: 0,
                   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                   fileType: type,
                 };
                 setRecentlyUploaded((prevState) => [sample, ...prevState]);
                 var counterRef = db
                   .collection("counters")
+                  .doc(uniqueIdentifier);
+                // Initialize the counter document
+                batch.set(counterRef, { num_shards: num_shards });
+                // Initialize each shard with count=0
+                for (let i = 0; i < num_shards; i++) {
+                  const shardRef = counterRef
+                    .collection("shards")
+                    .doc(i.toString());
+                  batch.set(shardRef, { count: 0 });
+                }
+                var counterRef = db
+                  .collection("heartCounters")
                   .doc(uniqueIdentifier);
                 // Initialize the counter document
                 batch.set(counterRef, { num_shards: num_shards });
@@ -154,7 +197,7 @@ export default function AuthProvider({ children }) {
     );
   }
 
-  async function hasUserLikedPost(postID) {
+  async function hasUserLikedPost() {
     var currentUserID = currentUser.uid;
     var referenceToPost = db.collection("users").doc(currentUserID);
     var doc = await referenceToPost.get();
@@ -168,7 +211,6 @@ export default function AuthProvider({ children }) {
   //Map over all of the results and set each one to state
   //At the end of it return the entirety of state
   async function retrieveRecentPosts() {
-    setLoadingFilter(true);
     const recentRef = db.collection("recent").doc("recent_fifty");
     const collections = await recentRef.get();
     var items = collections.data();
@@ -185,28 +227,46 @@ export default function AuthProvider({ children }) {
           });
           return total_count;
         });
-      var updatedMemeObject = totalLikesOnPost
-        .then((resolvedPromiseForNumberOfLikes) => {
-          var docData = {
-            userName: item.userName,
-            title: item.title,
-            author: item.author,
-            authorPic: item.authorPic,
-            likes: resolvedPromiseForNumberOfLikes,
-            image: item.image,
-            fileType: item.fileType,
-            createdAt: item.createdAt,
-            id: item.id,
-          };
+      var shardHeartRef = db.collection("heartCounters").doc(item.id);
 
-          return docData;
-        })
-        .then((updatedMemeData) => {
-          return updatedMemeData;
+      //Here we look at the amount of hearts a post has
+      var totalHeartsOnPost = shardHeartRef
+        .collection("shards")
+        .get()
+        .then((snapshot) => {
+          let total_count = 0;
+          snapshot.forEach((doc) => {
+            total_count += doc.data().count;
+          });
+          return total_count;
         });
+      totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
+        var amountOfLikes = resolvedPromiseForNumberOfLikes;
+        return amountOfLikes;
+      });
+      totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
+        var amountOfHearts = resolvedPromiseForNumberOfHearts;
+        return amountOfHearts;
+      });
+      async function documentData() {
+        var usersLikes = await totalLikesOnPost;
+        var usersHearts = await totalHeartsOnPost;
+        var docData = {
+          userName: item.userName,
+          title: item.title,
+          author: item.author,
+          authorPic: item.authorPic,
+          likes: usersLikes,
+          hearts: usersHearts,
+          image: item.image,
+          fileType: item.fileType,
+          createdAt: item.createdAt,
+          id: item.id,
+        };
+        return docData;
+      }
 
-      setLoadingFilter(false);
-      return updatedMemeObject;
+      return documentData();
     });
     return updatedObjects;
 
@@ -228,7 +288,6 @@ export default function AuthProvider({ children }) {
   // }
 
   async function retrievePopularPosts() {
-    setLoadingFilter(true);
     const popRef = db.collection("popular").doc("top_fifty");
     const collections = await popRef.get();
     var items = collections.data();
@@ -247,31 +306,46 @@ export default function AuthProvider({ children }) {
           });
           return total_count;
         });
-      var updatedMemeObject = totalLikesOnPost
-        .then((resolvedPromiseForNumberOfLikes) => {
-          db.collection("memes").doc(item.id).update({
-            likes: resolvedPromiseForNumberOfLikes,
+      var shardHeartRef = db.collection("heartCounters").doc(item.id);
+
+      //Here we look at the amount of hearts a post has
+      var totalHeartsOnPost = shardHeartRef
+        .collection("shards")
+        .get()
+        .then((snapshot) => {
+          let total_count = 0;
+          snapshot.forEach((doc) => {
+            total_count += doc.data().count;
           });
-          var docData = {
-            userName: item.userName,
-            title: item.title,
-            author: item.author,
-            authorPic: item.authorPic,
-            likes: resolvedPromiseForNumberOfLikes,
-            image: item.image,
-            fileType: item.fileType,
-            createdAt: item.createdAt,
-            id: item.id,
-          };
-
-          return docData;
-        })
-        .then((updatedMemeData) => {
-          return updatedMemeData;
+          return total_count;
         });
+      totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
+        var amountOfLikes = resolvedPromiseForNumberOfLikes;
+        return amountOfLikes;
+      });
+      totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
+        var amountOfHearts = resolvedPromiseForNumberOfHearts;
+        return amountOfHearts;
+      });
+      async function documentData() {
+        var usersLikes = await totalLikesOnPost;
+        var usersHearts = await totalHeartsOnPost;
+        var docData = {
+          userName: item.userName,
+          title: item.title,
+          author: item.author,
+          authorPic: item.authorPic,
+          likes: usersLikes,
+          hearts: usersHearts,
+          image: item.image,
+          fileType: item.fileType,
+          createdAt: item.createdAt,
+          id: item.id,
+        };
+        return docData;
+      }
 
-      setLoadingFilter(false);
-      return updatedMemeObject;
+      return documentData();
     });
     return updatedObjects;
   }
@@ -281,12 +355,10 @@ export default function AuthProvider({ children }) {
     //Prevent throwing error
     if (user && id.length >= 5) {
       var search = await db.collection("usernames").doc(username).get();
-      const data = search.data();
-      if (data === undefined) {
-        return undefined;
-      } else {
+      var exists = search.exists;
+      if (exists) {
         return false;
-      }
+      } else return true;
     }
   }
   //1 read
@@ -308,11 +380,19 @@ export default function AuthProvider({ children }) {
     db.collection("users").doc(value).set({ items });
   }
 
-  function updateProfile(name, file) {
-    addUsernameToDB(name);
-    setUserName(name);
-    setProfilePicture(file);
-    history.push("");
+  function updateProfile(name, file, defaultAvatar) {
+    if (defaultAvatar) {
+      addUsernameToDB(name);
+      setUserName(name);
+      setProfilePicture(file, true);
+      history.push("");
+    }
+    if (!defaultAvatar) {
+      addUsernameToDB(name);
+      setUserName(name);
+      setProfilePicture(file, false);
+      history.push("");
+    }
   }
 
   function setUserName(username) {
@@ -326,9 +406,16 @@ export default function AuthProvider({ children }) {
       );
   }
 
-  function setProfilePicture(file) {
+  function setProfilePicture(file, defaultAvatar) {
+    var imageFile;
     var id = user.uid;
-    var imageFile = URL.createObjectURL(file);
+    if (defaultAvatar) {
+      imageFile = file;
+    }
+    if (!defaultAvatar) {
+      imageFile = URL.createObjectURL(file);
+    }
+
     const upload = storage.ref(`users/${id}`).put(file);
     upload.on(
       "state_changed",
@@ -361,14 +448,13 @@ export default function AuthProvider({ children }) {
   async function retrieveRandomMeme() {
     var memes = db.collection("memes");
     var key = memes.doc().id;
-    var randomMeme = {};
+    var memeObject = {};
     await memes
       .where(firebase.firestore.FieldPath.documentId(), ">=", key)
       .limit(1)
       .get()
       .then((snapshot) => {
         if (snapshot.size > 0) {
-          var updatedValue = {};
           snapshot.forEach((doc) => {
             //For each item look through the shards and tally them up
             var shardRef = db.collection("counters").doc(doc.data().id);
@@ -382,29 +468,53 @@ export default function AuthProvider({ children }) {
                 });
                 return total_count;
               });
-            var updatedMemeObject = totalLikesOnPost
-              .then((resolvedPromiseForNumberOfLikes) => {
-                var docData = {
-                  userName: doc.data().userName,
-                  title: doc.data().title,
-                  author: doc.data().author,
-                  authorPic: doc.data().authorPic,
-                  likes: resolvedPromiseForNumberOfLikes,
-                  image: doc.data().image,
-                  createdAt: doc.data().createdAt,
-                  id: doc.data().id,
-                };
-                return docData;
-              })
-              .then((updatedMemeData) => {
-                return updatedMemeData;
+            var shardHeartRef = db
+              .collection("heartCounters")
+              .doc(doc.data().id);
+            var totalHeartsOnPost = shardHeartRef
+              .collection("shards")
+              .get()
+              .then((snapshot) => {
+                let total_count = 0;
+                snapshot.forEach((doc) => {
+                  total_count += doc.data().count;
+                });
+                return total_count;
               });
-            setLoadingFilter(false);
-            updatedValue = updatedMemeObject;
-            return updatedMemeObject;
+            totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
+              var amountOfLikes = resolvedPromiseForNumberOfLikes;
+              return amountOfLikes;
+            });
+            totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
+              var amountOfHearts = resolvedPromiseForNumberOfHearts;
+              return amountOfHearts;
+            });
+
+            async function documentData() {
+              var usersLikes = await totalLikesOnPost;
+              var usersHearts = await totalHeartsOnPost;
+              var docData = {
+                userName: doc.data().userName,
+                title: doc.data().title,
+                author: doc.data().author,
+                authorPic: doc.data().authorPic,
+                likes: usersLikes,
+                hearts: usersHearts,
+                image: doc.data().image,
+                fileType: doc.data().fileType,
+                createdAt: doc.data().createdAt,
+                id: doc.data().id,
+              };
+              console.log(docData);
+              return docData;
+            }
+
+            memeObject = documentData();
+            return documentData();
           });
-          randomMeme = updatedValue;
-          return updatedValue;
+          console.log(memeObject);
+
+          return memeObject;
         } else {
           var meme = memes
             .where(firebase.firestore.FieldPath.documentId(), "<", key)
@@ -425,46 +535,77 @@ export default function AuthProvider({ children }) {
                     });
                     return total_count;
                   });
-                var updatedMemeObject = totalLikesOnPost
-                  .then((resolvedPromiseForNumberOfLikes) => {
-                    var docData = {
-                      userName: doc.data().userName,
-                      title: doc.data().title,
-                      author: doc.data().author,
-                      authorPic: doc.data().authorPic,
-                      likes: resolvedPromiseForNumberOfLikes,
-                      image: doc.data().image,
-                      createdAt: doc.data().createdAt,
-                      id: doc.data().id,
-                    };
-                    return docData;
-                  })
-                  .then((updatedMemeData) => {
-                    return updatedMemeData;
+                var shardHeartRef = db
+                  .collection("heartCounters")
+                  .doc(doc.data().id);
+                var totalHeartsOnPost = shardHeartRef
+                  .collection("shards")
+                  .get()
+                  .then((snapshot) => {
+                    let total_count = 0;
+                    snapshot.forEach((doc) => {
+                      total_count += doc.data().count;
+                    });
+                    return total_count;
                   });
-                setLoadingFilter(false);
-                updatedValue = updatedMemeObject;
-                return updatedMemeObject;
+                totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
+                  var amountOfLikes = resolvedPromiseForNumberOfLikes;
+                  return amountOfLikes;
+                });
+                totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
+                  var amountOfHearts = resolvedPromiseForNumberOfHearts;
+                  return amountOfHearts;
+                });
+                async function documentData() {
+                  var usersLikes = await totalLikesOnPost;
+                  var usersHearts = await totalHeartsOnPost;
+                  var docData = {
+                    userName: doc.data().userName,
+                    title: doc.data().title,
+                    author: doc.data().author,
+                    authorPic: doc.data().authorPic,
+                    likes: usersLikes,
+                    hearts: usersHearts,
+                    image: doc.data().image,
+                    fileType: doc.data().fileType,
+                    createdAt: doc.data().createdAt,
+                    id: doc.data().id,
+                  };
+                  console.log(docData);
+                  return docData;
+                }
+
+                memeObject = documentData();
+                return documentData();
               });
-              return updatedValue;
-            })
-            .catch((error) => {});
+              console.log(memeObject);
+
+              return memeObject;
+            });
         }
       })
       .catch((error) => {});
-    return randomMeme;
+    return memeObject;
   }
   async function removeHeartPost(postId) {
     var userID = currentUser.uid;
+    var num_shards = 5;
+    var ref = db.collection("heartCounters").doc(postId);
 
     //Remove it from the users' liked posts and merge it
     var userRef = db.collection("users").doc(userID);
     await userRef.update({
       hearted: firebase.firestore.FieldValue.arrayRemove(postId),
     });
+    const shard_id = Math.floor(Math.random() * num_shards).toString();
+    const shard_ref = ref.collection("shards").doc(shard_id);
+
+    shard_ref.update("count", firebase.firestore.FieldValue.increment(-1));
   }
   async function heartPost(postID) {
     var userID = currentUser.uid;
+    var num_shards = 5;
+    var ref = db.collection("heartCounters").doc(postID);
 
     //Add it to the users' liked posts and merge it
     var userRef = db.collection("users").doc(userID);
@@ -474,6 +615,12 @@ export default function AuthProvider({ children }) {
       },
       { merge: true }
     );
+    // Select a shard of the counter at random
+    const shard_id = Math.floor(Math.random() * num_shards).toString();
+    const shard_ref = ref.collection("shards").doc(shard_id);
+
+    // Update count
+    shard_ref.update("count", firebase.firestore.FieldValue.increment(1));
   }
 
   async function removeLikePost(postID) {
@@ -547,23 +694,27 @@ export default function AuthProvider({ children }) {
     let mount = true;
     if (mount === true) {
       const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user.emailVerified && user.displayName != null) {
-          setCurrentUser(user);
+        if (user) {
+          if (user.emailVerified && user.displayName != null) {
+            setCurrentUser(user);
+          }
+          if (user.displayName && !user.emailVerified) {
+            setNotConfirmedEmail(true);
+          }
+          if (user.emailVerified && user.displayName === null) {
+            setCurrentUser(user);
+            history.push({
+              pathname: "/setup",
+              state: {
+                verifiedUser: true,
+              },
+            });
+          }
         }
-        if (user.emailVerified && user.displayName === null) {
-          setCurrentUser(user);
-          console.log("email verified but no username detected");
-          history.push({
-            pathname: "/setup",
-            state: {
-              verifiedUser: true,
-            },
-          });
+        if (!user) {
+          history.push("/");
         }
-        if (!user.emailVerified) {
-          console.log("user needs to verify email");
-          setRemindToVerify(true);
-        }
+
         setLoadUser(false);
       });
       return unsubscribe;
@@ -586,7 +737,6 @@ export default function AuthProvider({ children }) {
     sendConfirmationEmail,
     addUsernameToDB,
     updateProfile,
-    loadingFilter,
     retrievePopularPosts,
     retrieveRecentPosts,
     likePost,
@@ -597,8 +747,9 @@ export default function AuthProvider({ children }) {
     retrieveRandomMeme,
     removeLikePost,
     removeHeartPost,
-    sendAuthEmail,
-    remindToVerify,
+    completeSignInWithEmail,
+    setCurrentUser,
+    notConfirmedEmail,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }
