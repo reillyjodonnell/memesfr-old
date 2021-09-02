@@ -101,13 +101,6 @@ const useStyles = makeStyles((theme) => ({
       //add this nested selector
       borderColor: "red",
     },
-    "& label.Mui-focused": {
-      color: "green",
-    },
-
-    "&$cssFocused $notchedOutline": {
-      borderColor: "green",
-    },
   },
 }));
 

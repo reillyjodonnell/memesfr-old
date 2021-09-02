@@ -24,7 +24,12 @@ import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 function Copyright() {
   return (
     <>
-      <Typography variant="body2" color="textSecondary" align="center">
+      <Typography
+        variant="body2"
+        style={{ color: "white", marginTop: "5rem" }}
+        color="textSecondary"
+        align="center"
+      >
         {"Copyright © "}
         <Link color="inherit" href="https://memesfr.com/">
           Memesfr
@@ -63,11 +68,14 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "100vh",
     "& .MuiPaper-root": {
       backgroundColor: "#272932",
     },
+    "& label.Mui-focused": {
+      color: "white",
+    },
   },
+
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
@@ -100,10 +108,6 @@ const useStyles = makeStyles((theme) => ({
     "& $notchedOutline": {
       //add this nested selector
       borderColor: "red",
-    },
-
-    "&$cssFocused $notchedOutline": {
-      borderColor: "green",
     },
   },
 }));
@@ -220,13 +224,11 @@ export default function SignUp() {
       <Container component="main" maxWidth="xs">
         <CssBaseline>
           <div className={classes.paper}>
-            <div className="login-logo">
+            <div onClick={() => history.push("/")} className="login-logo">
               <Castle />
               <span>Memesfr</span>
             </div>
-            <Typography component="h1" variant="h5">
-              Sign up
-            </Typography>
+
             {alert && (
               <span style={{ paddingTop: "1rem", color: "red" }}>{error}</span>
             )}
@@ -239,7 +241,7 @@ export default function SignUp() {
                   className={classes.form}
                   noValidate
                 >
-                  <Grid container spacing={2}>
+                  <Grid className={classes.root} container spacing={2}>
                     <Grid item xs={12}>
                       <TextField
                         inputRef={emailRef}
@@ -254,6 +256,9 @@ export default function SignUp() {
                         autoComplete="email"
                         helperText={emailErrorMessage}
                         error={emailError}
+                        InputProps={{
+                          className: "textfield",
+                        }}
                       />
                     </Grid>
                     <Grid item xs={12}>
@@ -271,6 +276,9 @@ export default function SignUp() {
                         autoComplete="current-password"
                         helperText={passwordErrorMessage}
                         error={passwordError}
+                        InputProps={{
+                          className: "textfield",
+                        }}
                         InputProps={{
                           endAdornment: (
                             <InputAdornment position="end">
@@ -290,14 +298,6 @@ export default function SignUp() {
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox value="allowExtraEmails" color="primary" />
-                        }
-                        label="I want to receive inspirational memes via email ❤️"
-                      />
-                    </Grid>
                   </Grid>
                   <Button
                     disabled={loading}
@@ -312,9 +312,14 @@ export default function SignUp() {
 
                   <div className={classes.social}></div>
 
-                  <Grid container justify="flex-end">
+                  <Grid container justify="flex-start">
                     <Grid item>
-                      <Link onClick={redirectToLogin} href="#" variant="body2">
+                      <Link
+                        style={{ color: "#129eda" }}
+                        onClick={redirectToLogin}
+                        href="#"
+                        variant="body2"
+                      >
                         Already have an account? Sign in
                       </Link>
                     </Grid>
@@ -326,14 +331,6 @@ export default function SignUp() {
           <Box mt={5}>
             <Copyright />
           </Box>
-          <div className="return-home">
-            <Link
-              onClick={() => history.push("/")}
-              style={{ cursor: "pointer" }}
-            >
-              Return to Home
-            </Link>
-          </div>
         </CssBaseline>
       </Container>
     </MuiThemeProvider>
