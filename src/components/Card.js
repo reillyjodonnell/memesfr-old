@@ -15,7 +15,6 @@ import buffDoge from "../Assets/buff-doge.jpg";
 import { useMobile } from "../contexts/MobileContext";
 
 export default function Card(props) {
-  console.log("rendering");
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
   const [thumbDown, setThumbDown] = useState(false);

@@ -59,7 +59,6 @@ export default function Sidebar(props) {
   function selectOption() {
     setActive((prevState) => !prevState);
   }
-  console.log(activeMenu);
   return (
     <div className="sidebar-fixed">
       <div className="sidebar-content">
