@@ -13,10 +13,8 @@ import Sidebar from "./Sidebar";
 import firebase from "firebase";
 import { useAuth } from "../contexts/AuthContext";
 import { useMobile } from "../contexts/MobileContext";
-import { Link, useHistory } from "react-router-dom";
-import { ReactComponent as X } from "../Assets/SVGs/x.svg";
+import { useHistory } from "react-router-dom";
 import MobileNav from "./MobileNav";
-import SectionHeader from "./SectionHeader";
 import PasswordModal from "./PasswordModal";
 
 const drawerWidth = 240;
@@ -128,16 +126,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard(props) {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
   const [popularPosts, setPopularPosts] = useState([{}]);
   const [recentPosts, setRecentPosts] = useState([{}]);
   const [randomPosts, setRandomPosts] = useState([{}]);
   const [activeScreen, setActiveScreen] = useState([{}]);
   const [loadingFilter, setLoadingFilter] = useState(false);
-  const [home, setHome] = useState(false);
   const [createPost, createPostFunction] = useState(false);
-  const [firstTime, setFirstTime] = useState(false);
-  const [displayFirstTimeMessage, setDisplayFirstTimeMessage] = useState(true);
   const [loadAnotherRandomMeme, setLoadAnotherRandomMeme] = useState(false);
   const [resetPassword, resetPasswordFunction] = useState(false);
   const [usersLikedPosts, setUsersLikedPosts] = useState([]);
@@ -160,14 +154,6 @@ export default function Dashboard(props) {
     setCurrentUser,
     notConfirmedEmail,
   } = useAuth();
-
-  useEffect(() => {
-    let mounted = true;
-    if (mounted === true) {
-      setHome((prev) => !prev);
-    }
-    return () => (mounted = false);
-  }, [recentlyUploaded]);
 
   const history = useHistory();
 
@@ -249,58 +235,6 @@ export default function Dashboard(props) {
     }
   }, []);
 
-  useEffect(() => {
-    let mount = true;
-    let visited = localStorage.getItem("firstTime");
-    if (mount) {
-      if (visited) {
-        setFirstTime(false);
-      } else {
-        setFirstTime(true);
-        localStorage.setItem("firstTime", true);
-      }
-    }
-
-    return () => {
-      mount = false;
-    };
-  }, []);
-
-  const ThanksForVisiting = () => {
-    function closeMessage() {
-      setDisplayFirstTimeMessage(false);
-    }
-    if (displayFirstTimeMessage) {
-      return (
-        <div className="thanks-box">
-          <div className="close-thanks-box">
-            <X onClick={closeMessage} />
-          </div>
-
-          <span className="thanks-title">
-            Thanks so much for visiting this site ❤️
-          </span>
-          <div className="discord-invite">
-            <span>
-              Join our discord server and be a part of the Memefr community:
-            </span>
-            <Link> https://discord.gg/234DDJUQpD</Link>
-          </div>
-
-          <span>
-            We have some awesome things planned for the future, including paying
-            crypto for awesome memes (awesome, right?) This is a beta of the
-            website, which will most likely include serious bugs. We've done
-            tons of testing, but there's bound to be plenty of bugs. If you find
-            any bugs/ have any suggestions for the site, join the Discord server
-            and post them there!
-          </span>
-        </div>
-      );
-    }
-    return null;
-  };
-
   function showPopular() {
     setLoadingFilter(true);
     setActiveScreen();
@@ -370,14 +304,14 @@ export default function Dashboard(props) {
   }
 
   function filterHome() {
-    if (nav != 0) {
+    if (nav !== 0) {
       setLoadingFilter(true);
       myRef.current.scrollIntoView({ behavior: "smooth" });
       setNav(0);
     }
   }
   function filterTrending() {
-    if (nav != 1) {
+    if (nav !== 1) {
       setLoadingFilter(true);
       myRef.current.scrollIntoView({ behavior: "smooth" });
 
@@ -386,7 +320,7 @@ export default function Dashboard(props) {
   }
 
   function filterPopular() {
-    if (nav != 2) {
+    if (nav !== 2) {
       setLoadingFilter(true);
       myRef.current.scrollIntoView({ behavior: "smooth" });
 
@@ -394,7 +328,7 @@ export default function Dashboard(props) {
     }
   }
   function filterRecent() {
-    if (nav != 3) {
+    if (nav !== 3) {
       setLoadingFilter(true);
       myRef.current.scrollIntoView({ behavior: "smooth" });
       setNav(3);
@@ -436,7 +370,6 @@ export default function Dashboard(props) {
     return () => (mounted = false);
   }, [nav, loadAnotherRandomMeme]);
 
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
   const ConfirmEmailPrompt = () => {
     return (
       <div
@@ -495,7 +428,7 @@ export default function Dashboard(props) {
     var sayingOne = "";
     var sayingTwo = "";
     if (recentlyUploaded.length === 1) {
-      var sayingTwo = "Here's what you just posted 👇";
+      sayingTwo = "Here's what you just posted 👇";
     }
     if (recentlyUploaded.length > 1) {
       sayingOne = "Keep it up memelord";
@@ -585,7 +518,7 @@ export default function Dashboard(props) {
               {loadingFilter && <ShowSkeletons />}
               <RecentlyPosted />
               {activeScreen
-                ? activeScreen.length != undefined &&
+                ? activeScreen.length !== undefined &&
                   activeScreen.map((item) => {
                     var liked = false;
                     var hearted = false;
@@ -619,7 +552,7 @@ export default function Dashboard(props) {
                   closePrompt={resetUserPassword}
                 />
               ) : null}
-              {!loadingFilter && nav != 4 && (
+              {!loadingFilter && nav !== 4 && (
                 <div className="end-of-memes">
                   <span>End of the memes 😢</span>
                 </div>

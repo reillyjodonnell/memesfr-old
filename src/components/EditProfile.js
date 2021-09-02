@@ -1,38 +1,15 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { ReactComponent as Castle } from "../Assets/SVGs/castle.svg";
 import "../CSS Components/EditProfile.css";
-import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import "../CSS Components/CreateProfile.css";
-import Avatar from "@material-ui/core/Avatar";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
 import Link from "@material-ui/core/Link";
-import Container from "@material-ui/core/Container";
-import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://memesfr.com/">
-        Memesfr
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
 export default function SelectUsername() {
   const history = useHistory();
-  const [disabled, setDisabled] = useState(true);
-  const [error, setError] = useState(false);
-
-  const [viewPhoto, viewPhotoFunction] = useState(false);
   const [file, setFile] = useState("");
   const inputFile = useRef(null);
 
@@ -81,7 +58,7 @@ export default function SelectUsername() {
         <div className="create-profile">
           <h2 style={{ color: "white" }}>@{currentUser.displayName}</h2>
           <div className="sidebar-avatar-container">
-            <img className="sidebar-avatar" src={currentUser.photoURL} />
+            <img alt="" className="sidebar-avatar" src={currentUser.photoURL} />
           </div>
 
           <span className="update-avatar-prompt">Change avatar?</span>

@@ -1,39 +1,11 @@
-import React, { useState } from "react";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
-import DeleteIcon from "@material-ui/icons/Delete";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import RightIcon from "@material-ui/icons/SubdirectoryArrowRight";
+import React from "react";
 import { ReactComponent as Picture } from "../Assets/Icons/Image.svg";
 import { ReactComponent as Gif } from "../Assets/Icons/Gif.svg";
-import doge from "../Assets/doge.svg";
 import "../CSS Components/CreatePost.css";
 
 import Modal from "./Modal";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& > *": {
-      margin: theme.spacing(1),
-      width: "25ch",
-      width: "100px",
-      display: "flex",
-      width: "100%",
-    },
-  },
-  button: {
-    margin: theme.spacing(1),
-    display: "flex",
-  },
-  box: {
-    display: "flex",
-    margin: "1rem",
-    border: "1px solid black",
-    height: "4rem",
-  },
-}));
 
 export default function CreatePost(props) {
   const history = useHistory();
@@ -43,7 +15,7 @@ export default function CreatePost(props) {
 
   if (currentUser) {
     if (currentUser.email)
-      if (currentUser.photoURL != undefined) {
+      if (currentUser.photoURL !== undefined) {
         var profilePicture = currentUser.photoURL;
       }
   }
@@ -76,7 +48,10 @@ export default function CreatePost(props) {
                 ) : null}
                 <div className="avatar-container">
                   <div className="avatar">
-                    <img src={`${profilePicture}`} />
+                    <img
+                      alt="user's profile avatar"
+                      src={`${profilePicture}`}
+                    />
                   </div>
                 </div>
                 <div className="add-content">

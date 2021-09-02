@@ -4,12 +4,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { useHistory } from "react-router-dom";
 import trash from "../Assets/SVGs/trash.svg";
 import report from "../Assets/SVGs/report.svg";
-import { ReactComponent as X } from "../Assets/SVGs/x.svg";
-import { ReactComponent as PencilIcon } from "../Assets/SVGs/pencil.svg";
-import { ReactComponent as Dots } from "../Assets/SVGs/dots.svg";
 import { ReactComponent as HeartIcon } from "../Assets/SVGs/heart.svg";
 import { ReactComponent as LikeIcon } from "../Assets/SVGs/thumbUp.svg";
-import { ReactComponent as VerticalDots } from "../Assets/SVGs/verticalDots.svg";
 import buffDoge from "../Assets/buff-doge.jpg";
 
 import { useMobile } from "../contexts/MobileContext";
@@ -20,7 +16,6 @@ export default function Card(props) {
   const [thumbDown, setThumbDown] = useState(false);
   const [likes, changeLikes] = useState(0);
   const [options, expandOptions] = useState(false);
-  const [pencil, expandPencil] = useState(false);
   const [needSubmit, setNeedSubmit] = useState(false);
   const [permissionToEdit, setPermissionToEdit] = useState(false);
   const [hasAlreadyLikedPost, setHasAlreadyLikedPost] = useState(false);
@@ -92,10 +87,10 @@ export default function Card(props) {
 
   const toggleThumbUp = () => {
     setNeedSubmit(true);
-    if (thumbUp == true) {
+    if (thumbUp === true) {
       setThumbUp(!thumbUp);
       changeLikes((likes) => likes - 1);
-    } else if (thumbDown == true) {
+    } else if (thumbDown === true) {
       setThumbDown(!thumbDown);
       setThumbUp(!thumbUp);
       changeLikes((prevLikes) => prevLikes + 2);
@@ -110,25 +105,8 @@ export default function Card(props) {
       setHeart(true);
     } else setHeart(false);
   };
-  const toggleThumbDown = () => {
-    setNeedSubmit(true);
-    if (thumbUp == true) {
-      setThumbUp(!thumbUp);
-      setThumbDown(!thumbDown);
-      changeLikes(likes - 2);
-    } else if (thumbDown == true) {
-      setThumbDown(!thumbDown);
-      changeLikes(likes + 1);
-    } else {
-      setThumbDown(!thumbDown);
-      changeLikes(likes - 1);
-    }
-  };
 
   const closeOptions = () => {
-    expandOptions(!options);
-  };
-  const openOptions = () => {
     expandOptions(!options);
   };
 
@@ -167,7 +145,7 @@ export default function Card(props) {
             </div>
             <div className="delete">
               <span>Report Post</span>
-              <img src={report} />
+              <img alt="report button" src={report} />
             </div>
           </div>
         </>
@@ -176,30 +154,6 @@ export default function Card(props) {
   }
 
   /* THIS IS IF MODS/CREATORS WANT TO EDIT POST*/
-  function Edit() {
-    if (pencil)
-      return (
-        <div className="edit-mode" onClick={ExpandPencilContainer}>
-          <X />
-        </div>
-      );
-    else
-      return (
-        <div onClick={ExpandPencilContainer} className="edit-mode">
-          <PencilIcon></PencilIcon>
-        </div>
-      );
-  }
-  function Options() {
-    return (
-      <div className="edit-mode" onClick={openOptions}>
-        <VerticalDots />
-      </div>
-    );
-  }
-  const ExpandPencilContainer = () => {
-    expandPencil(!pencil);
-  };
 
   function ExpandedPencil() {
     return (
@@ -208,7 +162,7 @@ export default function Card(props) {
           <span>Edit post</span>
         </div>
         <div className="delete">
-          <img src={trash} />
+          <img alt="a trash icon to remove posts" src={trash} />
           <span>Remove post</span>
         </div>
       </div>
@@ -220,9 +174,14 @@ export default function Card(props) {
     return (
       <div className="avatar-picture">
         {avatar ? (
-          <img src={avatar} style={{ height: "100%", width: "100%" }} />
+          <img
+            alt="user's avatar"
+            src={avatar}
+            style={{ height: "100%", width: "100%" }}
+          />
         ) : (
           <img
+            alt="buff doge meme"
             src={buffDoge}
             style={{
               height: "100%",
@@ -278,6 +237,7 @@ export default function Card(props) {
                 <VideoPlayback />
               ) : (
                 <img
+                  alt=""
                   onDoubleClick={currentUser ? toggleHeart : activatePrompt}
                   className="meme-image"
                   src={props.item.image}

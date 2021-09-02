@@ -1,14 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import "../CSS Components/CreateProfile.css";
-import Avatar from "@material-ui/core/Avatar";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Link from "@material-ui/core/Link";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import { useAuth } from "../contexts/AuthContext";
 import { useHistory, useLocation } from "react-router-dom";
 import { ReactComponent as Castle } from "../Assets/SVGs/castle.svg";
@@ -60,12 +57,7 @@ const useStyles = makeStyles((theme) => ({
         color: "#bebebee3",
       },
     },
-    "& .MuiInputBase-root": {
-      color: "white",
-      "&.Mui-focused": {
-        color: "white",
-      },
-    },
+
     "& .MuiFilledInput-underline:after": {
       borderBottom: "2px solid  #EA3788",
     },
@@ -114,7 +106,7 @@ export default function CreateProfile(props) {
       setDisabled(true);
     } else if (e.target.value.length < 16) {
       checkUsernameAvailability(e.target.value).then((result) => {
-        if (result == false) {
+        if (result === false) {
           setAvailableMessage("Username taken");
           setDisabled(true);
           setError(true);
@@ -148,83 +140,81 @@ export default function CreateProfile(props) {
   };
   const ImageThumb = ({ image }) => {
     if (image) {
-      return <img src={URL.createObjectURL(image)} alt={image.name} />;
-    } else return <img src={defaultAvatar} />;
+      return <img src={URL.createObjectURL(image)} alt="" />;
+    } else return <img alt="" src={defaultAvatar} />;
   };
 
   if (location.state) {
     if (location.state.verifiedUser) {
-      {
-        return (
-          <div className="create-profile-container">
-            <div className="create-profile">
-              <div
-                className="sidebar-logo"
-                style={{ padding: "2rem", justifyContent: "center" }}
-              >
-                <Castle />
-                <span style={{ color: "white" }}>Memesfr</span>
-              </div>
-
-              <div className="username">
-                <span className="username-prompt">Choose a username below</span>
-
-                <form className={classes.root} autoComplete="off">
-                  <div>
-                    <TextField
-                      className={classes.username}
-                      onChange={(e) => checkUserNameError(e)}
-                      required
-                      error={error}
-                      id="filled-error-helper-text"
-                      label="username"
-                      defaultValue=""
-                      helperText={availableMessage}
-                      variant="filled"
-                      inputProps={{
-                        classes: {
-                          focused: classes.focused,
-                        },
-                      }}
-                    />
-                  </div>
-                </form>
-              </div>
-              <div className="profile-image-preview">
-                <ImageThumb image={file} />
-              </div>
-
-              <div className="create-avatar" onClick={onButtonClick}>
-                <button className="upload-button">
-                  <span>Change image</span>
-
-                  <input
-                    onChange={handleUpload}
-                    id="file"
-                    ref={inputFile}
-                    type="file"
-                    style={{ display: "none" }}
-                  />
-                </button>
-              </div>
-              <div className="submit-profile">
-                <Button
-                  disabled={disabled}
-                  onClick={saveProfile}
-                  variant="contained"
-                  className={disabled ? null : classes.button}
-                >
-                  Save Profile
-                </Button>
-              </div>
+      return (
+        <div className="create-profile-container">
+          <div className="create-profile">
+            <div
+              className="sidebar-logo"
+              style={{ padding: "2rem", justifyContent: "center" }}
+            >
+              <Castle />
+              <span style={{ color: "white" }}>Memesfr</span>
             </div>
 
-            <Box mt={5}>
-              <Copyright />
-            </Box>
+            <div className="username">
+              <span className="username-prompt">Choose a username below</span>
+
+              <form className={classes.root} autoComplete="off">
+                <div>
+                  <TextField
+                    className={classes.username}
+                    onChange={(e) => checkUserNameError(e)}
+                    required
+                    error={error}
+                    id="filled-error-helper-text"
+                    label="username"
+                    defaultValue=""
+                    helperText={availableMessage}
+                    variant="filled"
+                    inputProps={{
+                      classes: {
+                        focused: classes.focused,
+                      },
+                    }}
+                  />
+                </div>
+              </form>
+            </div>
+            <div className="profile-image-preview">
+              <ImageThumb image={file} />
+            </div>
+
+            <div className="create-avatar" onClick={onButtonClick}>
+              <button className="upload-button">
+                <span>Change image</span>
+
+                <input
+                  onChange={handleUpload}
+                  id="file"
+                  ref={inputFile}
+                  type="file"
+                  style={{ display: "none" }}
+                />
+              </button>
+            </div>
+            <div className="submit-profile">
+              <Button
+                disabled={disabled}
+                onClick={saveProfile}
+                variant="contained"
+                className={disabled ? null : classes.button}
+              >
+                Save Profile
+              </Button>
+            </div>
           </div>
-        );
-      }
+
+          <Box mt={5}>
+            <Copyright />
+          </Box>
+        </div>
+      );
     }
   } else {
     history.push("/");
