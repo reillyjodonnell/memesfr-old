@@ -42,6 +42,15 @@ export default function DropDownMenu(props) {
     setFirstTime(false);
   }
 
+  const Help = () => {
+    <div onClick={() => history.push("/help")}>
+      <DropDownItem
+        Icon={<Help style={{ stroke: "white" }} />}
+        IconText="Help"
+      />
+    </div>;
+  };
+
   const discLink = "https://discord.gg/234DDJUQpD";
 
   function activateDoge() {
@@ -91,12 +100,6 @@ export default function DropDownMenu(props) {
               onEnter={calcHeight}
             >
               <div className="menu">
-                <div onClick={() => history.push("/help")}>
-                  <DropDownItem
-                    Icon={<Help style={{ stroke: "white" }} />}
-                    IconText="Help"
-                  />
-                </div>
                 <div>
                   <DropDownItem
                     IconText="Settings"

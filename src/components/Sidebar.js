@@ -31,7 +31,7 @@ export default function Sidebar(props) {
   const { updateDoge } = useTheme();
   const dropdownRef = useRef(null);
   const history = useHistory();
-  const { signOut } = useAuth();
+  const { signOut, currentUser } = useAuth();
 
   function activateDoge() {
     updateDoge();
@@ -45,6 +45,14 @@ export default function Sidebar(props) {
   function goToLogin() {
     history.push("/login");
   }
+  const Help = () => {
+    <div onClick={() => history.push("/help")} className={"navigation-group"}>
+      <div className="navigation-group-items navigation-settings-icon">
+        <Help />
+        <span className="navigation-group-text">Help</span>
+      </div>
+    </div>;
+  };
 
   const discLink = "https://discord.gg/234DDJUQpD";
 
@@ -212,39 +220,39 @@ export default function Sidebar(props) {
                   </div>
                 </a>
               </div>
-              <div className={"navigation-group"}>
-                <div
-                  onClick={props.resetPassword}
-                  className="navigation-group-items navigation-settings-icon"
-                >
-                  <Password />
-                  <span className="navigation-group-text">Change Password</span>
-                </div>
-              </div>
-              <div
-                onClick={() => history.push("/edit")}
-                className={"navigation-group"}
-              >
-                <div className="navigation-group-items navigation-settings-icon">
-                  <ProfilePic />
-                  <span className="navigation-group-text">Change Avatar</span>
-                </div>
-              </div>
-              <div
-                onClick={() => history.push("/help")}
-                className={"navigation-group"}
-              >
-                <div className="navigation-group-items navigation-settings-icon">
-                  <Help />
-                  <span className="navigation-group-text">Help</span>
-                </div>
-              </div>
-              <div onClick={signOut} className={"navigation-group"}>
-                <div className="navigation-group-items navigation-settings-icon">
-                  <Logout />
-                  <span className="navigation-group-text">Sign Out</span>
-                </div>
-              </div>
+              {currentUser ? (
+                <>
+                  <div className={"navigation-group"}>
+                    <div
+                      onClick={props.resetPassword}
+                      className="navigation-group-items navigation-settings-icon"
+                    >
+                      <Password />
+                      <span className="navigation-group-text">
+                        Change Password
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    onClick={() => history.push("/edit")}
+                    className={"navigation-group"}
+                  >
+                    <div className="navigation-group-items navigation-settings-icon">
+                      <ProfilePic />
+                      <span className="navigation-group-text">
+                        Change Avatar
+                      </span>
+                    </div>
+                  </div>
+
+                  <div onClick={signOut} className={"navigation-group"}>
+                    <div className="navigation-group-items navigation-settings-icon">
+                      <Logout />
+                      <span className="navigation-group-text">Sign Out</span>
+                    </div>
+                  </div>
+                </>
+              ) : null}
             </div>
           </CSSTransition>
         </div>

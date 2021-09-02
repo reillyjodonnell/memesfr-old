@@ -370,32 +370,38 @@ export default function Dashboard(props) {
   }
 
   function filterHome() {
-    setLoadingFilter(true);
-    myRef.current.scrollIntoView({ behavior: "smooth" });
-    setNav(0);
+    if (nav != 0) {
+      setLoadingFilter(true);
+      myRef.current.scrollIntoView({ behavior: "smooth" });
+      setNav(0);
+    }
   }
   function filterTrending() {
-    setLoadingFilter(true);
-    myRef.current.scrollIntoView({ behavior: "smooth" });
+    if (nav != 1) {
+      setLoadingFilter(true);
+      myRef.current.scrollIntoView({ behavior: "smooth" });
 
-    setNav(1);
+      setNav(1);
+    }
   }
 
   function filterPopular() {
-    setLoadingFilter(true);
-    myRef.current.scrollIntoView({ behavior: "smooth" });
+    if (nav != 2) {
+      setLoadingFilter(true);
+      myRef.current.scrollIntoView({ behavior: "smooth" });
 
-    setNav(2);
+      setNav(2);
+    }
   }
   function filterRecent() {
-    setLoadingFilter(true);
-    myRef.current.scrollIntoView({ behavior: "smooth" });
-
-    setNav(3);
+    if (nav != 3) {
+      setLoadingFilter(true);
+      myRef.current.scrollIntoView({ behavior: "smooth" });
+      setNav(3);
+    }
   }
   function filterRandom() {
     setLoadingFilter(true);
-
     setNav(4);
     setLoadAnotherRandomMeme((prevState) => !prevState);
   }
