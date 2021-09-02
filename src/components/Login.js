@@ -28,7 +28,12 @@ function Copyright() {
     history.push("/");
   }
   return (
-    <Typography variant="body2" color="textSecondary" align="center">
+    <Typography
+      variant="body2"
+      color="white"
+      style={{ marginTop: "5rem" }}
+      align="center"
+    >
       {"Copyright © "}
       <Link color="inherit" cursor="pointer" onClick={redirectHome}>
         Memesfr
@@ -64,6 +69,9 @@ const useStyles = makeStyles((theme) => ({
     "& .MuiPaper-root": {
       backgroundColor: "#272932",
     },
+    "& label.Mui-focused": {
+      color: "white",
+    },
   },
   image: {
     backgroundImage: `url(${Doge})`,
@@ -92,6 +100,9 @@ const useStyles = makeStyles((theme) => ({
     "& $notchedOutline": {
       //add this nested selector
       borderColor: "red",
+    },
+    "& label.Mui-focused": {
+      color: "green",
     },
 
     "&$cssFocused $notchedOutline": {
@@ -166,13 +177,11 @@ export default function SignInSide(props) {
             square
           >
             <div className={classes.paper}>
-              <div className="login-logo">
+              <div onClick={() => history.push("/")} className="login-logo">
                 <Castle />
                 <span>Memesfr</span>
               </div>
-              <Typography component="h1" variant="h5">
-                Sign in
-              </Typography>
+
               {error ? (
                 <span
                   style={{
@@ -232,14 +241,10 @@ export default function SignInSide(props) {
                   }}
                 />
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link style={{ color: "#129eda" }} href="#" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>
-                <FormControlLabel
-                  control={<Checkbox value="remember" color="primary" />}
-                  label="Remember me"
-                />
 
                 <Button
                   type="submit"
@@ -252,19 +257,17 @@ export default function SignInSide(props) {
                 </Button>
                 <Grid container>
                   <Grid item>
-                    <Link href="#" onClick={redirectToSignup} variant="body2">
+                    <Link
+                      href="#"
+                      style={{ color: "#129eda" }}
+                      onClick={redirectToSignup}
+                      variant="body2"
+                    >
                       {"Don't have an account? Sign Up"}
                     </Link>
                   </Grid>
                 </Grid>
-                <div className="return-home">
-                  <Link
-                    onClick={() => history.push("/")}
-                    style={{ cursor: "pointer" }}
-                  >
-                    Return Home
-                  </Link>
-                </div>
+
                 <Box mt={5}>
                   <Copyright />
                 </Box>
