@@ -31,7 +31,7 @@ function Copyright() {
     <Typography
       variant="body2"
       color="white"
-      style={{ marginTop: "5rem" }}
+      style={{ marginTop: "5rem", cursor: "pointer" }}
       align="center"
     >
       {"Copyright © "}

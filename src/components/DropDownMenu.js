@@ -204,12 +204,7 @@ export default function DropDownMenu(props) {
                     IconText={doge ? "Deactivate Doge" : "Activate Doge"}
                   />
                 </div>
-                <div onClick={() => history.push("/edit")}>
-                  <DropDownItem
-                    Icon={<ProfilePic />}
-                    IconText="Change Avatar"
-                  />
-                </div>
+
                 <div>
                   <DropDownItem
                     Icon={<Password />}

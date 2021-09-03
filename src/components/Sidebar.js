@@ -232,17 +232,6 @@ export default function Sidebar(props) {
                       </span>
                     </div>
                   </div>
-                  <div
-                    onClick={() => history.push("/edit")}
-                    className={"navigation-group"}
-                  >
-                    <div className="navigation-group-items navigation-settings-icon">
-                      <ProfilePic />
-                      <span className="navigation-group-text">
-                        Change Avatar
-                      </span>
-                    </div>
-                  </div>
 
                   <div onClick={signOut} className={"navigation-group"}>
                     <div className="navigation-group-items navigation-settings-icon">
