@@ -42,14 +42,9 @@ function Copyright() {
 }
 
 const theme = createMuiTheme({
-  palette: {
-    background: {
-      default: "#272932",
-    },
-  },
-  overrides: {
-    MuiOutlinedInput: {
-      root: {
+  root: {
+    overrides: {
+      MuiOutlinedInput: {
         "& $notchedOutline": {
           borderColor: "white",
           backgroundColor: "#e3e3e34a",
@@ -71,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
     "& .MuiPaper-root": {
       backgroundColor: "#272932",
     },
+
     "& label.Mui-focused": {
       color: "white",
     },
@@ -151,13 +147,18 @@ export default function SignUp() {
     try {
       setError("");
       await signup(email, password)
-        .then(() => {
-          setUserCreation(true);
+        .then((err) => {
+          console.log(err);
+          if (!err) {
+            window.alert("Success");
+            setUserCreation(true);
+          }
+          if (err) {
+            setError("Email is already in use");
+            setEmailError(true);
+          }
         })
-        .catch((err) => {
-          setError("Email is already in use");
-          setEmailError(true);
-        });
+        .catch((err) => {});
 
       setLoading(false);
     } catch {}

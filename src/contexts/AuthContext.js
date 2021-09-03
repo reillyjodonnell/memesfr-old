@@ -33,7 +33,10 @@ export default function AuthProvider({ children }) {
           userData.user.sendEmailVerification();
         }
       })
-      .catch((err) => {});
+      .catch((err) => {
+        console.log(err);
+        return err.message;
+      });
   }
 
   async function completeSignInWithEmail() {

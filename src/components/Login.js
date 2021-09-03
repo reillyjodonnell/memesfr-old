@@ -122,7 +122,6 @@ export default function SignInSide(props) {
     if (mount === true) {
       console.log("setting user");
       const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-        console.log(user);
         setCurrentUser(user);
       });
       return unsubscribe;
@@ -233,11 +232,6 @@ export default function SignInSide(props) {
                     ),
                   }}
                 />
-                <Grid item xs>
-                  <Link style={{ color: "#129eda" }} href="#" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
 
                 <Button
                   type="submit"
