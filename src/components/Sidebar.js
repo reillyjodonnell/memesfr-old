@@ -33,6 +33,34 @@ export default function Sidebar(props) {
   const history = useHistory();
   const { signOut, currentUser } = useAuth();
 
+  const UploadButton = () => {
+    return (
+      <div onClick={props.createPost} className="sidebar-create-post">
+        <span>Upload</span>
+        <Plus />
+      </div>
+    );
+  };
+
+  const UserActivityInformation = () => {
+    return (
+      <div className="user-activity-information-container">
+        <div className="user-activity-information-modules">
+          <span className="user-activity-information-category">Memes</span>
+          <span className="user-activity-information-number">0</span>
+        </div>
+        <div className="user-activity-information-modules">
+          <span className="user-activity-information-category">Followers</span>
+          <span className="user-activity-information-number">0</span>
+        </div>
+        <div className="user-activity-information-modules">
+          <span className="user-activity-information-category">Following</span>
+          <span className="user-activity-information-number">0</span>
+        </div>
+      </div>
+    );
+  };
+
   function activateDoge() {
     updateDoge();
     setDoge((prev) => !prev);
@@ -67,19 +95,19 @@ export default function Sidebar(props) {
           <span>Memesfr</span>
         </div>
         {props.avatar !== undefined ? (
-          <div className="sidebar-user-section">
-            <div className="sidebar-avatar-container">
-              <img className="sidebar-avatar" src={props.avatar} />
+          <>
+            <div className="sidebar-user-section">
+              <div className="sidebar-avatar-container">
+                <img className="sidebar-avatar" src={props.avatar} />
+              </div>
+
+              <span className="sidebar-username">
+                @{props.username && props.username}
+              </span>
             </div>
 
-            <span className="sidebar-username">
-              @{props.username && props.username}
-            </span>
-            <div onClick={props.createPost} className="sidebar-create-post">
-              <span>Upload</span>
-              <Plus />
-            </div>
-          </div>
+            <UserActivityInformation />
+          </>
         ) : null}
         <div className="sidebar-navigation">
           <CSSTransition
