@@ -42,9 +42,9 @@ function Copyright() {
 }
 
 const theme = createMuiTheme({
-  root: {
-    overrides: {
-      MuiOutlinedInput: {
+  overrides: {
+    MuiOutlinedInput: {
+      root: {
         "& $notchedOutline": {
           borderColor: "white",
           backgroundColor: "#e3e3e34a",

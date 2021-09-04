@@ -31,7 +31,7 @@ function Copyright() {
     <Typography
       variant="body2"
       color="white"
-      style={{ marginTop: "5rem", cursor: "pointer" }}
+      style={{ marginTop: "5rem", cursor: "pointer", color: "white" }}
       align="center"
     >
       {"Copyright © "}
@@ -70,6 +70,9 @@ const useStyles = makeStyles((theme) => ({
       backgroundColor: "#272932",
     },
     "& label.Mui-focused": {
+      color: "white",
+    },
+    "& label.Mui": {
       color: "white",
     },
   },

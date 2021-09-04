@@ -121,6 +121,7 @@ a {
 
 .menu-icon-button:hover {
   filter: brightness(1.2);
+  -webkit-filter: brightness(1.2);
 }
 
 /* Dropdown Menu */
