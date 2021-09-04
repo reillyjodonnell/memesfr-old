@@ -79,6 +79,7 @@
   object-position: 50% 50%;
 }
 .sidebar-username {
+  font-size: 1.2rem;
   font-weight: 500;
   margin: 2rem 0;
 }
@@ -115,7 +116,7 @@
   flex-direction: column;
   position: relative;
   height: auto;
-  margin: 2rem 0 0 0;
+  margin: 1rem 0 0 0;
 }
 .sidebar-navigation-icon-active {
 }
