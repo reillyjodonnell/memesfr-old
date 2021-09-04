@@ -136,6 +136,7 @@ export default function Dashboard(props) {
   const [resetPassword, resetPasswordFunction] = useState(false);
   const [usersLikedPosts, setUsersLikedPosts] = useState([]);
   const [usersHeartedPosts, setUsersHeartedPosts] = useState([]);
+  const [numberOfMemes, setNumberOfMemes] = useState(0);
 
   const [nav, setNav] = useState(0);
 
@@ -153,6 +154,7 @@ export default function Dashboard(props) {
     hasUserLikedPost,
     setCurrentUser,
     notConfirmedEmail,
+    retrieveNumberOfMemesPosted,
   } = useAuth();
 
   const history = useHistory();
@@ -193,7 +195,22 @@ export default function Dashboard(props) {
 
   useEffect(() => {
     let mounted = true;
+    if (mounted) {
+      async function find() {
+        if (currentUser) {
+          var number = await retrieveNumberOfMemesPosted();
+          setNumberOfMemes(number);
+        }
+      }
+      find();
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [currentUser]);
 
+  useEffect(() => {
+    let mounted = true;
     // Confirm the link is a sign-in with email link.
     if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
       // Additional state parameters can also be passed via URL.
@@ -220,6 +237,7 @@ export default function Dashboard(props) {
             // You can check if the user is new or existing:
             // result.additionalUserInfo.isNewUser
             setCurrentUser(result.user);
+
             history.push({
               pathname: "/setup",
               state: {
@@ -494,6 +512,7 @@ export default function Dashboard(props) {
         </>
       ) : (
         <Sidebar
+          numberOfMemes={numberOfMemes}
           homeFilter={filterHome}
           trendingFilter={filterTrending}
           recentFilter={filterRecent}

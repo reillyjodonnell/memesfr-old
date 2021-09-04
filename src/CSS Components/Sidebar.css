@@ -50,7 +50,8 @@
   stroke: #ea3788;
 }
 .sidebar-logo svg {
-  min-width: 44px;
+  width: 52px;
+  height: 52px;
 }
 .sidebar-user-section {
   display: flex;
@@ -78,8 +79,8 @@
   object-position: 50% 50%;
 }
 .sidebar-username {
-  font-weight: 600;
-  margin: 1rem 0;
+  font-weight: 500;
+  margin: 2rem 0;
 }
 
 /*User Activity Information (lives under username on sidebar)*/
@@ -97,7 +98,8 @@
   flex-direction: column-reverse;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
+  padding: 0 1rem 1rem 1rem;
+  font-size: 1rem;
 }
 .user-activity-information-category {
   padding: 1rem 0 0 0;
@@ -107,13 +109,13 @@
 }
 
 .sidebar-navigation {
-  border-top: 1px solid rgba(207, 207, 207, 0.13);
   font-size: 0.5rem;
-  padding: 0 1rem;
+  padding: 0 2rem;
   display: flex;
   flex-direction: column;
   position: relative;
   height: auto;
+  margin: 2rem 0 0 0;
 }
 .sidebar-navigation-icon-active {
 }
@@ -250,10 +252,13 @@
 
 @media only screen and (min-height: 900px) {
   .navigation-group-text {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 500;
   }
   .navigation-group {
-    margin: 1.25rem 0;
+    margin: 1.5rem 0;
+  }
+  .navigation-group:last-child {
+    margin-bottom: 2rem;
   }
 }

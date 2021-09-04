@@ -290,6 +290,15 @@ export default function AuthProvider({ children }) {
   //     });
   // }
 
+  async function retrieveNumberOfMemesPosted() {
+    var currentUserID = currentUser.uid;
+    var referenceToPost = db.collection("users").doc(currentUserID);
+    var doc = await referenceToPost.get();
+    var likedPosts = doc.data().createdPosts.length;
+
+    return likedPosts;
+  }
+
   async function retrievePopularPosts() {
     const popRef = db.collection("popular").doc("top_fifty");
     const collections = await popRef.get();
@@ -753,6 +762,7 @@ export default function AuthProvider({ children }) {
     completeSignInWithEmail,
     setCurrentUser,
     notConfirmedEmail,
+    retrieveNumberOfMemesPosted,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { ReactComponent as Settings } from "../Assets/SVGs/settings.svg";
 import { ReactComponent as Logout } from "../Assets/SVGs/logout.svg";
 import { ReactComponent as Castle } from "../Assets/SVGs/castle.svg";
-import { ReactComponent as Home } from "../Assets/Icons/Home.svg";
+import { ReactComponent as Home } from "../Assets/Icons/Home2.svg";
 import { ReactComponent as Trending } from "../Assets/SVGs/trending.svg";
 import { ReactComponent as Popular } from "../Assets/Icons/Popular.svg";
 import { ReactComponent as Recent } from "../Assets/Icons/Recent.svg";
@@ -14,6 +14,10 @@ import { ReactComponent as Doge } from "../Assets/doge.svg";
 import { ReactComponent as Help } from "../Assets/SVGs/help.svg";
 import { ReactComponent as Ball } from "../Assets/SVGs/pokeBall.svg";
 import { ReactComponent as Discord } from "../Assets/SVGs/discordLogo.svg";
+import { ReactComponent as TrendingUp } from "../Assets/Icons/TrendingUp.svg";
+import { ReactComponent as Flame } from "../Assets/Icons/Flame2.svg";
+import { ReactComponent as Dice } from "../Assets/Icons/Dice2.svg";
+
 import { ReactComponent as ProfilePic } from "../Assets/SVGs/photo.svg";
 import { ReactComponent as Password } from "../Assets/SVGs/lock.svg";
 import { useAuth } from "../contexts/AuthContext";
@@ -43,11 +47,14 @@ export default function Sidebar(props) {
   };
 
   const UserActivityInformation = () => {
+    console.log(props);
     return (
       <div className="user-activity-information-container">
         <div className="user-activity-information-modules">
           <span className="user-activity-information-category">Memes</span>
-          <span className="user-activity-information-number">0</span>
+          <span className="user-activity-information-number">
+            {props.numberOfMemes}
+          </span>
         </div>
         <div className="user-activity-information-modules">
           <span className="user-activity-information-category">Followers</span>
@@ -118,7 +125,7 @@ export default function Sidebar(props) {
             onEnter={calcHeight}
             dropdownRef={dropdownRef}
           >
-            <div>
+            <div className="sidebar-nav-categories">
               <div
                 onClick={props.homeFilter}
                 className={
@@ -129,7 +136,15 @@ export default function Sidebar(props) {
               >
                 <div className="navigation-group-items">
                   <Home
-                    style={props.active === 0 ? { fill: "url(#grad)" } : null}
+                    style={
+                      props.active === 0
+                        ? {
+                            stroke: "url(#grad)",
+                            width: "40px",
+                            height: "40px",
+                          }
+                        : { width: "40px", height: "40px" }
+                    }
                   />
                   <span className="navigation-group-text">Home</span>
                 </div>
@@ -142,8 +157,12 @@ export default function Sidebar(props) {
                     : "navigation-group"
                 }
               >
-                <Trending
-                  style={props.active === 1 ? { fill: "url(#grad)" } : null}
+                <TrendingUp
+                  style={
+                    props.active === 1
+                      ? { stroke: "url(#grad)", width: "40px", height: "40px" }
+                      : { width: "40px", height: "40px" }
+                  }
                 />
                 <span className="navigation-group-text">Trending</span>
               </div>
@@ -155,8 +174,12 @@ export default function Sidebar(props) {
                     : "navigation-group"
                 }
               >
-                <Popular
-                  style={props.active === 2 ? { fill: "url(#grad)" } : null}
+                <Flame
+                  style={
+                    props.active === 2
+                      ? { stroke: "url(#grad)", width: "40px", height: "40px" }
+                      : { width: "40px", height: "40px" }
+                  }
                 />
                 <span className="navigation-group-text">Popular</span>
               </div>
@@ -169,7 +192,11 @@ export default function Sidebar(props) {
                 }
               >
                 <Recent
-                  style={props.active === 3 ? { stroke: "url(#grad)" } : null}
+                  style={
+                    props.active === 3
+                      ? { stroke: "url(#grad)", width: "40px", height: "40px" }
+                      : { width: "40px", height: "40px" }
+                  }
                 />
                 <span className="navigation-group-text">Recent</span>
               </div>
@@ -181,8 +208,12 @@ export default function Sidebar(props) {
                     : "navigation-group"
                 }
               >
-                <Random
-                  style={props.active === 4 ? { fill: "url(#grad)" } : null}
+                <Dice
+                  style={
+                    props.active === 4
+                      ? { stroke: "url(#grad)", width: "40px", height: "40px" }
+                      : { width: "40px", height: "40px" }
+                  }
                 />
                 <span className="navigation-group-text">Random</span>
               </div>
@@ -190,13 +221,19 @@ export default function Sidebar(props) {
                 onClick={() => setActiveMenu("settings")}
                 className="navigation-group"
               >
-                <Settings style={active ? { stroke: "url(#grad)" } : null} />
-                <span className="navigation-group-text">Settings</span>
+                <Settings
+                  style={
+                    active
+                      ? { fill: "url(#grad)", width: "40px", height: "40px" }
+                      : { width: "40px", height: "40px" }
+                  }
+                />
+                <span className="navigation-group-text ">Settings</span>
               </div>
               <div className="sidebar-login ">
                 {props.avatar !== undefined ? (
                   <div className="logout-container" onClick={signOut}>
-                    <Logout />
+                    <Logout style={{ width: "40px", height: "40px" }} />
                     <span className="navigation-group-text">Logout</span>
                   </div>
                 ) : (
