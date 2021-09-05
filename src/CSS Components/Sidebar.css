@@ -16,7 +16,6 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 1rem;
   width: 100%;
 }
 .sidebar-create-post {
@@ -148,6 +147,7 @@
 }
 .navigation-group-text {
   margin-left: 2rem;
+  letter-spacing: 0.5px;
 }
 .navigation-group-items {
   width: auto;
@@ -157,7 +157,7 @@
 }
 
 .navigation-group {
-  margin: 0.75rem 0;
+  margin: 1rem 0;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;

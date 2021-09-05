@@ -1,11 +1,13 @@
 body {
   margin: 0;
-  font-family: "Roboto", sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
   z-index: 1000;
+}
+span {
+  font-family: "Roboto";
 }
 
 ::-webkit-scrollbar {
@@ -20,8 +22,11 @@ body {
   background-clip: content-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
-}
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@font-face {
+  font-family: "Montserrat-Regular";
+  src: local("Montserrat-Regular"),
+    url(./Assets/Fonts/Montserrat-Regular.ttf) format("woff");
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
