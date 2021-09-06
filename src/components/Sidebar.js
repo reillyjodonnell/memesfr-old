@@ -238,7 +238,7 @@ export default function Sidebar(props) {
                   </div>
                 ) : (
                   <div onClick={goToLogin} className={"navigation-group"}>
-                    <Logout />
+                    <Logout style={{ width: "40px", height: "40px" }} />
                     <span className="navigation-group-text">
                       Sign in/ Sign up
                     </span>

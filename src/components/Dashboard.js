@@ -527,58 +527,52 @@ export default function Dashboard(props) {
       )}
 
       <main className={classes.content}>
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={5}></Grid>
-          <Box spacing={5} pt={4}>
-            <div ref={myRef}></div>
-
-            {notConfirmedEmail ? <ConfirmEmailPrompt /> : null}
-            <div className="main-content">
-              {loadingFilter && <ShowSkeletons />}
-              <RecentlyPosted />
-              {activeScreen
-                ? activeScreen.length !== undefined &&
-                  activeScreen.map((item) => {
-                    var liked = false;
-                    var hearted = false;
-                    if (usersLikedPosts.includes(item.id)) {
-                      liked = true;
-                    }
-                    if (usersHeartedPosts.includes(item.id)) {
-                      hearted = true;
-                    }
-                    return (
-                      <Card
-                        hearted={hearted}
-                        liked={liked}
-                        key={item.id}
-                        likedPosts={usersLikedPosts}
-                        heartedPosts={usersHeartedPosts}
-                        item={item}
-                      ></Card>
-                    );
-                  })
-                : null}
-              {createPost ? (
-                <CreatePost
-                  createPostFunction={createPostFunction}
-                  createPost={createPost}
-                />
-              ) : null}
-              {resetPassword ? (
-                <PasswordModal
-                  resetPassword={resetPassword}
-                  closePrompt={resetUserPassword}
-                />
-              ) : null}
-              {!loadingFilter && nav !== 4 && (
-                <div className="end-of-memes">
-                  <span>End of the memes 😢</span>
-                </div>
-              )}
+        <div ref={myRef}></div>
+        {notConfirmedEmail ? <ConfirmEmailPrompt /> : null}
+        <div className="main-content">
+          {loadingFilter && <ShowSkeletons />}
+          <RecentlyPosted />
+          {activeScreen
+            ? activeScreen.length !== undefined &&
+              activeScreen.map((item) => {
+                var liked = false;
+                var hearted = false;
+                if (usersLikedPosts.includes(item.id)) {
+                  liked = true;
+                }
+                if (usersHeartedPosts.includes(item.id)) {
+                  hearted = true;
+                }
+                return (
+                  <Card
+                    hearted={hearted}
+                    liked={liked}
+                    key={item.id}
+                    likedPosts={usersLikedPosts}
+                    heartedPosts={usersHeartedPosts}
+                    item={item}
+                  ></Card>
+                );
+              })
+            : null}
+          {createPost ? (
+            <CreatePost
+              createPostFunction={createPostFunction}
+              createPost={createPost}
+            />
+          ) : null}
+          {resetPassword ? (
+            <PasswordModal
+              resetPassword={resetPassword}
+              closePrompt={resetUserPassword}
+            />
+          ) : null}
+          {!loadingFilter && nav !== 4 && (
+            <div className="end-of-memes">
+              <span>End of the memes 😢</span>
             </div>
-          </Box>
-        </Container>
+          )}
+        </div>
       </main>
     </div>
   );
