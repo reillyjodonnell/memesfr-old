@@ -1,12 +1,12 @@
 <svg
           xmlns="http://www.w3.org/2000/svg"
           className="options report"
-          width="44"
-          height="44"
+          width="35"
+          height="35"
           viewBox="0 0 24 24"
           stroke-width="1.5"
-          stroke="#0000009e"
-          fill="#0000009e"
+          stroke="white"
+          fill="white"
           stroke-linecap="round"
           stroke-linejoin="round"
         >

@@ -2,11 +2,11 @@
 
   xmlns="http://www.w3.org/2000/svg"
               
-              width="44"
-              height="44"
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
               stroke-width="1.5"
-              stroke="black"
+              stroke="rgba(255, 255, 255, 0.822)"
               fill="none"
               stroke-linecap="round"
               stroke-linejoin="round"

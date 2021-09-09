@@ -6,7 +6,10 @@ import trash from "../Assets/SVGs/trash.svg";
 import report from "../Assets/SVGs/report.svg";
 import { ReactComponent as HeartIcon } from "../Assets/SVGs/heart.svg";
 import { ReactComponent as LikeIcon } from "../Assets/SVGs/thumbUp.svg";
+import Options from "../Assets/SVGs/verticalDots.svg";
 import buffDoge from "../Assets/buff-doge.jpg";
+import { ReactComponent as ShareIcon } from "../Assets/Icons/Share.svg";
+import { ReactComponent as MessageIcon } from "../Assets/Icons/MessageBubble.svg";
 
 import { useMobile } from "../contexts/MobileContext";
 
@@ -211,14 +214,71 @@ export default function Card(props) {
     );
   };
 
-  function memeAuthor() {
-    var memeAuthorUsername = props.item.userName;
-    if (props.item.userName) {
-      return memeAuthorUsername;
-    } else return "anonymous";
-  }
+  const CardTemplate = () => {
+    return (
+      <div
+        className="card-area"
+        style={isMobile ? { width: "100%" } : null}
+        onMouseLeave={captureUserInput}
+        onScrollCapture={isMobile ? captureUserInput : null}
+      >
+        <div className="card">
+          <div className="upper">
+            <div className="upper-top">
+              <DisplayAvatar />
+              <div className="upper-top-user-section">
+                <span className="user-name">{memeAuthor()}</span>
 
-  if (props) {
+                <span className="time-posted">5 hours ago</span>
+              </div>
+              <div className="upper-top-options">
+                <div className="follow-icon-container">
+                  <span className="follow-icon">Follow</span>
+                </div>
+              </div>
+            </div>
+            <div className="upper-lower">
+              <span className="meme-title">{props.item.title}</span>
+            </div>
+          </div>
+          <div className="middle">
+            <div className="image-container">
+              {props.item.fileType === "video" ? (
+                <VideoPlayback />
+              ) : (
+                <img
+                  alt=""
+                  onDoubleClick={currentUser ? toggleHeart : activatePrompt}
+                  className="meme-image"
+                  src={props.item.image}
+                ></img>
+              )}
+            </div>
+          </div>
+          <div className="lower">
+            <div className="interactive-container">
+              <HeartIcon
+                className={
+                  heart
+                    ? "active-heart heart-icon"
+                    : "heart-icon inactive-heart"
+                }
+                onClick={currentUser ? toggleHeart : activatePrompt}
+              />
+
+              <ShareIcon />
+              <MessageIcon />
+            </div>
+
+            <div className="options-container">
+              <img src={Options} />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  const OriginalCardDesign = (props) => {
     return (
       <div
         className="card-area"
@@ -229,7 +289,19 @@ export default function Card(props) {
         <div className="card">
           <div className="upper">
             <div className="upper-top-info">
-              <span className="meme-title">{props.item.title}</span>
+              <div className="upper-user-info">
+                <DisplayAvatar />
+                <div className="meme-identification">
+                  <span className="clickable">{memeAuthor()}</span>
+                  <span className="hashtag-identifier"></span>
+                </div>
+                <div className="time-container">
+                  <span>5 hours ago</span>
+                </div>
+              </div>
+              <div className="upper-meme-title">
+                <span className="meme-title">{props.item.title}</span>
+              </div>
             </div>
 
             <div className="image-container">
@@ -248,11 +320,6 @@ export default function Card(props) {
           </div>
 
           <div className="lower">
-            <DisplayAvatar />
-            <div className="meme-identification">
-              <span className="clickable">@{memeAuthor()}</span>
-              <span className="hashtag-identifier"></span>
-            </div>
             <div className="heart-container">
               <HeartIcon
                 className={
@@ -290,5 +357,16 @@ export default function Card(props) {
         </div>
       </div>
     );
+  };
+
+  function memeAuthor() {
+    var memeAuthorUsername = props.item.userName;
+    if (props.item.userName) {
+      return memeAuthorUsername;
+    } else return "anonymous";
+  }
+
+  if (props) {
+    return <CardTemplate />;
   }
 }
