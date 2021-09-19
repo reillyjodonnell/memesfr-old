@@ -141,10 +141,11 @@
     font-size: 0.75rem;
   }
 }
-
 /*
 THIS CREATES A 3X3 GRID ON THE MAINCONTENT
 Querying computers with width of at least 1300px)
+
+
 @media only screen and (min-width: 1300px) {
   .main-content {
     display: grid;

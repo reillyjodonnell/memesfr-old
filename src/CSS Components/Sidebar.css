@@ -263,3 +263,8 @@
     margin-bottom: 2rem;
   }
 }
+@media only screen and (min-height: 900px) and (max-width: 1600px) {
+  .user-activity-information-container > div {
+    padding: 0 0.5rem 0.5rem 0.5rem;
+  }
+}
