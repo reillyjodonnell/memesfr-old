@@ -39,7 +39,7 @@
 .sidebar-logo {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin: 1rem;
   font-weight: 600;
   font-size: 2rem;
