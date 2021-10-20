@@ -1,5 +1,5 @@
-import React from "react";
-import x from "../Assets/SVGs/x.svg";
+import React from 'react';
+import x from '../Assets/SVGs/x.svg';
 
 const ImageThumb = ({
   file,
@@ -8,17 +8,17 @@ const ImageThumb = ({
   removeFile,
   setFile,
 }) => {
-  setFileError("");
+  setFileError('');
   const filesFormats = [
-    "image/jpeg",
-    "image/jpg",
-    "image/gif",
-    "image/png",
-    "video/mp4",
+    'image/jpeg',
+    'image/jpg',
+    'image/gif',
+    'image/png',
+    'video/mp4',
   ];
   const validFormat = filesFormats.includes(file.type);
-  if (file.type == "video/mp4") {
-    setFileType("video");
+  if (file.type == 'video/mp4') {
+    setFileType('video');
     return (
       <div className="meme-image-preview">
         <video
@@ -28,7 +28,7 @@ const ImageThumb = ({
           alt={file.name}
           autoPlay="true"
           controls="true"
-          style={{ objectFit: "contain" }}
+          style={{ objectFit: 'contain' }}
         ></video>
         <img onClick={removeFile} className="cancel-meme" src={x} />
       </div>
@@ -36,7 +36,7 @@ const ImageThumb = ({
   }
 
   if (validFormat) {
-    setFileType("image");
+    setFileType('image');
 
     return (
       <div className="meme-image-preview">
@@ -49,9 +49,9 @@ const ImageThumb = ({
       </div>
     );
   } else {
-    setFile("");
-    var fileType = JSON.stringify(file.type);
-    var fileEnding = fileType.slice(7, fileType.length - 1);
+    setFile('');
+    const fileType = JSON.stringify(file.type);
+    const fileEnding = fileType.slice(7, fileType.length - 1);
     setFileError(`😢 unsupported file type .${fileEnding}`);
     return null;
   }

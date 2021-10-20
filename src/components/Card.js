@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import "../CSS Components/Card.css";
-import { useAuth } from "../contexts/AuthContext";
-import { useHistory } from "react-router-dom";
-import trash from "../Assets/SVGs/trash.svg";
-import report from "../Assets/SVGs/report.svg";
-import { ReactComponent as HeartIcon } from "../Assets/SVGs/heart.svg";
-import { ReactComponent as LikeIcon } from "../Assets/SVGs/thumbUp.svg";
-import buffDoge from "../Assets/buff-doge.jpg";
+import React, { useState, useEffect } from 'react';
+import '../CSS Components/Card.css';
+import { useAuth } from '../contexts/AuthContext';
+import { useHistory } from 'react-router-dom';
+import trash from '../Assets/SVGs/trash.svg';
+import report from '../Assets/SVGs/report.svg';
+import { ReactComponent as HeartIcon } from '../Assets/SVGs/heart.svg';
+import { ReactComponent as LikeIcon } from '../Assets/SVGs/thumbUp.svg';
+import buffDoge from '../Assets/buff-doge.jpg';
 
-import { useMobile } from "../contexts/MobileContext";
+import { useMobile } from '../contexts/MobileContext';
 
 export default function Card(props) {
   const [heart, setHeart] = useState(false);
@@ -111,7 +111,7 @@ export default function Card(props) {
   };
 
   function activatePrompt() {
-    history.push("/signup");
+    history.push('/signup');
   }
   useEffect(() => {
     let mounted = true;
@@ -169,7 +169,7 @@ export default function Card(props) {
     );
   }
   const DisplayAvatar = () => {
-    var avatar = props.item.authorPic;
+    const avatar = props.item.authorPic;
 
     return (
       <div className="avatar-picture">
@@ -177,15 +177,15 @@ export default function Card(props) {
           <img
             alt="user's avatar"
             src={avatar}
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: '100%', width: '100%' }}
           />
         ) : (
           <img
             alt="buff doge meme"
             src={buffDoge}
             style={{
-              height: "100%",
-              width: "100%",
+              height: '100%',
+              width: '100%',
             }}
           />
         )}
@@ -198,7 +198,7 @@ export default function Card(props) {
       <>
         <video
           type="video/mp4"
-          style={{ objectFit: "cover" }}
+          style={{ objectFit: 'cover' }}
           controls
           loop
           onDoubleClick={currentUser ? toggleHeart : activatePrompt}
@@ -212,17 +212,17 @@ export default function Card(props) {
   };
 
   function memeAuthor() {
-    var memeAuthorUsername = props.item.userName;
+    const memeAuthorUsername = props.item.userName;
     if (props.item.userName) {
       return memeAuthorUsername;
-    } else return "anonymous";
+    } else return 'anonymous';
   }
 
   if (props) {
     return (
       <div
         className="card-area"
-        style={isMobile ? { width: "100%" } : null}
+        style={isMobile ? { width: '100%' } : null}
         onMouseLeave={captureUserInput}
         onScrollCapture={isMobile ? captureUserInput : null}
       >
@@ -233,7 +233,7 @@ export default function Card(props) {
             </div>
 
             <div className="image-container">
-              {props.item.fileType === "video" ? (
+              {props.item.fileType === 'video' ? (
                 <VideoPlayback />
               ) : (
                 <img
@@ -257,14 +257,14 @@ export default function Card(props) {
               <HeartIcon
                 className={
                   heart
-                    ? "active-heart heart-icon"
-                    : "heart-icon inactive-heart"
+                    ? 'active-heart heart-icon'
+                    : 'heart-icon inactive-heart'
                 }
                 onClick={currentUser ? toggleHeart : activatePrompt}
               />
               <span
                 className={
-                  heart ? "active-heart number-of-likes" : "number-of-likes"
+                  heart ? 'active-heart number-of-likes' : 'number-of-likes'
                 }
               >
                 1
@@ -273,13 +273,13 @@ export default function Card(props) {
 
             <div className="like-container">
               <LikeIcon
-                style={thumbUp ? { fill: "url(#thumb-grad)" } : null}
-                className={thumbUp ? "active-thumbup" : "inactive-thumbup"}
+                style={thumbUp ? { fill: 'url(#thumb-grad)' } : null}
+                className={thumbUp ? 'active-thumbup' : 'inactive-thumbup'}
                 onClick={currentUser ? toggleThumbUp : activatePrompt}
               />
               <span
                 className={
-                  thumbUp ? "active-thumbUp number-of-likes" : "number-of-likes"
+                  thumbUp ? 'active-thumbUp number-of-likes' : 'number-of-likes'
                 }
               >
                 {likes}
