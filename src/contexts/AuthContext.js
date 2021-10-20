@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
-import { auth, db, storage } from "../services/firebase";
-import { useHistory } from "react-router-dom";
-import firebase from "firebase/app";
-import CreateProfile from "../components/CreateProfile";
+import React, { useState, useEffect, useContext } from 'react';
+import { auth, db, storage } from '../services/firebase';
+import { useHistory } from 'react-router-dom';
+import firebase from 'firebase/app';
+import CreateProfile from '../components/CreateProfile';
 
 const AuthContext = React.createContext();
 
@@ -18,12 +18,12 @@ export default function AuthProvider({ children }) {
   const [notConfirmedEmail, setNotConfirmedEmail] = useState(false);
   const history = useHistory();
 
-  var actionCodeSettings = {
-    url: "https://memesfr.com/",
+  const actionCodeSettings = {
+    url: 'https://memesfr.com/',
     handleCodeInApp: true,
   };
 
-  var user = auth.currentUser;
+  const user = auth.currentUser;
 
   function signup(email, password) {
     return auth
@@ -47,7 +47,7 @@ export default function AuthProvider({ children }) {
       // the sign-in operation.
       // Get the email if available. This should be available if the user completes
       // the flow on the same device where they started it.
-      var email = window.localStorage.getItem("emailForSignIn");
+      const email = window.localStorage.getItem('emailForSignIn');
       if (!email) {
       }
       // The client SDK will parse the code from the link for you.
@@ -56,11 +56,11 @@ export default function AuthProvider({ children }) {
         .signInWithEmailLink(email, window.location.href)
         .then((result) => {
           // Clear email from storage.
-          window.localStorage.removeItem("emailForSignIn");
+          window.localStorage.removeItem('emailForSignIn');
           if (result.user) {
             setCurrentUser(result.user);
             history.push({
-              pathname: "/setup",
+              pathname: '/setup',
               state: {
                 verifiedUser: true,
               },
@@ -83,13 +83,13 @@ export default function AuthProvider({ children }) {
     return auth.signInWithEmailAndPassword(email, password);
   }
   function resetPassword() {
-    history.push("/reset");
+    history.push('/reset');
     return auth.sendPasswordResetEmail(user.email);
   }
   function signOut() {
     auth.signOut().then(
       function () {
-        history.push("/");
+        history.push('/');
         history.go(0);
       },
       function (error) {}
@@ -99,26 +99,26 @@ export default function AuthProvider({ children }) {
   }
 
   function uploadMeme(image, title, type) {
-    var author = currentUser.uid;
-    var ud = currentUser.displayName;
-    var userPic = currentUser.photoURL;
+    const author = currentUser.uid;
+    const ud = currentUser.displayName;
+    const userPic = currentUser.photoURL;
     const upload = storage.ref(`memes/${title}`).put(image);
-    var num_shards = 5;
-    var batch = db.batch();
+    const num_shards = 5;
+    const batch = db.batch();
     upload.on(
-      "state_changed",
+      'state_changed',
       (snapshot) => {},
       (error) => {},
       () => {
         //This is 1 write
         storage
-          .ref("memes")
+          .ref('memes')
           .child(title)
           .getDownloadURL()
           .then((url, id) => {
             //1 read here
-            var memeRef = db.collection("memes");
-            var uniqueIdentifier = memeRef.doc().id;
+            const memeRef = db.collection('memes');
+            const uniqueIdentifier = memeRef.doc().id;
             memeRef
               .doc(uniqueIdentifier)
               .set(
@@ -139,17 +139,18 @@ export default function AuthProvider({ children }) {
               )
 
               .then(() => {
-                var userRef = db.collection("users").doc(author);
+                const userRef = db.collection('users').doc(author);
                 batch.set(
                   userRef,
                   {
-                    createdPosts: firebase.firestore.FieldValue.arrayUnion(
-                      uniqueIdentifier
-                    ),
+                    createdPosts:
+                      firebase.firestore.FieldValue.arrayUnion(
+                        uniqueIdentifier
+                      ),
                   },
                   { merge: true }
                 );
-                var sample = {
+                const sample = {
                   id: uniqueIdentifier,
                   userName: ud,
                   author: author,
@@ -163,27 +164,27 @@ export default function AuthProvider({ children }) {
                   fileType: type,
                 };
                 setRecentlyUploaded((prevState) => [sample, ...prevState]);
-                var counterRef = db
-                  .collection("counters")
+                const counterRef = db
+                  .collection('counters')
                   .doc(uniqueIdentifier);
                 // Initialize the counter document
                 batch.set(counterRef, { num_shards: num_shards });
                 // Initialize each shard with count=0
                 for (let i = 0; i < num_shards; i++) {
                   const shardRef = counterRef
-                    .collection("shards")
+                    .collection('shards')
                     .doc(i.toString());
                   batch.set(shardRef, { count: 0 });
                 }
-                var counterRef = db
-                  .collection("heartCounters")
+                const counterRefHeart = db
+                  .collection('heartCounters')
                   .doc(uniqueIdentifier);
                 // Initialize the counter document
-                batch.set(counterRef, { num_shards: num_shards });
+                batch.set(counterRefHeart, { num_shards: num_shards });
                 // Initialize each shard with count=0
                 for (let i = 0; i < num_shards; i++) {
-                  const shardRef = counterRef
-                    .collection("shards")
+                  const shardRef = counterRefHeart
+                    .collection('shards')
                     .doc(i.toString());
                   batch.set(shardRef, { count: 0 });
                 }
@@ -201,12 +202,12 @@ export default function AuthProvider({ children }) {
   }
 
   async function hasUserLikedPost() {
-    var currentUserID = currentUser.uid;
-    var referenceToPost = db.collection("users").doc(currentUserID);
-    var doc = await referenceToPost.get();
-    var likedPosts = doc.data().likedPosts;
-    var heartedPosts = doc.data().hearted;
-    var distinct = [{ likedPosts }, { heartedPosts }];
+    const currentUserID = currentUser.uid;
+    const referenceToPost = db.collection('users').doc(currentUserID);
+    const doc = await referenceToPost.get();
+    const likedPosts = doc.data().likedPosts;
+    const heartedPosts = doc.data().hearted;
+    const distinct = [{ likedPosts }, { heartedPosts }];
     return distinct;
   }
 
@@ -214,14 +215,14 @@ export default function AuthProvider({ children }) {
   //Map over all of the results and set each one to state
   //At the end of it return the entirety of state
   async function retrieveRecentPosts() {
-    const recentRef = db.collection("recent").doc("recent_fifty");
+    const recentRef = db.collection('recent').doc('recent_fifty');
     const collections = await recentRef.get();
-    var items = collections.data();
-    var updatedObjects = items.posts.map((item) => {
+    const items = collections.data();
+    const updatedObjects = items.posts.map((item) => {
       //For each item look through the shards and tally them up
-      var shardRef = db.collection("counters").doc(item.id);
-      var totalLikesOnPost = shardRef
-        .collection("shards")
+      const shardRef = db.collection('counters').doc(item.id);
+      const totalLikesOnPost = shardRef
+        .collection('shards')
         .get()
         .then((snapshot) => {
           let total_count = 0;
@@ -230,11 +231,11 @@ export default function AuthProvider({ children }) {
           });
           return total_count;
         });
-      var shardHeartRef = db.collection("heartCounters").doc(item.id);
+      const shardHeartRef = db.collection('heartCounters').doc(item.id);
 
       //Here we look at the amount of hearts a post has
-      var totalHeartsOnPost = shardHeartRef
-        .collection("shards")
+      const totalHeartsOnPost = shardHeartRef
+        .collection('shards')
         .get()
         .then((snapshot) => {
           let total_count = 0;
@@ -244,17 +245,17 @@ export default function AuthProvider({ children }) {
           return total_count;
         });
       totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
-        var amountOfLikes = resolvedPromiseForNumberOfLikes;
+        const amountOfLikes = resolvedPromiseForNumberOfLikes;
         return amountOfLikes;
       });
       totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
-        var amountOfHearts = resolvedPromiseForNumberOfHearts;
+        const amountOfHearts = resolvedPromiseForNumberOfHearts;
         return amountOfHearts;
       });
       async function documentData() {
-        var usersLikes = await totalLikesOnPost;
-        var usersHearts = await totalHeartsOnPost;
-        var docData = {
+        const usersLikes = await totalLikesOnPost;
+        const usersHearts = await totalHeartsOnPost;
+        const docData = {
           userName: item.userName,
           title: item.title,
           author: item.author,
@@ -291,16 +292,16 @@ export default function AuthProvider({ children }) {
   // }
 
   async function retrievePopularPosts() {
-    const popRef = db.collection("popular").doc("top_fifty");
+    const popRef = db.collection('popular').doc('top_fifty');
     const collections = await popRef.get();
-    var items = collections.data();
-    var results = items.posts;
+    const items = collections.data();
+    const results = items.posts;
 
-    var updatedObjects = items.posts.map((item) => {
+    const updatedObjects = items.posts.map((item) => {
       //For each item look through the shards and tally them up
-      var shardRef = db.collection("counters").doc(item.id);
-      var totalLikesOnPost = shardRef
-        .collection("shards")
+      const shardRef = db.collection('counters').doc(item.id);
+      const totalLikesOnPost = shardRef
+        .collection('shards')
         .get()
         .then((snapshot) => {
           let total_count = 0;
@@ -309,11 +310,11 @@ export default function AuthProvider({ children }) {
           });
           return total_count;
         });
-      var shardHeartRef = db.collection("heartCounters").doc(item.id);
+      const shardHeartRef = db.collection('heartCounters').doc(item.id);
 
       //Here we look at the amount of hearts a post has
-      var totalHeartsOnPost = shardHeartRef
-        .collection("shards")
+      const totalHeartsOnPost = shardHeartRef
+        .collection('shards')
         .get()
         .then((snapshot) => {
           let total_count = 0;
@@ -323,17 +324,17 @@ export default function AuthProvider({ children }) {
           return total_count;
         });
       totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
-        var amountOfLikes = resolvedPromiseForNumberOfLikes;
+        const amountOfLikes = resolvedPromiseForNumberOfLikes;
         return amountOfLikes;
       });
       totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
-        var amountOfHearts = resolvedPromiseForNumberOfHearts;
+        const amountOfHearts = resolvedPromiseForNumberOfHearts;
         return amountOfHearts;
       });
       async function documentData() {
-        var usersLikes = await totalLikesOnPost;
-        var usersHearts = await totalHeartsOnPost;
-        var docData = {
+        const usersLikes = await totalLikesOnPost;
+        const usersHearts = await totalHeartsOnPost;
+        const docData = {
           userName: item.userName,
           title: item.title,
           author: item.author,
@@ -354,11 +355,11 @@ export default function AuthProvider({ children }) {
   }
 
   async function checkUsernameAvailability(id) {
-    var username = id.toLowerCase();
+    const username = id.toLowerCase();
     //Prevent throwing error
     if (user && id.length >= 5) {
-      var search = await db.collection("usernames").doc(username).get();
-      var exists = search.exists;
+      const search = await db.collection('usernames').doc(username).get();
+      const exists = search.exists;
       if (exists) {
         return false;
       } else return true;
@@ -366,8 +367,8 @@ export default function AuthProvider({ children }) {
   }
   //1 read
   function addUsernameToDB(id) {
-    var value = user.uid;
-    var items = [
+    const value = user.uid;
+    const items = [
       {
         createdPosts: [],
       },
@@ -379,8 +380,8 @@ export default function AuthProvider({ children }) {
       },
     ];
 
-    db.collection("usernames").doc(id).set({ uid: value });
-    db.collection("users").doc(value).set({ items });
+    db.collection('usernames').doc(id).set({ uid: value });
+    db.collection('users').doc(value).set({ items });
   }
 
   function updateProfile(name, file, defaultAvatar) {
@@ -388,13 +389,13 @@ export default function AuthProvider({ children }) {
       addUsernameToDB(name);
       setUserName(name);
       setProfilePicture(file, true);
-      history.push("");
+      history.push('');
     }
     if (!defaultAvatar) {
       addUsernameToDB(name);
       setUserName(name);
       setProfilePicture(file, false);
-      history.push("");
+      history.push('');
     }
   }
 
@@ -410,8 +411,8 @@ export default function AuthProvider({ children }) {
   }
 
   function setProfilePicture(file, defaultAvatar) {
-    var imageFile;
-    var id = user.uid;
+    let imageFile;
+    const id = user.uid;
     if (defaultAvatar) {
       imageFile = file;
     }
@@ -421,12 +422,12 @@ export default function AuthProvider({ children }) {
 
     const upload = storage.ref(`users/${id}`).put(file);
     upload.on(
-      "state_changed",
+      'state_changed',
       (snapshot) => {},
       (error) => {},
       () => {
         storage
-          .ref("users")
+          .ref('users')
           .child(id)
           .getDownloadURL()
           .then((url) => {
@@ -449,20 +450,20 @@ export default function AuthProvider({ children }) {
   //How do we count the total number of likes on the post?
 
   async function retrieveRandomMeme() {
-    var memes = db.collection("memes");
-    var key = memes.doc().id;
-    var memeObject = {};
+    const memes = db.collection('memes');
+    const key = memes.doc().id;
+    let memeObject = {};
     await memes
-      .where(firebase.firestore.FieldPath.documentId(), ">=", key)
+      .where(firebase.firestore.FieldPath.documentId(), '>=', key)
       .limit(1)
       .get()
       .then((snapshot) => {
         if (snapshot.size > 0) {
           snapshot.forEach((doc) => {
             //For each item look through the shards and tally them up
-            var shardRef = db.collection("counters").doc(doc.data().id);
-            var totalLikesOnPost = shardRef
-              .collection("shards")
+            const shardRef = db.collection('counters').doc(doc.data().id);
+            const totalLikesOnPost = shardRef
+              .collection('shards')
               .get()
               .then((snapshot) => {
                 let total_count = 0;
@@ -471,11 +472,11 @@ export default function AuthProvider({ children }) {
                 });
                 return total_count;
               });
-            var shardHeartRef = db
-              .collection("heartCounters")
+            const shardHeartRef = db
+              .collection('heartCounters')
               .doc(doc.data().id);
-            var totalHeartsOnPost = shardHeartRef
-              .collection("shards")
+            const totalHeartsOnPost = shardHeartRef
+              .collection('shards')
               .get()
               .then((snapshot) => {
                 let total_count = 0;
@@ -485,18 +486,18 @@ export default function AuthProvider({ children }) {
                 return total_count;
               });
             totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
-              var amountOfLikes = resolvedPromiseForNumberOfLikes;
+              const amountOfLikes = resolvedPromiseForNumberOfLikes;
               return amountOfLikes;
             });
             totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
-              var amountOfHearts = resolvedPromiseForNumberOfHearts;
+              const amountOfHearts = resolvedPromiseForNumberOfHearts;
               return amountOfHearts;
             });
 
             async function documentData() {
-              var usersLikes = await totalLikesOnPost;
-              var usersHearts = await totalHeartsOnPost;
-              var docData = {
+              const usersLikes = await totalLikesOnPost;
+              const usersHearts = await totalHeartsOnPost;
+              const docData = {
                 userName: doc.data().userName,
                 title: doc.data().title,
                 author: doc.data().author,
@@ -511,25 +512,21 @@ export default function AuthProvider({ children }) {
               console.log(docData);
               return docData;
             }
-
+            console.log(documentData());
             memeObject = documentData();
-            return documentData();
           });
-          console.log(memeObject);
-
           return memeObject;
         } else {
-          var meme = memes
-            .where(firebase.firestore.FieldPath.documentId(), "<", key)
+          memes
+            .where(firebase.firestore.FieldPath.documentId(), '<', key)
             .limit(1)
             .get()
             .then((snapshot) => {
-              var updatedValue = {};
               snapshot.forEach((doc) => {
                 //For each item look through the shards and tally them up
-                var shardRef = db.collection("counters").doc(doc.data().id);
-                var totalLikesOnPost = shardRef
-                  .collection("shards")
+                const shardRef = db.collection('counters').doc(doc.data().id);
+                const totalLikesOnPost = shardRef
+                  .collection('shards')
                   .get()
                   .then((snapshot) => {
                     let total_count = 0;
@@ -538,11 +535,11 @@ export default function AuthProvider({ children }) {
                     });
                     return total_count;
                   });
-                var shardHeartRef = db
-                  .collection("heartCounters")
+                const shardHeartRef = db
+                  .collection('heartCounters')
                   .doc(doc.data().id);
-                var totalHeartsOnPost = shardHeartRef
-                  .collection("shards")
+                const totalHeartsOnPost = shardHeartRef
+                  .collection('shards')
                   .get()
                   .then((snapshot) => {
                     let total_count = 0;
@@ -552,17 +549,17 @@ export default function AuthProvider({ children }) {
                     return total_count;
                   });
                 totalLikesOnPost.then((resolvedPromiseForNumberOfLikes) => {
-                  var amountOfLikes = resolvedPromiseForNumberOfLikes;
+                  const amountOfLikes = resolvedPromiseForNumberOfLikes;
                   return amountOfLikes;
                 });
                 totalHeartsOnPost.then((resolvedPromiseForNumberOfHearts) => {
-                  var amountOfHearts = resolvedPromiseForNumberOfHearts;
+                  const amountOfHearts = resolvedPromiseForNumberOfHearts;
                   return amountOfHearts;
                 });
                 async function documentData() {
-                  var usersLikes = await totalLikesOnPost;
-                  var usersHearts = await totalHeartsOnPost;
-                  var docData = {
+                  const usersLikes = await totalLikesOnPost;
+                  const usersHearts = await totalHeartsOnPost;
+                  const docData = {
                     userName: doc.data().userName,
                     title: doc.data().title,
                     author: doc.data().author,
@@ -577,41 +574,39 @@ export default function AuthProvider({ children }) {
                   console.log(docData);
                   return docData;
                 }
-
                 memeObject = documentData();
-                return documentData();
               });
-              console.log(memeObject);
 
               return memeObject;
             });
         }
       })
       .catch((error) => {});
+    console.log(memeObject);
     return memeObject;
   }
   async function removeHeartPost(postId) {
-    var userID = currentUser.uid;
-    var num_shards = 5;
-    var ref = db.collection("heartCounters").doc(postId);
+    const userID = currentUser.uid;
+    const num_shards = 5;
+    const ref = db.collection('heartCounters').doc(postId);
 
     //Remove it from the users' liked posts and merge it
-    var userRef = db.collection("users").doc(userID);
+    const userRef = db.collection('users').doc(userID);
     await userRef.update({
       hearted: firebase.firestore.FieldValue.arrayRemove(postId),
     });
     const shard_id = Math.floor(Math.random() * num_shards).toString();
-    const shard_ref = ref.collection("shards").doc(shard_id);
+    const shard_ref = ref.collection('shards').doc(shard_id);
 
-    shard_ref.update("count", firebase.firestore.FieldValue.increment(-1));
+    shard_ref.update('count', firebase.firestore.FieldValue.increment(-1));
   }
   async function heartPost(postID) {
-    var userID = currentUser.uid;
-    var num_shards = 5;
-    var ref = db.collection("heartCounters").doc(postID);
+    const userID = currentUser.uid;
+    const num_shards = 5;
+    const ref = db.collection('heartCounters').doc(postID);
 
     //Add it to the users' liked posts and merge it
-    var userRef = db.collection("users").doc(userID);
+    const userRef = db.collection('users').doc(userID);
     await userRef.update(
       {
         hearted: firebase.firestore.FieldValue.arrayUnion(postID),
@@ -620,35 +615,35 @@ export default function AuthProvider({ children }) {
     );
     // Select a shard of the counter at random
     const shard_id = Math.floor(Math.random() * num_shards).toString();
-    const shard_ref = ref.collection("shards").doc(shard_id);
+    const shard_ref = ref.collection('shards').doc(shard_id);
 
     // Update count
-    shard_ref.update("count", firebase.firestore.FieldValue.increment(1));
+    shard_ref.update('count', firebase.firestore.FieldValue.increment(1));
   }
 
   async function removeLikePost(postID) {
-    var userID = currentUser.uid;
-    var num_shards = 5;
-    var ref = db.collection("counters").doc(postID);
+    const userID = currentUser.uid;
+    const num_shards = 5;
+    const ref = db.collection('counters').doc(postID);
 
-    var userRef = db.collection("users").doc(userID);
+    const userRef = db.collection('users').doc(userID);
     await userRef.update({
       likedPosts: firebase.firestore.FieldValue.arrayRemove(postID),
     });
 
     const shard_id = Math.floor(Math.random() * num_shards).toString();
-    const shard_ref = ref.collection("shards").doc(shard_id);
+    const shard_ref = ref.collection('shards').doc(shard_id);
 
-    shard_ref.update("count", firebase.firestore.FieldValue.increment(-1));
+    shard_ref.update('count', firebase.firestore.FieldValue.increment(-1));
   }
 
   async function likePost(postID) {
-    var userID = currentUser.uid;
-    var num_shards = 5;
-    var ref = db.collection("counters").doc(postID);
+    const userID = currentUser.uid;
+    const num_shards = 5;
+    const ref = db.collection('counters').doc(postID);
 
     //Add it to the users' liked posts and merge it
-    var userRef = db.collection("users").doc(userID);
+    const userRef = db.collection('users').doc(userID);
     await userRef.update(
       {
         likedPosts: firebase.firestore.FieldValue.arrayUnion(postID),
@@ -658,22 +653,22 @@ export default function AuthProvider({ children }) {
 
     // Select a shard of the counter at random
     const shard_id = Math.floor(Math.random() * num_shards).toString();
-    const shard_ref = ref.collection("shards").doc(shard_id);
+    const shard_ref = ref.collection('shards').doc(shard_id);
 
     // Update count
-    shard_ref.update("count", firebase.firestore.FieldValue.increment(1));
+    shard_ref.update('count', firebase.firestore.FieldValue.increment(1));
   }
   function dislikePost(postID) {
-    var userID = currentUser.uid;
+    const userID = currentUser.uid;
     const num_shards = 5;
-    var ref = db.collection("counters").doc(postID);
+    const ref = db.collection('counters').doc(postID);
 
     // Select a shard of the counter at random
     const shard_id = Math.floor(Math.random() * num_shards).toString();
-    const shard_ref = ref.collection("shards").doc(shard_id);
+    const shard_ref = ref.collection('shards').doc(shard_id);
 
     // Update count
-    shard_ref.update("count", firebase.firestore.FieldValue.increment(1));
+    shard_ref.update('count', firebase.firestore.FieldValue.increment(1));
 
     //Write to the shard
   }
@@ -685,11 +680,11 @@ export default function AuthProvider({ children }) {
         // The link was successfully sent. Inform the user.
         // Save the email locally so you don't need to ask the user for it again
         // if they open the link on the same device.
-        window.localStorage.setItem("emailForSignIn", user.email);
+        window.localStorage.setItem('emailForSignIn', user.email);
       })
       .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
+        const errorCode = error.code;
+        const errorMessage = error.message;
       });
   }
 
@@ -707,7 +702,7 @@ export default function AuthProvider({ children }) {
           if (user.emailVerified && user.displayName === null) {
             setCurrentUser(user);
             history.push({
-              pathname: "/setup",
+              pathname: '/setup',
               state: {
                 verifiedUser: true,
               },
@@ -715,7 +710,7 @@ export default function AuthProvider({ children }) {
           }
         }
         if (!user) {
-          history.push("/");
+          history.push('/');
         }
 
         setLoadUser(false);

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from 'react';
 
 const MobileContext = React.createContext();
 
@@ -10,7 +10,7 @@ export default function MobileProvider({ children }) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    var mount = true;
+    let mount = true;
     if (mount) {
       if (
         navigator.userAgent.match(/Android/i) ||
