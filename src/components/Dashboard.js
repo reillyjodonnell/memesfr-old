@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
@@ -300,6 +299,7 @@ export default function Dashboard(props) {
     }
 
     loadRandom().then((items) => {
+      console.log(items);
       setRandomPosts(items);
       setActiveScreen([items]);
       setLoadingFilter(false);
@@ -523,6 +523,7 @@ export default function Dashboard(props) {
               {activeScreen
                 ? activeScreen.length !== undefined &&
                   activeScreen.map((item) => {
+                    console.log(`Rendering activeScreen`);
                     let liked = false;
                     let hearted = false;
                     if (usersLikedPosts.includes(item.id)) {

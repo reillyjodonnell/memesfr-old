@@ -452,7 +452,7 @@ export default function AuthProvider({ children }) {
   async function retrieveRandomMeme() {
     const memes = db.collection('memes');
     const key = memes.doc().id;
-    const memeObject = {};
+    let memeObject = {};
     await memes
       .where(firebase.firestore.FieldPath.documentId(), '>=', key)
       .limit(1)
@@ -512,20 +512,16 @@ export default function AuthProvider({ children }) {
               console.log(docData);
               return docData;
             }
-
+            console.log(documentData());
             memeObject = documentData();
-            return documentData();
           });
-          console.log(memeObject);
-
           return memeObject;
         } else {
-          const meme = memes
+          memes
             .where(firebase.firestore.FieldPath.documentId(), '<', key)
             .limit(1)
             .get()
             .then((snapshot) => {
-              const updatedValue = {};
               snapshot.forEach((doc) => {
                 //For each item look through the shards and tally them up
                 const shardRef = db.collection('counters').doc(doc.data().id);
@@ -578,17 +574,15 @@ export default function AuthProvider({ children }) {
                   console.log(docData);
                   return docData;
                 }
-
                 memeObject = documentData();
-                return documentData();
               });
-              console.log(memeObject);
 
               return memeObject;
             });
         }
       })
       .catch((error) => {});
+    console.log(memeObject);
     return memeObject;
   }
   async function removeHeartPost(postId) {
