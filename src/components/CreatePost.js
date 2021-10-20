@@ -1,37 +1,39 @@
-import React from "react";
-import { ReactComponent as Picture } from "../Assets/Icons/Image.svg";
-import { ReactComponent as Gif } from "../Assets/Icons/Gif.svg";
-import "../CSS Components/CreatePost.css";
+import React from 'react';
+import { ReactComponent as Picture } from '../Assets/Icons/Image.svg';
+import { ReactComponent as Gif } from '../Assets/Icons/Gif.svg';
+import '../CSS Components/CreatePost.css';
 
-import Modal from "./Modal";
-import { useAuth } from "../contexts/AuthContext";
-import { useHistory } from "react-router-dom";
+import Modal from './Modal';
+import { useAuth } from '../contexts/AuthContext';
+import { useHistory } from 'react-router-dom';
 
 export default function CreatePost(props) {
   const history = useHistory();
   const { currentUser } = useAuth();
 
-  var promptToPost = "Login to Upload Dank Meme";
+  let promptToPost = 'Login to Upload Dank Meme';
+
+  let profilePicture;
 
   if (currentUser) {
     if (currentUser.email)
       if (currentUser.photoURL !== undefined) {
-        var profilePicture = currentUser.photoURL;
+        profilePicture = currentUser.photoURL;
       }
   }
 
   const OpenFilePrompt = () => {
-    document.getElementById("root").style.filter = "";
+    document.getElementById('root').style.filter = '';
     props.createPostFunction(!props.createPost);
   };
 
   function loadLoginScreen() {
-    history.push("/login");
+    history.push('/login');
   }
 
   const CreateNewPost = () => {
     if (props.createPost === true) {
-      document.getElementById("root").style.filter = "blur(5px)";
+      document.getElementById('root').style.filter = 'blur(5px)';
     }
     return (
       <div className="outer-post-box">
@@ -57,7 +59,7 @@ export default function CreatePost(props) {
                 <div className="add-content">
                   <div onClick={OpenFilePrompt} className="create-prompt">
                     <span className="create-meme-title">
-                      Dank Meme Title . . .{" "}
+                      Dank Meme Title . . .{' '}
                     </span>
                   </div>
                 </div>
@@ -83,9 +85,9 @@ export default function CreatePost(props) {
   return (
     <div
       style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <CreateNewPost />

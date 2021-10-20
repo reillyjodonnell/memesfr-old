@@ -1,32 +1,32 @@
-import React, { useState, useRef, useEffect, useMemo } from "react";
-import ReactDom from "react-dom";
-import x from "../Assets/SVGs/x.svg";
-import { makeStyles } from "@material-ui/core/styles";
-import { useAuth } from "../contexts/AuthContext";
-import Loading from "./Loading";
-import "../CSS Components/Modal.css";
-import ImageThumb from "./ImageThumb";
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import ReactDom from 'react-dom';
+import x from '../Assets/SVGs/x.svg';
+import { makeStyles } from '@material-ui/core/styles';
+import { useAuth } from '../contexts/AuthContext';
+import Loading from './Loading';
+import '../CSS Components/Modal.css';
+import ImageThumb from './ImageThumb';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    "& .MuiTextField-root": {
+    '& .MuiTextField-root': {
       margin: theme.spacing(1),
-      width: "25ch",
+      width: '25ch',
     },
   },
   input: {
-    marginBottom: ".5rem",
+    marginBottom: '.5rem',
   },
 }));
-const accept = "images";
+const accept = 'images';
 export default function Modal(props) {
-  console.log("Component is rendering");
+  console.log('Component is rendering');
   const classes = useStyles();
-  const [name, setName] = useState("Use The Memes, Luke");
+  const [name, setName] = useState('Use The Memes, Luke');
   const [viewPhoto, viewPhotoFunction] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [file, setFile] = useState("");
-  const [fileType, setFileType] = useState("");
+  const [file, setFile] = useState('');
+  const [fileType, setFileType] = useState('');
   const [uploaded, setUploaded] = useState(false);
   const [fileError, setFileError] = useState(false);
   const [titleError, setTitleError] = useState(true);
@@ -36,7 +36,7 @@ export default function Modal(props) {
 
   const { uploadMeme } = useAuth();
 
-  const [titleErrorMessage, setTitleErrorMessage] = useState("");
+  const [titleErrorMessage, setTitleErrorMessage] = useState('');
 
   const titleRegex = /(?=.*[!@#$%^&*])/;
   const checkTitleError = (e) => {
@@ -46,19 +46,19 @@ export default function Modal(props) {
       setTitleError(true);
       setTitleErrorMessage("Can't have special characters'");
     }
-    if (e.target.value == "") {
+    if (e.target.value == '') {
       setTitleError(true);
-      setTitleErrorMessage("Cannot be empty");
+      setTitleErrorMessage('Cannot be empty');
     } else {
-      setTitleErrorMessage("");
+      setTitleErrorMessage('');
       setTitleError(false);
     }
   };
 
   const uploadPost = (e) => {
     e.preventDefault();
-    var image = file;
-    var title = titleRef.current.value;
+    let image = file;
+    let title = titleRef.current.value;
     uploadMeme(image, title, fileType);
     setUploaded(true);
     props.createPostFunction(false);
@@ -66,14 +66,14 @@ export default function Modal(props) {
   };
 
   function removeFile() {
-    setFileError("");
-    setFile("");
+    setFileError('');
+    setFile('');
   }
 
   const handleChange = (event) => {
     event.preventDefault();
     setName(event.target.value);
-    if (name !== "") {
+    if (name !== '') {
       setDisabled(false);
     } else setDisabled(true);
   };
@@ -120,7 +120,7 @@ export default function Modal(props) {
         <>
           <form className="main-section-form" onSubmit={uploadPost}>
             <div
-              style={file ? { border: "none" } : null}
+              style={file ? { border: 'none' } : null}
               className="main-section"
             >
               <div className="image-preview">
@@ -138,7 +138,7 @@ export default function Modal(props) {
                 <input
                   accept=".png, .jpeg, .jpg, .gif, .mp4, .avi"
                   type="image"
-                  style={{ display: "none" }}
+                  style={{ display: 'none' }}
                   image={file}
                 />
               </div>
@@ -150,8 +150,8 @@ export default function Modal(props) {
               <button
                 className={
                   titleError
-                    ? "modal-upload-button-disabled"
-                    : "modal-upload-button"
+                    ? 'modal-upload-button-disabled'
+                    : 'modal-upload-button'
                 }
                 type="submit"
                 disabled={titleError}
@@ -161,7 +161,7 @@ export default function Modal(props) {
                   type="submit"
                   id="file"
                   ref={inputFile}
-                  style={{ display: "none" }}
+                  style={{ display: 'none' }}
                 />
                 Upload
               </button>
@@ -177,7 +177,7 @@ export default function Modal(props) {
               id="file"
               ref={inputFile}
               style={{
-                display: "none",
+                display: 'none',
                 opacity: 0,
               }}
             />
@@ -186,12 +186,12 @@ export default function Modal(props) {
             </span>
 
             {fileError ? (
-              <span style={{ padding: "1rem", color: "red" }}>{fileError}</span>
+              <span style={{ padding: '1rem', color: 'red' }}>{fileError}</span>
             ) : null}
           </div>
         </>
       )}
     </div>,
-    document.getElementById("portal")
+    document.getElementById('portal')
   );
 }

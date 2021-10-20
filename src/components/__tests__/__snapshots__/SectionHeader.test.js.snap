@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should match snapshot 1`] = `
+<div
+  className="section-header-area"
+  data-testid="section-1"
+>
+  <div
+    className="section-header-title"
+    data-testid="section-2"
+  >
+    <span>
+      Home
+    </span>
+  </div>
+</div>
+`;

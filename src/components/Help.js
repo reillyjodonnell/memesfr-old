@@ -2,11 +2,8 @@ import React from 'react'
 
 export default function Help() {
     return (
-        <div>
-            <span>
-                This is the help page
-            </span>
-
+        <div data-testid="help-1">
+             This is the help page
         </div>
     )
 }

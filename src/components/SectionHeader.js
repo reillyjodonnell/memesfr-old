@@ -1,9 +1,10 @@
-import React from "react";
+import React from 'react';
 
 export default function SectionHeader(props) {
+  console.log('Hi');
   return (
-    <div className="section-header-area">
-      <div className="section-header-title">
+    <div data-testid="section-1" className="section-header-area">
+      <div data-testid="section-2" className="section-header-title">
         {props.nav === 0 ? (
           <span>Home</span>
         ) : props.nav === 1 ? (

@@ -1,38 +1,38 @@
-import React, { useState, useEffect, useRef } from "react";
-import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Skeleton from "@material-ui/lab/Skeleton";
-import Card from "./Card";
-import "../CSS Components/Dashboard.css";
-import CreatePost from "./CreatePost";
-import MobileHeader from "./MobileHeader";
-import Sidebar from "./Sidebar";
-import firebase from "firebase";
-import { useAuth } from "../contexts/AuthContext";
-import { useMobile } from "../contexts/MobileContext";
-import { useHistory } from "react-router-dom";
-import MobileNav from "./MobileNav";
-import PasswordModal from "./PasswordModal";
+import React, { useState, useEffect, useRef } from 'react';
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+import Grid from '@material-ui/core/Grid';
+import Skeleton from '@material-ui/lab/Skeleton';
+import Card from './Card';
+import '../CSS Components/Dashboard.css';
+import CreatePost from './CreatePost';
+import MobileHeader from './MobileHeader';
+import Sidebar from './Sidebar';
+import firebase from 'firebase';
+import { useAuth } from '../contexts/AuthContext';
+import { useMobile } from '../contexts/MobileContext';
+import { useHistory } from 'react-router-dom';
+import MobileNav from './MobileNav';
+import PasswordModal from './PasswordModal';
 
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
-    backgroundColor: "#1098F7",
+    backgroundColor: '#1098F7',
   },
   toolbarIcon: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
     ...theme.mixins.toolbar,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(["width", "margin"], {
+    transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(["width", "margin"], {
+    transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -49,43 +49,43 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 36,
   },
   menuButtonHidden: {
-    display: "none",
+    display: 'none',
   },
   title: {
-    fontSize: "2rem",
-    cursor: "pointer",
-    marginRight: "auto",
-    overflow: "visible",
+    fontSize: '2rem',
+    cursor: 'pointer',
+    marginRight: 'auto',
+    overflow: 'visible',
   },
   drawerRoot: {
-    position: "sticky",
+    position: 'sticky',
     left: 0,
   },
   drawerPaper: {
-    top: "74px",
-    whiteSpace: "nowrap",
+    top: '74px',
+    whiteSpace: 'nowrap',
     width: drawerWidth,
-    transition: theme.transitions.create("width", {
+    transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   drawerPaperClose: {
-    overflowX: "hidden",
-    transition: theme.transitions.create("width", {
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
     width: theme.spacing(7),
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9),
     },
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: "100%",
-    overflowX: "hidden",
+    height: '100%',
+    overflowX: 'hidden',
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -93,34 +93,34 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     padding: theme.spacing(2),
-    display: "flex",
-    overflow: "auto",
-    flexDirection: "column",
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
   },
   fixedHeight: {
     height: 240,
   },
   loginregister: {
-    marginLeft: "auto",
-    width: "50%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    cursor: "pointer",
-    "@media (max-width: 650px)": {
-      display: "none",
+    marginLeft: 'auto',
+    width: '50%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+    cursor: 'pointer',
+    '@media (max-width: 650px)': {
+      display: 'none',
     },
   },
 
   image: {
-    marginRight: "1rem",
+    marginRight: '1rem',
   },
   skeleton: {
-    margin: "1rem",
+    margin: '1rem',
 
-    width: "40vw",
-    minWidth: "300px",
-    height: "35vh",
+    width: '40vw',
+    minWidth: '300px',
+    height: '35vh',
   },
 }));
 
@@ -157,18 +157,22 @@ export default function Dashboard(props) {
 
   const history = useHistory();
 
+  let username;
+
+  let avatar;
+
   if (currentUser) {
-    var username = currentUser.displayName;
-    var avatar = currentUser.photoURL;
+    username = currentUser.displayName;
+    avatar = currentUser.photoURL;
   }
 
-  var active = 0;
+  let active = 0;
 
   const createMemePost = () => {
     createPostFunction(!createPost);
   };
   const resetUserPassword = () => {
-    document.getElementById("root").style.filter = "";
+    document.getElementById('root').style.filter = '';
     resetPasswordFunction(!resetPassword);
   };
 
@@ -201,7 +205,7 @@ export default function Dashboard(props) {
       // the sign-in operation.
       // Get the email if available. This should be available if the user completes
       // the flow on the same device where they started it.
-      var email = window.localStorage.getItem("emailForSignIn");
+      let email = window.localStorage.getItem('emailForSignIn');
       if (!email) {
         // User opened the link on a different device. To prevent session fixation
         // attacks, ask the user to provide the associated email again. For example:
@@ -213,7 +217,7 @@ export default function Dashboard(props) {
           .signInWithEmailLink(email, window.location.href)
           .then((result) => {
             // Clear email from storage.
-            window.localStorage.removeItem("emailForSignIn");
+            window.localStorage.removeItem('emailForSignIn');
             // You can access the new user via result.user
             // Additional user info profile not available via:
             // result.additionalUserInfo.profile == null
@@ -221,7 +225,7 @@ export default function Dashboard(props) {
             // result.additionalUserInfo.isNewUser
             setCurrentUser(result.user);
             history.push({
-              pathname: "/setup",
+              pathname: '/setup',
               state: {
                 verifiedUser: result.user.emailVerified,
               },
@@ -306,14 +310,14 @@ export default function Dashboard(props) {
   function filterHome() {
     if (nav !== 0) {
       setLoadingFilter(true);
-      myRef.current.scrollIntoView({ behavior: "smooth" });
+      myRef.current.scrollIntoView({ behavior: 'smooth' });
       setNav(0);
     }
   }
   function filterTrending() {
     if (nav !== 1) {
       setLoadingFilter(true);
-      myRef.current.scrollIntoView({ behavior: "smooth" });
+      myRef.current.scrollIntoView({ behavior: 'smooth' });
 
       setNav(1);
     }
@@ -322,7 +326,7 @@ export default function Dashboard(props) {
   function filterPopular() {
     if (nav !== 2) {
       setLoadingFilter(true);
-      myRef.current.scrollIntoView({ behavior: "smooth" });
+      myRef.current.scrollIntoView({ behavior: 'smooth' });
 
       setNav(2);
     }
@@ -330,7 +334,7 @@ export default function Dashboard(props) {
   function filterRecent() {
     if (nav !== 3) {
       setLoadingFilter(true);
-      myRef.current.scrollIntoView({ behavior: "smooth" });
+      myRef.current.scrollIntoView({ behavior: 'smooth' });
       setNav(3);
     }
   }
@@ -374,25 +378,25 @@ export default function Dashboard(props) {
     return (
       <div
         style={{
-          cursor: "default",
-          marginRight: "auto",
-          marginLeft: "auto",
-          display: "flex",
-          textAlign: "center",
-          height: "100%",
-          justifyContent: "center",
-          color: "black",
-          flexDirection: "column",
-          marginTop: "1rem",
-          marginBottom: "1rem",
+          cursor: 'default',
+          marginRight: 'auto',
+          marginLeft: 'auto',
+          display: 'flex',
+          textAlign: 'center',
+          height: '100%',
+          justifyContent: 'center',
+          color: 'black',
+          flexDirection: 'column',
+          marginTop: '1rem',
+          marginBottom: '1rem',
         }}
       >
-        <span style={{ cursor: "default", padding: "1rem" }}>
+        <span style={{ cursor: 'default', padding: '1rem' }}>
           Last step: confirm your email to be able to upload memes
         </span>
         <span
           onClick={() => sendAuthEmail(currentUser.email)}
-          style={{ color: "red", padding: "1rem" }}
+          style={{ color: 'red', padding: '1rem' }}
         >
           Didn't get it? Resend
         </span>
@@ -425,43 +429,43 @@ export default function Dashboard(props) {
   };
 
   const RecentlyPosted = () => {
-    var sayingOne = "";
-    var sayingTwo = "";
+    let sayingOne = '';
+    let sayingTwo = '';
     if (recentlyUploaded.length === 1) {
       sayingTwo = "Here's what you just posted 👇";
     }
     if (recentlyUploaded.length > 1) {
-      sayingOne = "Keep it up memelord";
+      sayingOne = 'Keep it up memelord';
     }
     if (nav === 0 && recentlyUploaded.length > 0) {
       return (
         <>
           <div
             style={{
-              height: "100%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "auto",
-              margin: "1rem",
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 'auto',
+              margin: '1rem',
             }}
           >
             <div
               style={{
-                textAlign: "center",
-                display: "block",
-                padding: "1rem",
-                color: "white",
-                height: "100%",
-                width: "100%",
+                textAlign: 'center',
+                display: 'block',
+                padding: '1rem',
+                color: 'white',
+                height: '100%',
+                width: '100%',
               }}
             >
-              <span style={{ whiteSpace: "pre-wrap", fontSize: "1.2rem" }}>
+              <span style={{ whiteSpace: 'pre-wrap', fontSize: '1.2rem' }}>
                 {sayingOne}
               </span>
               <br />
-              <span style={{ whiteSpace: "nowrap", fontSize: "1.2rem" }}>
+              <span style={{ whiteSpace: 'nowrap', fontSize: '1.2rem' }}>
                 {sayingTwo}
               </span>
             </div>
@@ -520,8 +524,8 @@ export default function Dashboard(props) {
               {activeScreen
                 ? activeScreen.length !== undefined &&
                   activeScreen.map((item) => {
-                    var liked = false;
-                    var hearted = false;
+                    let liked = false;
+                    let hearted = false;
                     if (usersLikedPosts.includes(item.id)) {
                       liked = true;
                     }

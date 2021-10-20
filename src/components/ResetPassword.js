@@ -1,27 +1,27 @@
-import React, { useState, useRef } from "react";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import TextField from "@material-ui/core/TextField";
-import Link from "@material-ui/core/Link";
-import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import { useAuth } from "../contexts/AuthContext";
-import "../CSS Components/ResetPassword.css";
+import React, { useState, useRef } from 'react';
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import TextField from '@material-ui/core/TextField';
+import Link from '@material-ui/core/Link';
+import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Container from '@material-ui/core/Container';
+import { useAuth } from '../contexts/AuthContext';
+import '../CSS Components/ResetPassword.css';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
+      {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
         Memesfr
-      </Link>{" "}
+      </Link>{' '}
       {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Typography>
   );
 }
@@ -29,39 +29,39 @@ function Copyright() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
-    height: "48px",
+    height: '48px',
   },
   orparent: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   or: {
-    display: "flex",
-    justifySelf: "center",
-    alignSelf: "center",
-    textAlign: "center",
+    display: 'flex',
+    justifySelf: 'center',
+    alignSelf: 'center',
+    textAlign: 'center',
   },
 }));
 
 export default function ResetPassword() {
   const classes = useStyles();
-  const [email, setEmail] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [email, setEmail] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -76,33 +76,34 @@ export default function ResetPassword() {
   async function handleSubmit(e) {
     setError(false);
     setSuccess(false);
-    setErrorMessage("");
+    setErrorMessage('');
     e.preventDefault();
-    var email = emailRef.current.value;
+    let email = emailRef.current.value;
     resetPassword(email)
       .then(() => {
         setSuccess(true);
-        console.log("Successfully sent your email");
+        console.log('Successfully sent your email');
       })
       .catch((error) => {
         setError(true);
-        if (error.code === "auth/user-not-found") {
+        if (error.code === 'auth/user-not-found') {
           setErrorMessage("This email doesn't have an active account");
         }
       });
   }
 
-  const emailRegEx = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+  const emailRegEx =
+    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
   const checkEmailError = (e) => {
     setError(false);
-    setErrorMessage("");
+    setErrorMessage('');
     setEmail(e.target.value);
     if (e.target.value.match(emailRegEx)) {
-      setEmailErrorMessage("");
+      setEmailErrorMessage('');
       setEmailError(false);
     } else {
-      setEmailErrorMessage("Invalid");
+      setEmailErrorMessage('Invalid');
       setEmailError(true);
     }
   };
@@ -141,19 +142,19 @@ export default function ResetPassword() {
           <Success />
         ) : (
           <>
-            <Typography component="h1" style={{ padding: "1rem" }} variant="h5">
+            <Typography component="h1" style={{ padding: '1rem' }} variant="h5">
               Password Reset
             </Typography>
             <Typography
               component="h2"
-              style={{ paddingTop: "1rem" }}
+              style={{ paddingTop: '1rem' }}
               variant="h5"
             >
               Enter your email below
             </Typography>
 
             {alert && (
-              <span style={{ paddingTop: "1rem", color: "red" }}>
+              <span style={{ paddingTop: '1rem', color: 'red' }}>
                 {errorMessage}
               </span>
             )}
