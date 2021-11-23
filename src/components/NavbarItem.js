@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 export default function NavbarItem(props) {
   const [openMenu, setOpenMenu] = useState(false);
@@ -8,7 +8,9 @@ export default function NavbarItem(props) {
   }
   return (
     <>
-      <div onClick={toggleMenu}>{props.icon}</div>
+      <div data-testid="section-1" onClick={toggleMenu}>
+        {props.icon}
+      </div>
       {openMenu && props.children}
     </>
   );
