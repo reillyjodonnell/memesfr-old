@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../CSS Components/Card.css';
 import { useAuth } from '../contexts/AuthContext';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import trash from '../Assets/SVGs/trash.svg';
 import report from '../Assets/SVGs/report.svg';
 import { ReactComponent as HeartIcon } from '../Assets/SVGs/heart.svg';
@@ -55,7 +55,7 @@ export default function Card(props) {
     }
   }
 
-  const history = useHistory();
+  const history = useNavigate();
 
   useEffect(() => {}, [likes]);
 
@@ -253,7 +253,8 @@ export default function Card(props) {
               <span className="clickable">@{memeAuthor()}</span>
               <span className="hashtag-identifier"></span>
             </div>
-            <div className="heart-container">
+            {/* <div className="heart-container">
+
               <HeartIcon
                 className={
                   heart
@@ -269,10 +270,13 @@ export default function Card(props) {
               >
                 1
               </span>
-            </div>
+            </div> */}
 
-            <div className="like-container">
-              <LikeIcon
+            <div
+              onClick={currentUser ? toggleThumbUp : activatePrompt}
+              className={thumbUp ? 'like-container-active' : 'like-container'}
+            >
+              {/* <LikeIcon
                 style={thumbUp ? { fill: 'url(#thumb-grad)' } : null}
                 className={thumbUp ? 'active-thumbup' : 'inactive-thumbup'}
                 onClick={currentUser ? toggleThumbUp : activatePrompt}
@@ -283,7 +287,9 @@ export default function Card(props) {
                 }
               >
                 {likes}
-              </span>
+              </span> */}
+              <span className="likes-icon">👑</span>
+              <span className="number-of-likes">{likes}</span>
             </div>
           </div>
           {options ? <OptionsExpanded /> : null}

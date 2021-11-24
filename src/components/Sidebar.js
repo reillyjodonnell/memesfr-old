@@ -18,9 +18,9 @@ import { ReactComponent as ProfilePic } from '../Assets/SVGs/photo.svg';
 import { ReactComponent as Password } from '../Assets/SVGs/lock.svg';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { useHistory } from 'react-router';
 import { useMobile } from '../contexts/MobileContext';
 import '../CSS Components/Sidebar.css';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 export default function Sidebar(props) {
   const [activeNav, setActiveNav] = useState();
@@ -30,7 +30,7 @@ export default function Sidebar(props) {
   const [doge, setDoge] = useState(false);
   const { updateDoge } = useTheme();
   const dropdownRef = useRef(null);
-  const history = useHistory();
+  const history = useNavigate();
   const { signOut, currentUser } = useAuth();
 
   function activateDoge() {
@@ -59,6 +59,7 @@ export default function Sidebar(props) {
   function selectOption() {
     setActive((prevState) => !prevState);
   }
+
   return (
     <div className="sidebar-fixed">
       <div className="sidebar-content">
@@ -67,20 +68,19 @@ export default function Sidebar(props) {
           <span>Memesfr</span>
         </div>
         {props.avatar !== undefined ? (
-          <div className="sidebar-user-section">
-            <div className="sidebar-avatar-container">
-              <img className="sidebar-avatar" src={props.avatar} />
-            </div>
+          <Link to={`/users/${props.username}`}>
+            <div className="sidebar-user-section">
+              <div className="sidebar-avatar-container">
+                <img className="sidebar-avatar" src={props.avatar} />
+              </div>
 
-            <span className="sidebar-username">
-              @{props.username && props.username}
-            </span>
-            <div onClick={props.createPost} className="sidebar-create-post">
-              <span>Upload</span>
-              <Plus />
+              <span className="sidebar-username">
+                @{props.username && props.username}
+              </span>
             </div>
-          </div>
+          </Link>
         ) : null}
+
         <div className="sidebar-navigation">
           <CSSTransition
             in={activeMenu === 'main'}
@@ -90,7 +90,7 @@ export default function Sidebar(props) {
             onEnter={calcHeight}
             dropdownRef={dropdownRef}
           >
-            <div>
+            <>
               <div
                 onClick={props.homeFilter}
                 className={
@@ -180,7 +180,7 @@ export default function Sidebar(props) {
                   </div>
                 )}
               </div>
-            </div>
+            </>
           </CSSTransition>
 
           <CSSTransition

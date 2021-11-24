@@ -1,16 +1,16 @@
-import React, { useState, useRef } from "react";
-import { ReactComponent as Castle } from "../Assets/SVGs/castle.svg";
-import "../CSS Components/EditProfile.css";
-import Button from "@material-ui/core/Button";
-import "../CSS Components/CreateProfile.css";
-import Link from "@material-ui/core/Link";
+import React, { useState, useRef } from 'react';
+import { ReactComponent as Castle } from '../Assets/SVGs/castle.svg';
+import '../CSS Components/EditProfile.css';
+import Button from '@material-ui/core/Button';
+import '../CSS Components/CreateProfile.css';
+import Link from '@material-ui/core/Link';
 
-import { useAuth } from "../contexts/AuthContext";
-import { useHistory } from "react-router";
+import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function SelectUsername() {
-  const history = useHistory();
-  const [file, setFile] = useState("");
+  const history = useNavigate();
+  const [file, setFile] = useState('');
   const inputFile = useRef(null);
 
   const { setProfilePicture, currentUser } = useAuth();
@@ -19,7 +19,7 @@ export default function SelectUsername() {
     if (file) {
       setProfilePicture(file);
     }
-    history.push("/");
+    history.push('/');
   }
 
   const handleUpload = (event) => {
@@ -50,13 +50,13 @@ export default function SelectUsername() {
       <>
         <div
           className="sidebar-logo"
-          style={{ padding: "2rem", justifyContent: "center" }}
+          style={{ padding: '2rem', justifyContent: 'center' }}
         >
           <Castle />
-          <span style={{ color: "white" }}>Memesfr</span>
+          <span style={{ color: 'white' }}>Memesfr</span>
         </div>
         <div className="create-profile">
-          <h2 style={{ color: "white" }}>@{currentUser.displayName}</h2>
+          <h2 style={{ color: 'white' }}>@{currentUser.displayName}</h2>
           <div className="sidebar-avatar-container">
             <img alt="" className="sidebar-avatar" src={currentUser.photoURL} />
           </div>
@@ -70,7 +70,7 @@ export default function SelectUsername() {
                 id="file"
                 ref={inputFile}
                 type="file"
-                style={{ display: "none" }}
+                style={{ display: 'none' }}
               />
             </button>
             {file ? (
@@ -86,7 +86,7 @@ export default function SelectUsername() {
           </div>
         </div>
         <div className="return-home">
-          <Link onClick={() => history.push("/")} style={{ cursor: "pointer" }}>
+          <Link onClick={() => history.push('/')} style={{ cursor: 'pointer' }}>
             Return Home
           </Link>
         </div>

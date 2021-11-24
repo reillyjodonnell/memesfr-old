@@ -1,0 +1,68 @@
+.rightsidebar-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20vw;
+  background-color: var(--bg);
+  height: 100vh;
+  padding: 2rem;
+  color: white;
+  border-left: 0.5px solid rgba(255, 255, 255, 0.212);
+}
+.rightsidebar-main-section {
+  display: flex;
+  width: auto;
+  padding: 1rem;
+  margin: 2rem 0 0 0;
+
+  flex-direction: column;
+  align-items: center;
+  background-color: #00000038;
+  border: 2px solid #b4b4b7;
+  border-radius: 20px;
+  height: auto;
+}
+.daily-counter {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.main-section-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+.rightsidebar-avatar {
+  padding: 1rem;
+  width: 100%;
+}
+.rightsidebar-user-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+.rightsidebar-user-stats {
+  margin: 1rem 1rem 0 1rem;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  display: flex;
+  font-size: 1.25rem;
+}
+
+.rightsidebar-crown-count {
+}
+
+.rightsidebar-secondary-section {
+  display: flex;
+  width: 100%;
+  margin: 1rem;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+}

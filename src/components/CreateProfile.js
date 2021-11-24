@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Link from '@material-ui/core/Link';
 import { useAuth } from '../contexts/AuthContext';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ReactComponent as Castle } from '../Assets/SVGs/castle.svg';
 
 const useStyles = makeStyles((theme) => ({
@@ -90,7 +90,7 @@ export default function CreateProfile(props) {
   const [error, setError] = useState(true);
   const [file, setFile] = useState();
   const inputFile = useRef(null);
-  const history = useHistory();
+  const history = useNavigate();
   const location = useLocation();
   const { checkUsernameAvailability, updateProfile } = useAuth();
   const [userName, setUserName] = useState('');

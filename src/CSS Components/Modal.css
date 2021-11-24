@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: center;
   height: 60vh;
-  background-color: #272932;
+  background-color: black;
   border: 2px solid black;
   z-index: 100;
   left: 0;
@@ -32,6 +32,7 @@
   color: rgb(230, 230, 230);
   white-space: nowrap;
 }
+
 .upper-section img {
   margin-left: auto;
   cursor: pointer;
@@ -64,6 +65,11 @@
   border: none;
   color: white;
 }
+.upper-post-section-meme-title::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: rgba(255, 255, 255, 0.322);
+  opacity: 1; /* Firefox */
+}
 .upper-post-section-meme-title:focus {
   outline: none;
 }
@@ -73,7 +79,7 @@
 }
 .upload-meme-prompt {
   color: white;
-  background-color: #4c4d62;
+  background-color: var(--bg);
   padding: 1rem;
   border-radius: 30px;
   border: 1px solid black;
@@ -128,7 +134,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  border: 2px dashed rgba(116, 116, 116, 0.247);
+  border: 2px dashed #ffffff96;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -210,7 +216,7 @@
   /*
   background-image: linear-gradient(#ea3788, #00a7e1);
   */
-  background-color: #4c4d62 !important;
+  background-color: var(--bg);
 }
 .modal-upload-button-disabled {
   transition: all 0.4s ease;

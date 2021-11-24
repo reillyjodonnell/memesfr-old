@@ -3,20 +3,20 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import Skeleton from '@material-ui/lab/Skeleton';
-import Card from './Card';
-import '../CSS Components/Dashboard.css';
-import CreatePost from './CreatePost';
-import MobileHeader from './MobileHeader';
-import Sidebar from './Sidebar';
+import Card from '../../Card';
+import '../../../CSS Components/Dashboard.css';
+import CreatePost from '../../CreatePost';
+import MobileHeader from '../../MobileHeader';
+import Sidebar from '../../Sidebar';
 import firebase from 'firebase';
-import { useAuth } from '../contexts/AuthContext';
-import { useMobile } from '../contexts/MobileContext';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useMobile } from '../../../contexts/MobileContext';
 import { useNavigate } from 'react-router-dom';
-import MobileNav from './MobileNav';
-import PasswordModal from './PasswordModal';
-import RightSidebar from './RightSidebar';
-import TopBar from './TopBar';
+import MobileNav from '../../MobileNav';
+import PasswordModal from '../../PasswordModal';
+import RightSidebar from '../../RightSidebar';
+import Doge from '../../../Assets/doge.svg';
+import '../../../CSS Components/UserProfile.css';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -84,7 +84,6 @@ const useStyles = makeStyles((theme) => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: '100%',
     overflowX: 'hidden',
     display: 'flex',
     flexDirection: 'column',
@@ -125,7 +124,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard(props) {
+export default function UserProfile(props) {
   const classes = useStyles();
   const [popularPosts, setPopularPosts] = useState([{}]);
   const [recentPosts, setRecentPosts] = useState([{}]);
@@ -378,112 +377,25 @@ export default function Dashboard(props) {
     return () => (mounted = false);
   }, [nav, loadAnotherRandomMeme]);
 
-  const ConfirmEmailPrompt = () => {
+  const followerCount = 69;
+
+  const UserProfile = () => {
     return (
-      <div
-        style={{
-          cursor: 'default',
-          marginRight: 'auto',
-          marginLeft: 'auto',
-          display: 'flex',
-          textAlign: 'center',
-          height: '100%',
-          justifyContent: 'center',
-          color: 'black',
-          flexDirection: 'column',
-          marginTop: '1rem',
-          marginBottom: '1rem',
-        }}
-      >
-        <span style={{ cursor: 'default', padding: '1rem' }}>
-          Last step: confirm your email to be able to upload memes
-        </span>
-        <span
-          onClick={() => sendAuthEmail(currentUser.email)}
-          style={{ color: 'red', padding: '1rem' }}
-        >
-          Didn't get it? Resend
-        </span>
+      <div className="user-profile-container">
+        <div className="user-profile">
+          <div className="user-profile-cover-photo"></div>
+          <div className="user-avatar-container">
+            <img className="user-avatar" src={Doge} />
+          </div>
+
+          <span className="user-username">@OReilly</span>
+          <span className="user-follower-count">{followerCount} followers</span>
+        </div>
+        <div className="user-profile-posts"></div>
       </div>
     );
   };
 
-  const ShowSkeletons = () => {
-    return (
-      <>
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-        <Skeleton className={classes.skeleton} variant="rect" />
-      </>
-    );
-  };
-
-  const RecentlyPosted = () => {
-    let sayingOne = '';
-    let sayingTwo = '';
-    if (recentlyUploaded.length === 1) {
-      sayingTwo = "Here's what you just posted 👇";
-    }
-    if (recentlyUploaded.length > 1) {
-      sayingOne = 'Keep it up memelord';
-    }
-    if (nav === 0 && recentlyUploaded.length > 0) {
-      return (
-        <>
-          <div
-            style={{
-              height: '100%',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 'auto',
-              margin: '1rem',
-            }}
-          >
-            <div
-              style={{
-                textAlign: 'center',
-                display: 'block',
-                padding: '1rem',
-                color: 'white',
-                height: '100%',
-                width: '100%',
-              }}
-            >
-              <span style={{ whiteSpace: 'pre-wrap', fontSize: '1.2rem' }}>
-                {sayingOne}
-              </span>
-              <br />
-              <span style={{ whiteSpace: 'nowrap', fontSize: '1.2rem' }}>
-                {sayingTwo}
-              </span>
-            </div>
-          </div>
-          {recentlyUploaded.map((item) => {
-            return <Card key={item.id} item={item}></Card>;
-          })}
-        </>
-      );
-    }
-    return null;
-  };
-  if (activeScreen != null) {
-  }
   return (
     <div className="dashboard-content">
       {isMobile ? (
@@ -516,61 +428,7 @@ export default function Dashboard(props) {
       )}
 
       <main className={classes.content}>
-        <TopBar createPost={createMemePost} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={5}></Grid>
-          <Box spacing={5} pt={4}>
-            <div ref={myRef}></div>
-
-            {notConfirmedEmail ? <ConfirmEmailPrompt /> : null}
-
-            <div className="main-content">
-              {loadingFilter && <ShowSkeletons />}
-              <RecentlyPosted />
-              {activeScreen
-                ? activeScreen.length !== undefined &&
-                  activeScreen.map((item) => {
-                    console.log(`Rendering activeScreen`);
-                    let liked = false;
-                    let hearted = false;
-                    if (usersLikedPosts.includes(item.id)) {
-                      liked = true;
-                    }
-                    if (usersHeartedPosts.includes(item.id)) {
-                      hearted = true;
-                    }
-                    return (
-                      <Card
-                        hearted={hearted}
-                        liked={liked}
-                        key={item.id}
-                        likedPosts={usersLikedPosts}
-                        heartedPosts={usersHeartedPosts}
-                        item={item}
-                      ></Card>
-                    );
-                  })
-                : null}
-              {createPost ? (
-                <CreatePost
-                  createPostFunction={createPostFunction}
-                  createPost={createPost}
-                />
-              ) : null}
-              {resetPassword ? (
-                <PasswordModal
-                  resetPassword={resetPassword}
-                  closePrompt={resetUserPassword}
-                />
-              ) : null}
-              {!loadingFilter && nav !== 4 && (
-                <div className="end-of-memes">
-                  <span>End of the memes 😢</span>
-                </div>
-              )}
-            </div>
-          </Box>
-        </Container>
+        <UserProfile />
       </main>
       <RightSidebar />
     </div>

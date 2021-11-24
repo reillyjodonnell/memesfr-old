@@ -17,7 +17,7 @@ import Container from '@material-ui/core/Container';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { useAuth } from '../contexts/AuthContext';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ReactComponent as Castle } from '../Assets/SVGs/castle.svg';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
@@ -128,7 +128,7 @@ export default function SignUp() {
   const usernameRef = useRef();
   const passwordRef = useRef();
 
-  const history = useHistory();
+  const history = useNavigate();
 
   const { signup, sendAuthEmail } = useAuth();
 

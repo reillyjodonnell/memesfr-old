@@ -5,10 +5,10 @@ import '../CSS Components/CreatePost.css';
 
 import Modal from './Modal';
 import { useAuth } from '../contexts/AuthContext';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreatePost(props) {
-  const history = useHistory();
+  const history = useNavigate();
   const { currentUser } = useAuth();
 
   const promptToPost = 'Login to Upload Dank Meme';

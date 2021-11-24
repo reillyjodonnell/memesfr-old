@@ -18,11 +18,11 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { makeStyles } from '@material-ui/core/styles';
 import Doge from '../Assets/doge.svg';
 import firebase from '../services/firebase';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 function Copyright() {
-  const history = useHistory();
+  const history = useNavigate();
 
   function redirectHome() {
     history.push('/');
@@ -117,7 +117,7 @@ export default function SignInSide(props) {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const history = useHistory();
+  const history = useNavigate();
   const { login } = useAuth();
 
   useEffect(() => {

@@ -14,7 +14,7 @@ import { CSSTransition } from 'react-transition-group';
 
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { useHistory } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 import { useMobile } from '../contexts/MobileContext';
 
 export default function DropDownMenu(props) {
@@ -25,7 +25,7 @@ export default function DropDownMenu(props) {
   const [menuHeight, setMenuHeight] = useState(null);
   const [firstTime, setFirstTime] = useState(true);
   const dropdownRef = useRef(null);
-  const history = useHistory();
+  const history = useNavigate();
 
   function calcHeight(el) {
     let height = 0;

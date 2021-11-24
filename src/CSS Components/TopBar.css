@@ -1,0 +1,35 @@
+.topbar-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0.25rem;
+  width: 100%;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.212);
+}
+.topbar-button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.9rem;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+.add-dank-meme {
+  /* background-image: linear-gradient(#ea3788, #00a7e1); */
+  /* color: var(--bg); */
+  color: white;
+  /* background-color: white; */
+  border: 10px solid;
+  border-image-slice: 1;
+  border-width: 5px;
+  width: auto;
+  padding: 1rem;
+  border-image-source: linear-gradient(to left, #ea3788, #00a7e1);
+  padding: 1rem;
+  border-radius: 20px;
+}
+.add-dank-meme:hover {
+  filter: brightness(1.5);
+  transition: all var(--speed);
+}

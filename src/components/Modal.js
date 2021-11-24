@@ -93,7 +93,13 @@ export default function Modal(props) {
       ) : (
         <>
           <div className="upper-section">
-            <img style={{}} onClick={props.openFilePrompt} src={x} />
+            <img
+              alt="an x"
+              className="upper-section-cancel"
+              style={{}}
+              onClick={props.openFilePrompt}
+              src={x}
+            />
           </div>
           <div className="upper-post-section">
             <div className="upper-post-avatar-container">

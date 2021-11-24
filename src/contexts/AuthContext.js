@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { auth, db, storage } from '../services/firebase';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import firebase from 'firebase/app';
 import CreateProfile from '../components/CreateProfile';
 
@@ -16,7 +16,7 @@ export default function AuthProvider({ children }) {
   const [userExists, setUserExists] = useState(true);
   const [recentlyUploaded, setRecentlyUploaded] = useState([]);
   const [notConfirmedEmail, setNotConfirmedEmail] = useState(false);
-  const history = useHistory();
+  const history = useNavigate();
 
   const actionCodeSettings = {
     url: 'https://memesfr.com/',
@@ -292,6 +292,7 @@ export default function AuthProvider({ children }) {
   // }
 
   async function retrievePopularPosts() {
+    window.alert('Retrieving popular posts');
     const popRef = db.collection('popular').doc('top_fifty');
     const collections = await popRef.get();
     const items = collections.data();
