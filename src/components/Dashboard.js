@@ -16,7 +16,8 @@ import { useNavigate } from 'react-router-dom';
 import MobileNav from './MobileNav';
 import PasswordModal from './PasswordModal';
 import RightSidebar from './RightSidebar';
-import TopBar from './TopBar';
+import Feed from './routes/home/Feed';
+import { Outlet } from 'react-router-dom';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -138,7 +139,7 @@ export default function Dashboard(props) {
   const [usersLikedPosts, setUsersLikedPosts] = useState([]);
   const [usersHeartedPosts, setUsersHeartedPosts] = useState([]);
 
-  const [nav, setNav] = useState(0);
+  const [nav, setNav] = useState({ count: 0 });
 
   const myRef = useRef(null);
 
@@ -156,7 +157,7 @@ export default function Dashboard(props) {
     notConfirmedEmail,
   } = useAuth();
 
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   let username;
   let avatar;
@@ -165,8 +166,6 @@ export default function Dashboard(props) {
     username = currentUser.displayName;
     avatar = currentUser.photoURL;
   }
-
-  let active = 0;
 
   const createMemePost = () => {
     createPostFunction(!createPost);
@@ -178,9 +177,11 @@ export default function Dashboard(props) {
 
   //Runs three times
   useEffect(() => {
+    console.log('Running useEffect to find  liked posts');
     let mounted = true;
     if (mounted) {
       async function match() {
+        console.log('running match function within useEffect');
         if (currentUser) {
           const results = await hasUserLikedPost();
           let [{ likedPosts }, { heartedPosts }] = results;
@@ -193,7 +194,7 @@ export default function Dashboard(props) {
     return () => {
       mounted = false;
     };
-  }, [activeScreen]);
+  }, [nav, loadAnotherRandomMeme]);
 
   useEffect(() => {
     let mounted = true;
@@ -224,12 +225,7 @@ export default function Dashboard(props) {
             // You can check if the user is new or existing:
             // result.additionalUserInfo.isNewUser
             setCurrentUser(result.user);
-            history.push({
-              pathname: '/setup',
-              state: {
-                verifiedUser: result.user.emailVerified,
-              },
-            });
+            navigate('/setup');
           })
           .catch((error) => {
             // Some error occurred, you can inspect the code: error.code
@@ -248,16 +244,15 @@ export default function Dashboard(props) {
     if (randomPosts) {
       setRandomPosts();
     }
-    loadPopular().then((items) => {
-      setPopularPosts(items);
-      setActiveScreen(items);
-      setLoadingFilter(false);
-    });
+    // loadPopular().then((items) => {
+    //   setPopularPosts(items);
+    //   setActiveScreen(items);
+    //   setLoadingFilter(false);
+    // });
   }
 
   async function loadPopular() {
-    // const memeDataPromise = await retrievePopularPosts();
-    const memeDataPromise = [];
+    const memeDataPromise = await retrievePopularPosts();
     if (memeDataPromise !== []) {
       const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
         return memeData;
@@ -304,7 +299,6 @@ export default function Dashboard(props) {
     }
 
     loadRandom().then((items) => {
-      console.log(items);
       setRandomPosts(items);
       setActiveScreen([items]);
       setLoadingFilter(false);
@@ -314,69 +308,49 @@ export default function Dashboard(props) {
   function filterHome() {
     if (nav !== 0) {
       setLoadingFilter(true);
-      myRef.current.scrollIntoView({ behavior: 'smooth' });
-      setNav(0);
+      // myRef.current.scrollIntoView({ behavior: 'smooth' });
+      setNav({ count: 0 });
+      navigate('/');
     }
   }
   function filterTrending() {
     if (nav !== 1) {
       setLoadingFilter(true);
-      myRef.current.scrollIntoView({ behavior: 'smooth' });
-
-      setNav(1);
+      // myRef.current.scrollIntoView({ behavior: 'smooth' });
+      setNav({ count: 1 });
     }
   }
 
   function filterPopular() {
     if (nav !== 2) {
       setLoadingFilter(true);
-      myRef.current.scrollIntoView({ behavior: 'smooth' });
+      // myRef.current.scrollIntoView({ behavior: 'smooth' });
 
-      setNav(2);
+      setNav({ count: 2 });
     }
   }
   function filterRecent() {
     if (nav !== 3) {
       setLoadingFilter(true);
-      myRef.current.scrollIntoView({ behavior: 'smooth' });
-      setNav(3);
+      // myRef.current.scrollIntoView({ behavior: 'smooth' });
+      setNav({ count: 3 });
     }
   }
   function filterRandom() {
     setLoadingFilter(true);
-    setNav(4);
+    setNav({ count: 4 });
+    console.log('setaAv(4)');
     setLoadAnotherRandomMeme((prevState) => !prevState);
   }
-  useEffect(() => {
-    let mounted = true;
-    if (mounted === true) {
-      switch (nav) {
-        case 0:
-          showPopular();
-          active = 0;
-          break;
-        case 1:
-          showPopular();
-          active = 1;
-          break;
-        case 2:
-          showPopular();
-          active = 2;
-          break;
-        case 3:
-          showRecent();
-          active = 3;
-          break;
-        case 4:
-          showRandom();
-          active = 4;
-          break;
-        default:
-          active = 0;
-      }
-    }
-    return () => (mounted = false);
-  }, [nav, loadAnotherRandomMeme]);
+
+  const navigateToProfile = () => {
+    setNav({ count: 4 });
+    navigate(`/${currentUser.displayName}`);
+  };
+  const navigateToNotifications = () => {
+    setNav({ count: 1 });
+    navigate(`/notifications`);
+  };
 
   const ConfirmEmailPrompt = () => {
     return (
@@ -482,97 +456,67 @@ export default function Dashboard(props) {
     }
     return null;
   };
-  if (activeScreen != null) {
-  }
+
   return (
-    <div className="dashboard-content">
-      {isMobile ? (
-        <>
-          <MobileHeader activeUser={currentUser} />
-          <MobileNav
-            active={nav}
+    <>
+      <div className="dashboard-content">
+        {isMobile ? (
+          <>
+            <MobileHeader activeUser={currentUser} />
+            <MobileNav
+              active={nav.count}
+              homeFilter={filterHome}
+              trendingFilter={filterTrending}
+              recentFilter={filterRecent}
+              popularFilter={filterPopular}
+              randomFilter={filterRandom}
+              createPost={createMemePost}
+              resetPassword={resetUserPassword}
+            />
+          </>
+        ) : (
+          <Sidebar
             homeFilter={filterHome}
             trendingFilter={filterTrending}
             recentFilter={filterRecent}
             popularFilter={filterPopular}
             randomFilter={filterRandom}
+            navigateToProfile={navigateToProfile}
+            navigateToNotifications={navigateToNotifications}
             createPost={createMemePost}
+            active={nav.count}
+            username={username}
+            avatar={avatar}
             resetPassword={resetUserPassword}
           />
-        </>
-      ) : (
-        <Sidebar
-          homeFilter={filterHome}
-          trendingFilter={filterTrending}
-          recentFilter={filterRecent}
-          popularFilter={filterPopular}
-          randomFilter={filterRandom}
-          createPost={createMemePost}
-          active={nav}
-          username={username}
-          avatar={avatar}
-          resetPassword={resetUserPassword}
-        />
-      )}
+        )}
+        <Outlet />
 
-      <main className={classes.content}>
-        <TopBar createPost={createMemePost} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={5}></Grid>
-          <Box spacing={5} pt={4}>
-            <div ref={myRef}></div>
+        {/* <main className={classes.content}>
+          <TopBar createPost={createMemePost} /> */}
 
-            {notConfirmedEmail ? <ConfirmEmailPrompt /> : null}
+        {/* <Container maxWidth="lg" className={classes.container}>
+      {/* <Grid container spacing={5}></Grid>
+      <Box spacing={5} pt={4}>
+        <div ref={myRef}></div>
 
-            <div className="main-content">
-              {loadingFilter && <ShowSkeletons />}
-              <RecentlyPosted />
-              {activeScreen
-                ? activeScreen.length !== undefined &&
-                  activeScreen.map((item) => {
-                    console.log(`Rendering activeScreen`);
-                    let liked = false;
-                    let hearted = false;
-                    if (usersLikedPosts.includes(item.id)) {
-                      liked = true;
-                    }
-                    if (usersHeartedPosts.includes(item.id)) {
-                      hearted = true;
-                    }
-                    return (
-                      <Card
-                        hearted={hearted}
-                        liked={liked}
-                        key={item.id}
-                        likedPosts={usersLikedPosts}
-                        heartedPosts={usersHeartedPosts}
-                        item={item}
-                      ></Card>
-                    );
-                  })
-                : null}
-              {createPost ? (
-                <CreatePost
-                  createPostFunction={createPostFunction}
-                  createPost={createPost}
-                />
-              ) : null}
-              {resetPassword ? (
-                <PasswordModal
-                  resetPassword={resetPassword}
-                  closePrompt={resetUserPassword}
-                />
-              ) : null}
-              {!loadingFilter && nav !== 4 && (
-                <div className="end-of-memes">
-                  <span>End of the memes 😢</span>
-                </div>
-              )}
-            </div>
-          </Box>
-        </Container>
-      </main>
-      <RightSidebar />
+        {notConfirmedEmail ? <ConfirmEmailPrompt /> : null}
+
+        <div className="main-content">
+       <Feed
+            nav={nav}
+            loadingFilter={loadingFilter}
+            usersLikedPosts={usersLikedPosts}
+            activeScreen={activeScreen}
+            resetUserPassword={resetUserPassword}
+          />
     </div>
+      </Box> 
+      </Container> 
+        </main>
+        */}
+        <RightSidebar />
+      </div>
+    </>
   );
 }

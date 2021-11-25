@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../CSS Components/Card.css';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import trash from '../Assets/SVGs/trash.svg';
 import report from '../Assets/SVGs/report.svg';
 import { ReactComponent as HeartIcon } from '../Assets/SVGs/heart.svg';
@@ -55,7 +55,7 @@ export default function Card(props) {
     }
   }
 
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {}, [likes]);
 
@@ -111,7 +111,7 @@ export default function Card(props) {
   };
 
   function activatePrompt() {
-    history.push('/signup');
+    navigate('/signup');
   }
   useEffect(() => {
     let mounted = true;

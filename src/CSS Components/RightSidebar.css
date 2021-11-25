@@ -1,17 +1,26 @@
+.rightsidebar-fixed {
+  height: 100vh;
+  width: 20vw;
+  max-width: 400px;
+  position: sticky;
+  overflow: hidden;
+  right: 0;
+  top: 0;
+}
+
 .rightsidebar-content {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 20vw;
   background-color: var(--bg);
-  height: 100vh;
+  height: 100%;
   padding: 2rem;
   color: white;
   border-left: 0.5px solid rgba(255, 255, 255, 0.212);
 }
 .rightsidebar-main-section {
   display: flex;
-  width: auto;
   padding: 1rem;
   margin: 2rem 0 0 0;
 
@@ -31,7 +40,7 @@
 }
 
 .main-section-title {
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   font-weight: bold;
 }
 .rightsidebar-avatar {

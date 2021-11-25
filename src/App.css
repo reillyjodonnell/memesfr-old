@@ -3,7 +3,7 @@
 body {
   font-family: 'Roboto', sans-serif;
   height: 100%;
-  background-color: var(--bg);
+  background-color: #272932 !important;
 }
 
 .App {

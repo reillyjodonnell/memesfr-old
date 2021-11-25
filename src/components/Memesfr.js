@@ -10,6 +10,8 @@ import Help from './Help';
 import Edit from './EditProfile';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import UserProfile from './routes/users/UserProfile';
+import Notifications from './routes/notifications/Notifications';
+import Feed from './routes/home/Feed';
 
 export default function Memesfr() {
   const [register, openRegister] = useState(false);
@@ -32,15 +34,16 @@ export default function Memesfr() {
           <ThemeProvider>
             <AuthProvider>
               <Routes>
-                <Route exact path="/" element={<Home />} />
+                <Route exact path="/" element={<Home />}>
+                  <Route path="/" element={<Feed />} />
+                  <Route path=":userId" element={<UserProfile />} />
+                  <Route path="/notifications" element={<Notifications />} />
+                </Route>
                 <Route path="/signup" element={<Register />} />
                 <Route path="/setup" element={<CreateProfile />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/help" element={<Help />} />
                 <Route path="/edit" element={<Edit />} />
-                <Route path="/users">
-                  <Route path=":userId" element={<UserProfile />} />
-                </Route>
               </Routes>
             </AuthProvider>
           </ThemeProvider>

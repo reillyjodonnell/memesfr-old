@@ -14,7 +14,7 @@ import { CSSTransition } from 'react-transition-group';
 
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useMobile } from '../contexts/MobileContext';
 
 export default function DropDownMenu(props) {
@@ -25,7 +25,7 @@ export default function DropDownMenu(props) {
   const [menuHeight, setMenuHeight] = useState(null);
   const [firstTime, setFirstTime] = useState(true);
   const dropdownRef = useRef(null);
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   function calcHeight(el) {
     let height = 0;
@@ -41,7 +41,7 @@ export default function DropDownMenu(props) {
   }
 
   const Help = () => {
-    <div onClick={() => history.push('/help')}>
+    <div onClick={() => navigate('/help')}>
       <DropDownItem
         Icon={<Help style={{ stroke: 'white' }} />}
         IconText="Help"
@@ -107,7 +107,7 @@ export default function DropDownMenu(props) {
                   />
                 </div>
 
-                <div onClick={() => history.push('/login')}>
+                <div onClick={() => navigate('/login')}>
                   <DropDownItem
                     Icon={<Login style={{ transform: 'translateX(3px)' }} />}
                     IconText="Log In / Sign Up"

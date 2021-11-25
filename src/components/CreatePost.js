@@ -8,7 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function CreatePost(props) {
-  const history = useNavigate();
+  const navigate = useNavigate();
   const { currentUser } = useAuth();
 
   const promptToPost = 'Login to Upload Dank Meme';
@@ -28,7 +28,7 @@ export default function CreatePost(props) {
   };
 
   function loadLoginScreen() {
-    history.push('/login');
+    navigate('/login');
   }
 
   const CreateNewPost = () => {

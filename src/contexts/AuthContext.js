@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { auth, db, storage } from '../services/firebase';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import firebase from 'firebase/app';
 import CreateProfile from '../components/CreateProfile';
 
@@ -16,12 +16,13 @@ export default function AuthProvider({ children }) {
   const [userExists, setUserExists] = useState(true);
   const [recentlyUploaded, setRecentlyUploaded] = useState([]);
   const [notConfirmedEmail, setNotConfirmedEmail] = useState(false);
-  const history = useNavigate();
 
   const actionCodeSettings = {
     url: 'https://memesfr.com/',
     handleCodeInApp: true,
   };
+
+  let navigate = useNavigate();
 
   const user = auth.currentUser;
 
@@ -34,7 +35,6 @@ export default function AuthProvider({ children }) {
         }
       })
       .catch((err) => {
-        console.log(err);
         return err.message;
       });
   }
@@ -59,12 +59,7 @@ export default function AuthProvider({ children }) {
           window.localStorage.removeItem('emailForSignIn');
           if (result.user) {
             setCurrentUser(result.user);
-            history.push({
-              pathname: '/setup',
-              state: {
-                verifiedUser: true,
-              },
-            });
+            navigate('/setup');
           }
           // You can access the new user via result.user
           // Additional user info profile not available via:
@@ -83,14 +78,13 @@ export default function AuthProvider({ children }) {
     return auth.signInWithEmailAndPassword(email, password);
   }
   function resetPassword() {
-    history.push('/reset');
+    navigate('/reset');
     return auth.sendPasswordResetEmail(user.email);
   }
   function signOut() {
     auth.signOut().then(
       function () {
-        history.push('/');
-        history.go(0);
+        navigate('/');
       },
       function (error) {}
     );
@@ -202,13 +196,15 @@ export default function AuthProvider({ children }) {
   }
 
   async function hasUserLikedPost() {
-    const currentUserID = currentUser.uid;
-    const referenceToPost = db.collection('users').doc(currentUserID);
-    const doc = await referenceToPost.get();
-    const likedPosts = doc.data().likedPosts;
-    const heartedPosts = doc.data().hearted;
-    const distinct = [{ likedPosts }, { heartedPosts }];
-    return distinct;
+    if (currentUser) {
+      const currentUserID = currentUser.uid;
+      const referenceToPost = db.collection('users').doc(currentUserID);
+      const doc = await referenceToPost.get();
+      const likedPosts = doc.data().likedPosts;
+      const heartedPosts = doc.data().hearted;
+      const distinct = [{ likedPosts }, { heartedPosts }];
+      return distinct;
+    } else return null;
   }
 
   //Make a call to the firestore and retrieve the documents
@@ -292,7 +288,6 @@ export default function AuthProvider({ children }) {
   // }
 
   async function retrievePopularPosts() {
-    window.alert('Retrieving popular posts');
     const popRef = db.collection('popular').doc('top_fifty');
     const collections = await popRef.get();
     const items = collections.data();
@@ -390,13 +385,13 @@ export default function AuthProvider({ children }) {
       addUsernameToDB(name);
       setUserName(name);
       setProfilePicture(file, true);
-      history.push('');
+      navigate('/');
     }
     if (!defaultAvatar) {
       addUsernameToDB(name);
       setUserName(name);
       setProfilePicture(file, false);
-      history.push('');
+      navigate('/');
     }
   }
 
@@ -510,10 +505,8 @@ export default function AuthProvider({ children }) {
                 createdAt: doc.data().createdAt,
                 id: doc.data().id,
               };
-              console.log(docData);
               return docData;
             }
-            console.log(documentData());
             memeObject = documentData();
           });
           return memeObject;
@@ -572,7 +565,6 @@ export default function AuthProvider({ children }) {
                     createdAt: doc.data().createdAt,
                     id: doc.data().id,
                   };
-                  console.log(docData);
                   return docData;
                 }
                 memeObject = documentData();
@@ -583,7 +575,6 @@ export default function AuthProvider({ children }) {
         }
       })
       .catch((error) => {});
-    console.log(memeObject);
     return memeObject;
   }
   async function removeHeartPost(postId) {
@@ -702,16 +693,11 @@ export default function AuthProvider({ children }) {
           }
           if (user.emailVerified && user.displayName === null) {
             setCurrentUser(user);
-            history.push({
-              pathname: '/setup',
-              state: {
-                verifiedUser: true,
-              },
-            });
+            navigate('/setup');
           }
         }
         if (!user) {
-          history.push('/');
+          navigate('/');
         }
 
         setLoadUser(false);

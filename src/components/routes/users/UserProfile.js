@@ -11,12 +11,14 @@ import Sidebar from '../../Sidebar';
 import firebase from 'firebase';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useMobile } from '../../../contexts/MobileContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import MobileNav from '../../MobileNav';
 import PasswordModal from '../../PasswordModal';
 import RightSidebar from '../../RightSidebar';
 import Doge from '../../../Assets/doge.svg';
 import '../../../CSS Components/UserProfile.css';
+import { Skeleton } from '@material-ui/lab';
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -87,6 +89,8 @@ const useStyles = makeStyles((theme) => ({
     overflowX: 'hidden',
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   container: {
     paddingBottom: theme.spacing(4),
@@ -136,7 +140,8 @@ export default function UserProfile(props) {
   const [resetPassword, resetPasswordFunction] = useState(false);
   const [usersLikedPosts, setUsersLikedPosts] = useState([]);
   const [usersHeartedPosts, setUsersHeartedPosts] = useState([]);
-
+  const [activeFilter, setActiveFilter] = useState(0);
+  const [followsUser, setFollowsUser] = useState(true);
   const [nav, setNav] = useState(0);
 
   const myRef = useRef(null);
@@ -155,7 +160,7 @@ export default function UserProfile(props) {
     notConfirmedEmail,
   } = useAuth();
 
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   let username;
   let avatar;
@@ -223,12 +228,7 @@ export default function UserProfile(props) {
             // You can check if the user is new or existing:
             // result.additionalUserInfo.isNewUser
             setCurrentUser(result.user);
-            history.push({
-              pathname: '/setup',
-              state: {
-                verifiedUser: result.user.emailVerified,
-              },
-            });
+            navigate('/setup');
           })
           .catch((error) => {
             // Some error occurred, you can inspect the code: error.code
@@ -303,7 +303,6 @@ export default function UserProfile(props) {
     }
 
     loadRandom().then((items) => {
-      console.log(items);
       setRandomPosts(items);
       setActiveScreen([items]);
       setLoadingFilter(false);
@@ -379,58 +378,207 @@ export default function UserProfile(props) {
 
   const followerCount = 69;
 
+  const MemePreview = ({ title }) => {
+    return (
+      <div className="meme-container">
+        <img className="meme-image" src={Doge} />
+        <span className="meme-title">{title}</span>
+      </div>
+    );
+  };
+
+  const getUserAge = () => {
+    // plus sign is type conversion from string to int
+    const creationDateInMilliSeconds = +currentUser.metadata.a;
+    const creationDate = new Date(creationDateInMilliSeconds).toLocaleString(
+      'en-GB',
+      {
+        timeZone: 'GMT',
+      }
+    );
+
+    const timestamp = Math.round(Date.now());
+    let todayDate = new Date(timestamp).toLocaleString('en-GB', {
+      timeZone: 'GMT',
+    });
+
+    const yearCreation = creationDate.slice(6, 10);
+    const monthCreation = creationDate.slice(3, 5);
+    const dayCreation = creationDate.slice(0, 2);
+
+    const yearToday = todayDate.slice(6, 10);
+    const monthToday = todayDate.slice(3, 5);
+    const dayToday = todayDate.slice(0, 2);
+
+    const yearRemainder = yearToday - yearCreation;
+    const monthRemainder = monthToday - monthCreation;
+    const dayRemainder = dayToday - dayCreation;
+
+    const userAge = {
+      ageInYears: yearRemainder,
+      ageInMonths: monthRemainder,
+      ageInDays: dayRemainder,
+    };
+    return userAge;
+  };
+
+  const formatUserAge = () => {
+    const { ageInYears, ageInDays, ageInMonths } = getUserAge();
+    if (ageInYears === 0 && ageInMonths === 0) {
+      return `${ageInDays} days 👶`;
+    } else if (ageInYears === 0) {
+      return `${ageInMonths} months 🧒`;
+    } else return `${ageInYears} years ${ageInMonths} months 🧑`;
+  };
+  let userData = {};
+  if (currentUser !== undefined) {
+    userData = {
+      age: formatUserAge(),
+      totalCrowns: 69,
+      followerCount: 420,
+      memesPosted: 32,
+    };
+  }
+  const toggleFollowUser = () => {
+    setFollowsUser((prevState) => !prevState);
+  };
+
   const UserProfile = () => {
     return (
       <div className="user-profile-container">
         <div className="user-profile">
           <div className="user-profile-cover-photo"></div>
-          <div className="user-avatar-container">
-            <img className="user-avatar" src={Doge} />
+          <div>
+            <div className="user-avatar-container">
+              <img className="user-avatar" src={currentUser.photoURL} />
+            </div>
           </div>
 
-          <span className="user-username">@OReilly</span>
-          <span className="user-follower-count">{followerCount} followers</span>
+          <span className="user-username">{currentUser.displayName}</span>
+          <div className="user-profile-stats">
+            <div className="user-stat-group">
+              <span className="user-follower-count">
+                {userData.followerCount}
+              </span>
+              <span className="user-stat-title">followers</span>
+            </div>
+            <div className="user-stat-group">
+              <span className="user-crowns">{userData.totalCrowns} </span>
+
+              <span
+                style={{
+                  padding: '0px',
+                  margin: '0px !important',
+                  display: 'inline',
+                }}
+                className="user-stat-title"
+              >
+                crowns
+              </span>
+            </div>
+            <div className="user-stat-group">
+              <span className="user-bday">{userData.memesPosted} </span>
+
+              <span
+                style={{
+                  padding: '0px',
+                  margin: '0px !important',
+                  display: 'inline',
+                }}
+                className="user-stat-title"
+              >
+                memes
+              </span>
+            </div>
+          </div>
+          <div className="user-follow-button-container">
+            <div
+              onClick={toggleFollowUser}
+              className={
+                followsUser ? 'user-follow-button-active' : 'user-follow-button'
+              }
+            >
+              <span>{followsUser ? 'Following' : 'Follow'} </span>
+            </div>
+          </div>
+
+          <div className="user-profile-content">
+            <div
+              className="user-profile-navigation-container"
+              onClick={() => setActiveFilter(0)}
+            >
+              <span
+                className={
+                  activeFilter === 0
+                    ? 'user-profile-post-header-active'
+                    : 'user-profile-post-header'
+                }
+              >
+                Posts
+              </span>
+            </div>
+            <div
+              className="user-profile-navigation-container"
+              onClick={() => setActiveFilter(1)}
+            >
+              <span
+                className={
+                  activeFilter === 1
+                    ? 'user-profile-post-header-active'
+                    : 'user-profile-post-header'
+                }
+              >
+                Activity
+              </span>
+            </div>
+            <div
+              className="user-profile-navigation-container"
+              onClick={() => setActiveFilter(2)}
+            >
+              <span
+                className={
+                  activeFilter === 2
+                    ? 'user-profile-post-header-active'
+                    : 'user-profile-post-header'
+                }
+              >
+                Crowned
+              </span>
+            </div>
+          </div>
         </div>
-        <div className="user-profile-posts"></div>
       </div>
     );
   };
 
-  return (
-    <div className="dashboard-content">
-      {isMobile ? (
-        <>
-          <MobileHeader activeUser={currentUser} />
-          <MobileNav
-            active={nav}
-            homeFilter={filterHome}
-            trendingFilter={filterTrending}
-            recentFilter={filterRecent}
-            popularFilter={filterPopular}
-            randomFilter={filterRandom}
-            createPost={createMemePost}
-            resetPassword={resetUserPassword}
-          />
-        </>
-      ) : (
-        <Sidebar
-          homeFilter={filterHome}
-          trendingFilter={filterTrending}
-          recentFilter={filterRecent}
-          popularFilter={filterPopular}
-          randomFilter={filterRandom}
-          createPost={createMemePost}
-          active={nav}
-          username={username}
-          avatar={avatar}
-          resetPassword={resetUserPassword}
-        />
-      )}
+  const ShowSkeletons = () => {
+    return (
+      <>
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+        <Skeleton className={classes.skeleton} variant="rect" />
+      </>
+    );
+  };
 
-      <main className={classes.content}>
-        <UserProfile />
-      </main>
-      <RightSidebar />
+  return (
+    <div className="memes-content">
+      {currentUser !== undefined ? <UserProfile /> : null}
+      <ShowSkeletons />
     </div>
   );
 }

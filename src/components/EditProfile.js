@@ -9,7 +9,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function SelectUsername() {
-  const history = useNavigate();
+  const navigate = useNavigate();
   const [file, setFile] = useState('');
   const inputFile = useRef(null);
 
@@ -19,7 +19,7 @@ export default function SelectUsername() {
     if (file) {
       setProfilePicture(file);
     }
-    history.push('/');
+    navigate('/');
   }
 
   const handleUpload = (event) => {
@@ -86,7 +86,7 @@ export default function SelectUsername() {
           </div>
         </div>
         <div className="return-home">
-          <Link onClick={() => history.push('/')} style={{ cursor: 'pointer' }}>
+          <Link onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             Return Home
           </Link>
         </div>

@@ -12,12 +12,12 @@
 .countdown-timer {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   flex-direction: column;
   height: 80px;
   font-size: 2rem;
 
-  border: 3px solid #55565d;
+  border: 3px solid #55565d38;
   width: auto;
   padding: 1rem;
 }
@@ -30,7 +30,6 @@
 }
 .countdown-timer-time {
   display: flex;
-  height: 100%;
   color: rgba(255, 255, 255, 0.596);
   font-weight: 600;
   justify-content: center;

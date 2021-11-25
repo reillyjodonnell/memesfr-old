@@ -22,10 +22,10 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 function Copyright() {
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   function redirectHome() {
-    history.push('/');
+    navigate('/');
   }
   return (
     <Typography
@@ -117,7 +117,7 @@ export default function SignInSide(props) {
   const emailRef = useRef();
   const passwordRef = useRef();
 
-  const history = useNavigate();
+  const navigate = useNavigate();
   const { login } = useAuth();
 
   useEffect(() => {
@@ -140,18 +140,15 @@ export default function SignInSide(props) {
     try {
       await login(email, password)
         .then((user) => {
-          console.log(user);
-          history.push('/');
+          navigate('/');
         })
         .catch((err) => {
-          console.log(err);
-          console.log('Error');
           setError('Failed to log in');
         });
     } catch {}
   }
   function redirectToSignup() {
-    history.push('/signup');
+    navigate('/signup');
   }
   function enablePassword() {
     showPasswordFunction(!showPassword);
@@ -172,7 +169,7 @@ export default function SignInSide(props) {
             square
           >
             <div className={classes.paper}>
-              <div onClick={() => history.push('/')} className="login-logo">
+              <div onClick={() => navigate('/')} className="login-logo">
                 <Castle />
                 <span>Memesfr</span>
               </div>

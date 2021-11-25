@@ -90,7 +90,7 @@ export default function CreateProfile(props) {
   const [error, setError] = useState(true);
   const [file, setFile] = useState();
   const inputFile = useRef(null);
-  const history = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
   const { checkUsernameAvailability, updateProfile } = useAuth();
   const [userName, setUserName] = useState('');
@@ -217,7 +217,7 @@ export default function CreateProfile(props) {
       );
     }
   } else {
-    history.push('/');
+    navigate('/');
     return null;
   }
 }

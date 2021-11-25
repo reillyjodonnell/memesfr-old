@@ -128,7 +128,7 @@ export default function SignUp() {
   const usernameRef = useRef();
   const passwordRef = useRef();
 
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   const { signup, sendAuthEmail } = useAuth();
 
@@ -198,7 +198,7 @@ export default function SignUp() {
     showPasswordFunction(!showPassword);
   }
   function redirectToLogin() {
-    history.push('/login');
+    navigate('/login');
   }
 
   const ConfirmEmailAddress = () => {
@@ -226,7 +226,7 @@ export default function SignUp() {
       <Container component="main" maxWidth="xs">
         <CssBaseline>
           <div className={classes.paper}>
-            <div onClick={() => history.push('/')} className="login-logo">
+            <div onClick={() => navigate('/')} className="login-logo">
               <Castle />
               <span>Memesfr</span>
             </div>

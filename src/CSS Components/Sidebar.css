@@ -110,13 +110,13 @@
 }
 .navigation-group svg,
 .logout-container svg {
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
 }
 .navigation-group-text {
   margin-left: 1.5rem;
   font-weight: 500;
-  font-size: 1.25rem;
+  font-size: 1.4rem;
 }
 .navigation-group-items {
   width: auto;
