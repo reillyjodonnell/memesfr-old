@@ -287,6 +287,16 @@ export default function AuthProvider({ children }) {
   //     });
   // }
 
+  async function retrieveProfileData(userID) {
+    const userData = await db.collection('usernames').doc(userID);
+    const result = await userData.get();
+    const userId = result.data();
+    const profileData = await db.collection('users').doc(userId.uid);
+    const profileResult = await profileData.get();
+    const profileStats = profileResult.data();
+    return profileStats;
+  }
+
   async function retrievePopularPosts() {
     const popRef = db.collection('popular').doc('top_fifty');
     const collections = await popRef.get();
@@ -373,6 +383,18 @@ export default function AuthProvider({ children }) {
       },
       {
         likedPosts: [],
+      },
+      {
+        photoURL: user.photoURL,
+      },
+      {
+        userName: id,
+      },
+      {
+        crowns: 0,
+      },
+      {
+        followers: [],
       },
     ];
 
@@ -735,6 +757,7 @@ export default function AuthProvider({ children }) {
     completeSignInWithEmail,
     setCurrentUser,
     notConfirmedEmail,
+    retrieveProfileData,
   };
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 }

@@ -11,7 +11,7 @@ import Sidebar from '../../Sidebar';
 import firebase from 'firebase';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useMobile } from '../../../contexts/MobileContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams, useLocation } from 'react-router-dom';
 import MobileNav from '../../MobileNav';
 import PasswordModal from '../../PasswordModal';
 import RightSidebar from '../../RightSidebar';
@@ -129,6 +129,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function UserProfile(props) {
+  let params = useParams();
+  const { userId } = params;
   const classes = useStyles();
   const [popularPosts, setPopularPosts] = useState([{}]);
   const [recentPosts, setRecentPosts] = useState([{}]);
@@ -143,6 +145,10 @@ export default function UserProfile(props) {
   const [activeFilter, setActiveFilter] = useState(0);
   const [followsUser, setFollowsUser] = useState(true);
   const [nav, setNav] = useState(0);
+  const [crownCount, setCrownCount] = useState(0);
+  const [followers, setFollowers] = useState(0);
+  const [memesCreated, setMemesCreated] = useState(0);
+  const [userAge, setUserAge] = useState('');
 
   const myRef = useRef(null);
 
@@ -158,9 +164,31 @@ export default function UserProfile(props) {
     hasUserLikedPost,
     setCurrentUser,
     notConfirmedEmail,
+    retrieveProfileData,
   } = useAuth();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    async function data() {
+      const result = await profileData(userId);
+      return result;
+    }
+    data().then((result) => {
+      console.log(result);
+      const { createdPosts, crowns, followers } = result;
+      console.log(createdPosts.length, crowns, followers.length);
+      setCrownCount(crowns);
+      setFollowers(followers.length);
+      setMemesCreated(createdPosts.length);
+    });
+  }, []);
+
+  //Retrieve the data from the user profile using the UID
+  async function profileData(userId) {
+    const data = await retrieveProfileData(userId);
+    return data;
+  }
 
   let username;
   let avatar;
@@ -376,8 +404,6 @@ export default function UserProfile(props) {
     return () => (mounted = false);
   }, [nav, loadAnotherRandomMeme]);
 
-  const followerCount = 69;
-
   const MemePreview = ({ title }) => {
     return (
       <div className="meme-container">
@@ -432,6 +458,7 @@ export default function UserProfile(props) {
   };
   let userData = {};
   if (currentUser !== undefined) {
+    // setUserAge(formatUserAge());
     userData = {
       age: formatUserAge(),
       totalCrowns: 69,
@@ -457,13 +484,11 @@ export default function UserProfile(props) {
           <span className="user-username">{currentUser.displayName}</span>
           <div className="user-profile-stats">
             <div className="user-stat-group">
-              <span className="user-follower-count">
-                {userData.followerCount}
-              </span>
+              <span className="user-follower-count">{followers}</span>
               <span className="user-stat-title">followers</span>
             </div>
             <div className="user-stat-group">
-              <span className="user-crowns">{userData.totalCrowns} </span>
+              <span className="user-crowns">{crownCount} </span>
 
               <span
                 style={{
@@ -477,7 +502,7 @@ export default function UserProfile(props) {
               </span>
             </div>
             <div className="user-stat-group">
-              <span className="user-bday">{userData.memesPosted} </span>
+              <span className="user-bday">{memesCreated} </span>
 
               <span
                 style={{
@@ -577,7 +602,7 @@ export default function UserProfile(props) {
 
   return (
     <div className="memes-content">
-      {currentUser !== undefined ? <UserProfile /> : null}
+      {currentUser !== undefined ? <UserProfile userId={userId} /> : null}
       <ShowSkeletons />
     </div>
   );

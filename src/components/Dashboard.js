@@ -18,6 +18,7 @@ import PasswordModal from './PasswordModal';
 import RightSidebar from './RightSidebar';
 import Feed from './routes/home/Feed';
 import { Outlet } from 'react-router-dom';
+import Topbar from './TopBar';
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -244,11 +245,11 @@ export default function Dashboard(props) {
     if (randomPosts) {
       setRandomPosts();
     }
-    // loadPopular().then((items) => {
-    //   setPopularPosts(items);
-    //   setActiveScreen(items);
-    //   setLoadingFilter(false);
-    // });
+    loadPopular().then((items) => {
+      setPopularPosts(items);
+      setActiveScreen(items);
+      setLoadingFilter(false);
+    });
   }
 
   async function loadPopular() {
@@ -493,28 +494,26 @@ export default function Dashboard(props) {
         <Outlet />
 
         {/* <main className={classes.content}>
-          <TopBar createPost={createMemePost} /> */}
+          <Topbar createPost={createMemePost} />
 
-        {/* <Container maxWidth="lg" className={classes.container}>
-      {/* <Grid container spacing={5}></Grid>
-      <Box spacing={5} pt={4}>
-        <div ref={myRef}></div>
+          <Container maxWidth="lg" className={classes.container}>
+            <Grid container spacing={5}></Grid>
+            <Box spacing={5} pt={4}>
+              <div ref={myRef}></div>
 
-        {notConfirmedEmail ? <ConfirmEmailPrompt /> : null}
+              {notConfirmedEmail ? <ConfirmEmailPrompt /> : null}
 
-        <div className="main-content">
-       <Feed
-            nav={nav}
-            loadingFilter={loadingFilter}
-            usersLikedPosts={usersLikedPosts}
-            activeScreen={activeScreen}
-            resetUserPassword={resetUserPassword}
-          />
-    </div>
-      </Box> 
-      </Container> 
-        </main>
-        */}
+              <Feed
+                nav={nav}
+                loadingFilter={loadingFilter}
+                usersLikedPosts={usersLikedPosts}
+                activeScreen={activeScreen}
+                resetUserPassword={resetUserPassword}
+              /> 
+            </Box>
+          </Container>
+        </main> */}
+
         <RightSidebar />
       </div>
     </>
