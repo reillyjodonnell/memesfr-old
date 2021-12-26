@@ -11,17 +11,22 @@ export default function RightSidebar() {
           <Countdown />
         </div>
         <div className="rightsidebar-main-section">
-          <span className="main-section-title">today's memelord 👑</span>
-          <div className="rightsidebar-user-profile">
-            <img className="rightsidebar-avatar" src={Doge} />
-            <span>@reilly</span>
-          </div>
+          <div className="daily-meme-lord-container">
+            <div className="daily-meme-lord">
+              <span className="main-section-title">today's memelord 👑</span>
+              <div className="rightsidebar-user-profile">
+                <img className="rightsidebar-avatar" src={Doge} />
+                <span>@reilly</span>
+              </div>
 
-          <div className="rightsidebar-user-stats">
-            <span className="rightsidebar-crown-count">1.6k 👑</span>
-            <span className="rightsidebar-meme-count">24 memes</span>
+              <div className="rightsidebar-user-stats">
+                <span className="rightsidebar-crown-count">1.6k 👑</span>
+                <span className="rightsidebar-meme-count">24 memes</span>
+              </div>
+            </div>
           </div>
         </div>
+
         <div className="rightsidebar-secondary-section">
           <TrendingTopics />
         </div>

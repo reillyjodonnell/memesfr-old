@@ -117,19 +117,160 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Feed({
-  activeScreen,
-  resetUserPassword,
-  usersLikedPosts,
-  loadingFilter,
-}) {
+export default function Feed({ activeNav }) {
   const classes = useStyles();
-  const [createPost, createPostFunction] = useState(false);
   const [resetPassword, resetPasswordFunction] = useState(false);
+  const [register, openRegister] = useState(false);
+  const [signIn, openSignIn] = useState(false);
+  const [home, displayHome] = useState(true);
+  const [popularPosts, setPopularPosts] = useState([{}]);
+  const [recentPosts, setRecentPosts] = useState([{}]);
+  const [randomPosts, setRandomPosts] = useState([{}]);
+  const [activeScreen, setActiveScreen] = useState([{}]);
+  const [loadingFilter, setLoadingFilter] = useState(false);
+  const [createPost, createPostFunction] = useState(false);
+  const [loadAnotherRandomMeme, setLoadAnotherRandomMeme] = useState(false);
+  const [usersLikedPosts, setUsersLikedPosts] = useState([]);
+  const [usersHeartedPosts, setUsersHeartedPosts] = useState([]);
 
   const [nav, setNav] = useState(0);
 
   const myRef = useRef(null);
+
+  useEffect(() => {
+    showPopular();
+  }, []);
+
+  const {
+    currentUser,
+    hasUserLikedPost,
+    retrievePopularPosts,
+    retrieveRecentPosts,
+    retrieveRandomMeme,
+  } = useAuth();
+
+  const resetUserPassword = () => {
+    document.getElementById('root').style.filter = '';
+    resetPasswordFunction(!resetPassword);
+  };
+
+  function showPopular() {
+    setLoadingFilter(true);
+    setActiveScreen();
+    if (recentPosts) {
+      setRecentPosts();
+    }
+    if (randomPosts) {
+      setRandomPosts();
+    }
+    loadPopular().then((items) => {
+      console.log(items);
+      setPopularPosts(items);
+      setActiveScreen(items);
+      setLoadingFilter(false);
+    });
+  }
+
+  async function loadPopular() {
+    const memeDataPromise = await retrievePopularPosts();
+    if (memeDataPromise !== []) {
+      const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
+        return memeData;
+      });
+      return memeDataObject;
+    } else return memeDataPromise;
+  }
+  async function loadRecent() {
+    const memeDataPromise = await retrieveRecentPosts();
+    const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
+      return memeData;
+    });
+    return memeDataObject;
+  }
+
+  function showRecent() {
+    setActiveScreen();
+    if (popularPosts) {
+      setPopularPosts();
+    }
+    if (randomPosts) {
+      setRandomPosts();
+    }
+    loadRecent().then((items) => {
+      setRecentPosts(items);
+      setActiveScreen(items);
+      setLoadingFilter(false);
+    });
+  }
+  async function loadRandom() {
+    const memeDataPromise = await retrieveRandomMeme();
+    return memeDataPromise;
+  }
+
+  function showRandom() {
+    setLoadingFilter(true);
+
+    setActiveScreen();
+    if (popularPosts) {
+      setPopularPosts();
+    }
+    if (recentPosts) {
+      setRecentPosts();
+    }
+
+    loadRandom().then((items) => {
+      setRandomPosts(items);
+      setActiveScreen([items]);
+      setLoadingFilter(false);
+    });
+  }
+
+  function filterHome() {
+    if (nav !== 0) {
+      setLoadingFilter(true);
+      // myRef.current.scrollIntoView({ behavior: 'smooth' });
+      setNav({ count: 0 });
+      //navigate('/');
+    }
+  }
+  function filterTrending() {
+    if (nav !== 1) {
+      setLoadingFilter(true);
+      // myRef.current.scrollIntoView({ behavior: 'smooth' });
+      setNav({ count: 1 });
+    }
+  }
+
+  function filterPopular() {
+    if (nav !== 2) {
+      setLoadingFilter(true);
+      // myRef.current.scrollIntoView({ behavior: 'smooth' });
+
+      setNav({ count: 2 });
+    }
+  }
+  function filterRecent() {
+    if (nav !== 3) {
+      setLoadingFilter(true);
+      // myRef.current.scrollIntoView({ behavior: 'smooth' });
+      setNav({ count: 3 });
+    }
+  }
+  function filterRandom() {
+    setLoadingFilter(true);
+    setNav({ count: 4 });
+    console.log('setaAv(4)');
+    setLoadAnotherRandomMeme((prevState) => !prevState);
+  }
+
+  const updateRegister = () => {
+    displayHome(!home);
+    openRegister(!register);
+  };
+  const updateSignIn = () => {
+    displayHome(!home);
+    openSignIn(!signIn);
+  };
 
   const { isMobile } = useMobile();
 
@@ -212,7 +353,7 @@ export default function Feed({
 
   return (
     <div className="main-content">
-      {loadingFilter && <ShowSkeletons />}
+      {loadingFilter || activeScreen.length < 1 ? <ShowSkeletons /> : null}
       <RecentlyPosted />
       {activeScreen
         ? activeScreen.length !== undefined &&
@@ -222,7 +363,6 @@ export default function Feed({
             if (usersLikedPosts.includes(item.id)) {
               liked = true;
             }
-
             return (
               <Card
                 hearted={hearted}

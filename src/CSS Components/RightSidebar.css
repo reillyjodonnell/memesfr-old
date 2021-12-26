@@ -6,6 +6,8 @@
   overflow: hidden;
   right: 0;
   top: 0;
+  color: white;
+  border-left: 0.5px solid rgba(255, 255, 255, 0.212);
 }
 
 .rightsidebar-content {
@@ -15,20 +17,14 @@
   align-items: center;
   background-color: var(--bg);
   height: 100%;
-  padding: 2rem;
-  color: white;
-  border-left: 0.5px solid rgba(255, 255, 255, 0.212);
+  margin: 2rem;
 }
 .rightsidebar-main-section {
   display: flex;
-  padding: 1rem;
   margin: 2rem 0 0 0;
-
+  width: 100%;
   flex-direction: column;
   align-items: center;
-  background-color: #00000038;
-  border: 2px solid #b4b4b7;
-  border-radius: 20px;
   height: auto;
 }
 .daily-counter {
@@ -74,4 +70,23 @@
   flex-direction: column;
   align-items: center;
   border-radius: 20px;
+}
+
+.daily-meme-lord-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+  background-color: #00000038;
+  border: 2px solid #b4b4b7;
+  border-radius: 20px;
+}
+.daily-meme-lord {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem;
 }
