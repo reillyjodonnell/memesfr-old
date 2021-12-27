@@ -24,6 +24,7 @@
 }
 
 .topbar-upload-meme-button {
+  position: relative;
   margin: 0 1rem;
   padding: 4px;
   display: flex;
@@ -56,6 +57,17 @@
 .topbar-upload-meme-button:hover {
   border: 1px solid white;
   transition: all var(--speed);
+}
+
+.icon-text-modal {
+  z-index: 20000;
+  position: absolute;
+  display: flex;
+  width: 20px;
+  height: 10px;
+  justify-content: center;
+  align-items: center;
+  bottom: -30px;
 }
 .upload-meme-button-text {
   padding-right: 5px;

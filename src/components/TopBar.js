@@ -7,13 +7,34 @@ import { ReactComponent as Coins } from '../Assets/Icons/Coins.svg';
 import { ReactComponent as Language } from '../Assets/Icons/Language.svg';
 import { ReactComponent as Help } from '../Assets/Icons/Help.svg';
 
-import { Message, Settings } from '@material-ui/icons';
+import {
+  Message,
+  Settings,
+  AccountBalanceWalletRounded,
+} from '@material-ui/icons';
 
 export default function TopBar(props) {
   const [isHovering, setIsHovering] = useState(false);
+  const [showIconText, setShowIconText] = useState(false);
 
   const handleMouseOver = () => {
-    setIsHovering(true);
+    if (isHovering) {
+      setIsHovering(false);
+    } else {
+      setIsHovering(true);
+    }
+  };
+
+  const handleShowText = () => {
+    setShowIconText((prev) => !prev);
+  };
+
+  const IconText = ({ iconText }) => {
+    return (
+      <div className="icon-text-modal">
+        <span>Icon name</span>
+      </div>
+    );
   };
 
   const handleMouseOut = () => {
@@ -57,11 +78,23 @@ export default function TopBar(props) {
           <span>Memesfr</span>
         </div>
         <div className="topbar-icon-container">
-          <div className="topbar-upload-meme-button topbar-first-button">
+          <div
+            onMouseOver={handleShowText}
+            className="topbar-upload-meme-button topbar-first-button"
+          >
             <Plus />
           </div>
-          <div className="topbar-upload-meme-button">
+          <div
+            onMouseOver={handleShowText}
+            className="topbar-upload-meme-button"
+          >
             <Message />
+          </div>
+          <div
+            onMouseOver={handleShowText}
+            className="topbar-upload-meme-button"
+          >
+            <AccountBalanceWalletRounded />
           </div>
         </div>
 
