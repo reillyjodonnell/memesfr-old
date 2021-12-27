@@ -26,8 +26,6 @@ export default function AuthProvider({ children }) {
 
   const user = auth.currentUser;
 
-  console.log(currentUser);
-
   function signup(email, password) {
     return auth
       .createUserWithEmailAndPassword(email, password)

@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
-import Doge from "../Assets/doge.svg";
+import React, { useContext, useState, useEffect } from 'react';
+import Doge from '../Assets/doge.svg';
 
 const ThemeContext = React.createContext();
 
@@ -16,7 +16,7 @@ export default function ThemeProvider({ children }) {
       if (doge == true) {
         setDogeBackground();
       }
-      if (doge == false) document.body.style.backgroundImage = "";
+      if (doge == false) document.body.style.backgroundImage = '';
     }
     return () => (mount = false);
   }, [doge]);
@@ -26,9 +26,8 @@ export default function ThemeProvider({ children }) {
   }
 
   function setDogeBackground() {
-    console.log("Activating doge");
     document.body.style.backgroundImage = `url(${Doge})`;
-    document.body.style.backgroundSize = "contain";
+    document.body.style.backgroundSize = 'contain';
   }
 
   const values = {

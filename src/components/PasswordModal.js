@@ -1,13 +1,11 @@
-import React from "react";
-import ReactDom from "react-dom";
-import x from "../Assets/SVGs/x.svg";
-import "../CSS Components/PasswordModal.css";
+import React from 'react';
+import ReactDom from 'react-dom';
+import x from '../Assets/SVGs/x.svg';
+import '../CSS Components/PasswordModal.css';
 
 export default function Modal(props) {
-  console.log("Component is rendering");
-
   if (props.resetPassword) {
-    document.getElementById("root").style.filter = "blur(5px)";
+    document.getElementById('root').style.filter = 'blur(5px)';
   }
 
   return ReactDom.createPortal(
@@ -19,6 +17,6 @@ export default function Modal(props) {
         <span>Didn't get it? Resend Email.</span>
       </div>
     </div>,
-    document.getElementById("portal")
+    document.getElementById('portal')
   );
 }

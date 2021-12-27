@@ -148,7 +148,6 @@ export default function SignUp() {
       setError('');
       await signup(email, password)
         .then((err) => {
-          console.log(err);
           if (!err) {
             window.alert('Success');
             setUserCreation(true);

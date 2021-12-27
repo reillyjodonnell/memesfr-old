@@ -185,7 +185,6 @@ export default function Card(props) {
   }
   const DisplayAvatar = () => {
     const avatar = props.item.authorPic;
-    console.log(props);
     const username = props.item.userName;
 
     return (

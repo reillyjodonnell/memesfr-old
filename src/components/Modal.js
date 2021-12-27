@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 const accept = 'images';
 export default function Modal(props) {
-  console.log('Component is rendering');
   const classes = useStyles();
   const [name, setName] = useState('Use The Memes, Luke');
   const [viewPhoto, viewPhotoFunction] = useState(false);

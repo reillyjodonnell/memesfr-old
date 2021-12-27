@@ -95,6 +95,10 @@ export default function Sidebar(props) {
             </div>
           </Link>
         ) : null}
+        <div className="upload-meme-button">
+          <Plus style={{ width: '30px', paddingRight: '5px' }} />
+          <span>Upload Meme</span>
+        </div>
 
         <div className="sidebar-navigation">
           <CSSTransition

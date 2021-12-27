@@ -176,7 +176,6 @@ export default function UserProfile(props) {
       return result;
     }
     data().then((result) => {
-      console.log(result);
       const { createdPosts, crowns, followers, avatar } = result;
 
       setCrownCount(crowns);
@@ -184,8 +183,6 @@ export default function UserProfile(props) {
       setMemesCreated(createdPosts.length);
     });
   }, []);
-
-  console.log(currentUser);
 
   //Retrieve the data from the user profile using the UID
   async function profileData(userId) {
@@ -631,7 +628,7 @@ export default function UserProfile(props) {
   };
 
   return (
-    <div className="memes-content">
+    <div className="main-content">
       {currentUser !== undefined ? <UserProfile userId={userId} /> : null}
       <ShowSkeletons />
     </div>

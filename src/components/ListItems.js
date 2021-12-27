@@ -13,8 +13,6 @@ import { useAuth } from '../contexts/AuthContext';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
 export default function MainListItems(props) {
-  console.log(props);
-
   return (
     <div>
       <ListItem onClick={props.homeFilter} button>

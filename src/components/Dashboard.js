@@ -340,7 +340,6 @@ export default function Dashboard(props) {
   function filterRandom() {
     setLoadingFilter(true);
     setNav({ count: 4 });
-    console.log('setaAv(4)');
     setLoadAnotherRandomMeme((prevState) => !prevState);
   }
 
@@ -514,7 +513,7 @@ export default function Dashboard(props) {
           </Container>
         </main> */}
 
-        <RightSidebar />
+        {/* <RightSidebar /> */}
       </div>
     </div>
   );

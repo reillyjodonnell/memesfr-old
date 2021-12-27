@@ -138,6 +138,7 @@ export default function Feed({ activeNav }) {
   const myRef = useRef(null);
 
   useEffect(() => {
+    console.log('Getting and showing popular posts');
     showPopular();
   }, []);
 
@@ -164,7 +165,6 @@ export default function Feed({ activeNav }) {
       setRandomPosts();
     }
     loadPopular().then((items) => {
-      console.log(items);
       setPopularPosts(items);
       setActiveScreen(items);
       setLoadingFilter(false);
@@ -259,7 +259,6 @@ export default function Feed({ activeNav }) {
   function filterRandom() {
     setLoadingFilter(true);
     setNav({ count: 4 });
-    console.log('setaAv(4)');
     setLoadAnotherRandomMeme((prevState) => !prevState);
   }
 

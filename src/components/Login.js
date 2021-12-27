@@ -123,7 +123,6 @@ export default function SignInSide(props) {
   useEffect(() => {
     let mount = true;
     if (mount === true) {
-      console.log('setting user');
       const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
         setCurrentUser(user);
       });
