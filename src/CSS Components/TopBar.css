@@ -84,6 +84,7 @@
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  border-radius: 10px;
 }
 .topbar-profile-modal-item {
   font-size: 1rem;
