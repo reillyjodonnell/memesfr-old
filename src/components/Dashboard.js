@@ -121,7 +121,7 @@ const useStyles = makeStyles((theme) => ({
   skeleton: {
     margin: '1rem',
 
-    width: '40vw',
+    width: '35vw',
     minWidth: '300px',
     height: '35vh',
   },
@@ -459,7 +459,7 @@ export default function Dashboard(props) {
   };
 
   return (
-    <>
+    <div className="dashboard">
       <div className="dashboard-content">
         {isMobile ? (
           <>
@@ -516,6 +516,6 @@ export default function Dashboard(props) {
 
         <RightSidebar />
       </div>
-    </>
+    </div>
   );
 }

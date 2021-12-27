@@ -73,30 +73,44 @@
   flex-direction: row;
   align-items: center;
   width: 100%;
+  padding: 1rem;
 }
 .meme-identification {
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
   display: flex;
   font-size: 1rem;
   white-space: nowrap;
   height: 100%;
   width: 100%;
 }
+.user-name-information {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .username {
   display: flex;
   text-align: center;
   font-size: 12px;
   padding-left: 0;
   width: 100%;
+  cursor: pointer;
 }
 .clickable {
-  font-size: 16px;
-  cursor: default;
-  font-weight: 550;
+  font-weight: 600;
   padding-bottom: auto;
-  color: #fbfaf891;
+  color: white;
   text-overflow: ellipsis;
+  margin-right: 3px;
+  cursor: pointer;
+  pointer-events: all;
+}
+.clickable:hover {
+  transition: all var(--speed);
+  text-decoration: underline 2px solid white;
 }
 .clickable span {
   font-stretch: ultra-expanded;
@@ -193,17 +207,13 @@
 
 /*End Of Pencil*/
 .meme-title {
-  padding: 0.25rem;
-  padding-left: 0;
-  margin: 0.5rem 0;
-  font-size: 20px;
   font-weight: 500;
-  color: #fbfaf8;
+  color: #fbfaf8b0;
 }
 .lower {
   display: flex;
   width: 100%;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin: 1rem;
   overflow: hidden;
@@ -225,8 +235,13 @@
   border: 1px solid black;
   border-radius: 15px;
   padding: 0.25rem 0.25rem;
-  background-color: rgba(0, 0, 0, 0.26);
+  /* background-color: rgba(0, 0, 0, 0.26); */
   cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.288);
+}
+.like-container svg {
+  padding: 0 0.25rem;
+  color: white;
 }
 
 .like-container-active {
@@ -251,11 +266,11 @@
   transition: all var(--speed);
 }
 .likes-icon {
-  font-size: 1.65rem;
+  font-size: 1.45rem;
   padding: 0 0.25rem;
 }
 .number-of-likes {
-  font-size: 1.65rem;
+  font-size: 1.45rem;
   padding: 0 0.25rem;
   display: flex;
   justify-content: center;
@@ -263,6 +278,72 @@
   text-align: center;
   font-weight: 500;
   color: #cacacac9;
+}
+.icon-container {
+  display: flex;
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.295);
+  border-radius: 50%;
+}
+.icon-container:hover {
+  background-color: rgba(255, 255, 255, 0.651);
+  transition: var(--speed) all;
+}
+.verified-container {
+  height: 10px;
+  width: 10px;
+  background-color: white;
+  padding: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+/* USER FOLLOW BUTTON ON CARD */
+.user-follow-button-container-card {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  cursor: pointer;
+}
+.user-follow-button-container-card:hover {
+  filter: brightness(1.2);
+  transition: all var(--speed);
+}
+.user-follow-button-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  color: white;
+  font-weight: 600;
+  border: 2px solid var(--primary-accent);
+  padding: 0.25rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  animation: appearButton var(--speed);
+}
+
+.user-follow-button-card-active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  color: white;
+  font-weight: 600;
+  border: 2px solid var(--primary-accent);
+  padding: 0.25rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  background-color: rgba(236, 28, 63, 0.075);
+  animation: appearButton var(--speed);
+  filter: opacity(0.4);
+}
+.user-follow-button-card-active:hover {
+  filter: brightness(0.5);
+  transition: all var(--speed);
 }
 
 /*

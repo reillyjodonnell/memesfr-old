@@ -116,7 +116,11 @@ export default function Sidebar(props) {
               >
                 <div className="navigation-group-items">
                   <Home
-                    style={props.active === 0 ? { fill: 'url(#grad)' } : null}
+                    style={
+                      props.active === 0
+                        ? { fill: 'var(--primary-accent)' }
+                        : null
+                    }
                   />
                   <span className="navigation-group-text">Home</span>
                 </div>
@@ -130,7 +134,11 @@ export default function Sidebar(props) {
                 }
               >
                 <Notification
-                  style={props.active === 1 ? { fill: 'url(#grad)' } : null}
+                  style={
+                    props.active === 1
+                      ? { stroke: 'var(--primary-accent)' }
+                      : null
+                  }
                 />
                 <span className="navigation-group-text">Notifications</span>
               </div>
@@ -143,7 +151,11 @@ export default function Sidebar(props) {
                 }
               >
                 <Popular
-                  style={props.active === 2 ? { fill: 'url(#grad)' } : null}
+                  style={
+                    props.active === 2
+                      ? { fill: 'var(--primary-accent)' }
+                      : null
+                  }
                 />
                 <span className="navigation-group-text">Popular</span>
               </div>
@@ -156,7 +168,11 @@ export default function Sidebar(props) {
                 }
               >
                 <Recent
-                  style={props.active === 3 ? { stroke: 'url(#grad)' } : null}
+                  style={
+                    props.active === 3
+                      ? { stroke: 'var(--primary-accent)' }
+                      : null
+                  }
                 />
                 <span className="navigation-group-text">Recent</span>
               </div>
@@ -169,7 +185,11 @@ export default function Sidebar(props) {
                 }
               >
                 <User
-                  style={props.active === 4 ? { stroke: 'url(#grad)' } : null}
+                  style={
+                    props.active === 4
+                      ? { stroke: 'var(--primary-accent)' }
+                      : null
+                  }
                 />
                 <span className="navigation-group-text"> Profile</span>
               </div>

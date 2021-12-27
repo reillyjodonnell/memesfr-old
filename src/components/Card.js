@@ -7,6 +7,9 @@ import report from '../Assets/SVGs/report.svg';
 import { ReactComponent as HeartIcon } from '../Assets/SVGs/heart.svg';
 import { ReactComponent as LikeIcon } from '../Assets/SVGs/thumbUp.svg';
 import buffDoge from '../Assets/buff-doge.jpg';
+import { ReactComponent as CheckMark } from '../Assets/Icons/CheckMark.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShare, faComment } from '@fortawesome/free-solid-svg-icons';
 
 import { useMobile } from '../contexts/MobileContext';
 
@@ -20,8 +23,16 @@ export default function Card(props) {
   const [permissionToEdit, setPermissionToEdit] = useState(false);
   const [hasAlreadyLikedPost, setHasAlreadyLikedPost] = useState(false);
   const [hasAlreadyHeartedPost, setHasAlreadyHeartedPost] = useState(false);
+  const [followsUser, setFollowsUser] = useState(false);
 
   const { isMobile } = useMobile();
+
+  /* FOR DEV ONLY */
+  const isVerified = true;
+  const shares = Math.round(Math.random() * 10000);
+  const comments = Math.round(Math.random() * 40000);
+
+  /* END DEV ONLY */
 
   const {
     activeScreen,
@@ -32,6 +43,10 @@ export default function Card(props) {
     removeLikePost,
     removeHeartPost,
   } = useAuth();
+
+  const toggleFollowUser = () => {
+    setFollowsUser((prevState) => !prevState);
+  };
 
   function captureUserInput() {
     if (currentUser && needSubmit) {
@@ -170,26 +185,30 @@ export default function Card(props) {
   }
   const DisplayAvatar = () => {
     const avatar = props.item.authorPic;
+    console.log(props);
+    const username = props.item.userName;
 
     return (
-      <div className="avatar-picture">
-        {avatar ? (
-          <img
-            alt="user's avatar"
-            src={avatar}
-            style={{ height: '100%', width: '100%' }}
-          />
-        ) : (
-          <img
-            alt="buff doge meme"
-            src={buffDoge}
-            style={{
-              height: '100%',
-              width: '100%',
-            }}
-          />
-        )}
-      </div>
+      <Link to={`/${username}`}>
+        <div className="avatar-picture">
+          {avatar ? (
+            <img
+              alt="user's avatar"
+              src={avatar}
+              style={{ height: '100%', width: '100%' }}
+            />
+          ) : (
+            <img
+              alt="buff doge meme"
+              src={buffDoge}
+              style={{
+                height: '100%',
+                width: '100%',
+              }}
+            />
+          )}
+        </div>
+      </Link>
     );
   };
 
@@ -229,7 +248,32 @@ export default function Card(props) {
         <div className="card">
           <div className="upper">
             <div className="upper-top-info">
-              <span className="meme-title">{props.item.title}</span>
+              <DisplayAvatar />
+              <div className="meme-identification">
+                <div className="user-name-information">
+                  <span className="clickable">{memeAuthor()}</span>
+                  {isVerified && (
+                    <div className="verified-container">
+                      <CheckMark />
+                    </div>
+                  )}
+                </div>
+                <span className="meme-title">{props.item.title}</span>
+
+                <span className="hashtag-identifier"></span>
+              </div>
+              <div className="user-follow-button-container-card">
+                <div
+                  onClick={toggleFollowUser}
+                  className={
+                    followsUser
+                      ? 'user-follow-button-card-active'
+                      : 'user-follow-button-card'
+                  }
+                >
+                  <span>{followsUser ? 'Following' : 'Follow'} </span>
+                </div>
+              </div>
             </div>
 
             <div className="image-container">
@@ -248,11 +292,6 @@ export default function Card(props) {
           </div>
 
           <div className="lower">
-            <DisplayAvatar />
-            <div className="meme-identification">
-              <span className="clickable">@{memeAuthor()}</span>
-              <span className="hashtag-identifier"></span>
-            </div>
             {/* <div className="heart-container">
 
               <HeartIcon
@@ -290,6 +329,21 @@ export default function Card(props) {
               </span> */}
               <span className="likes-icon">👑</span>
               <span className="number-of-likes">{likes}</span>
+            </div>
+
+            <div className="like-container">
+              <FontAwesomeIcon
+                icon={faComment}
+                style={{ width: '1.5rem', height: '1.5rem' }}
+              />
+              <span className="number-of-likes">{comments}</span>
+            </div>
+            <div className="like-container">
+              <FontAwesomeIcon
+                icon={faShare}
+                style={{ width: '1.5rem', height: '1.5rem' }}
+              />
+              <span className="number-of-likes">{shares}</span>
             </div>
           </div>
           {options ? <OptionsExpanded /> : null}

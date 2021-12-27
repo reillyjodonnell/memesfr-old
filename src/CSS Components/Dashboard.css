@@ -6,9 +6,15 @@
   margin-bottom: 2rem;
   width: 60vw;
 }
+.dashboard {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
 .dashboard-content {
   display: flex;
   height: 100%;
+  max-width: 1200px;
 }
 .section-header-area {
   display: flex;

@@ -1,7 +1,7 @@
 .rightsidebar-fixed {
   height: 100vh;
-  width: 25vw;
   max-width: 400px;
+  width: 20vw;
   position: sticky;
   overflow: hidden;
   right: 0;
@@ -17,7 +17,6 @@
   align-items: center;
   background-color: var(--bg);
   height: 100%;
-  margin: 2rem;
 }
 .rightsidebar-main-section {
   display: flex;
@@ -79,7 +78,6 @@
   width: 100%;
   flex-direction: column;
   background-color: #00000038;
-  border: 2px solid #b4b4b7;
   border-radius: 20px;
 }
 .daily-meme-lord {
@@ -88,5 +86,5 @@
   align-items: center;
   flex-direction: column;
   width: 100%;
-  padding: 1rem;
+  padding: 2rem;
 }

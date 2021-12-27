@@ -145,10 +145,11 @@ export default function UserProfile(props) {
   const [activeFilter, setActiveFilter] = useState(0);
   const [followsUser, setFollowsUser] = useState(true);
   const [nav, setNav] = useState(0);
-  const [crownCount, setCrownCount] = useState(0);
+  const [crownCount, setCrownCount] = useState(69);
   const [followers, setFollowers] = useState(0);
   const [memesCreated, setMemesCreated] = useState(0);
   const [userAge, setUserAge] = useState('');
+  const [isUsersProfile, setIsUsersProfile] = useState(false);
 
   const myRef = useRef(null);
 
@@ -176,13 +177,15 @@ export default function UserProfile(props) {
     }
     data().then((result) => {
       console.log(result);
-      const { createdPosts, crowns, followers } = result;
-      console.log(createdPosts.length, crowns, followers.length);
+      const { createdPosts, crowns, followers, avatar } = result;
+
       setCrownCount(crowns);
       setFollowers(followers.length);
       setMemesCreated(createdPosts.length);
     });
   }, []);
+
+  console.log(currentUser);
 
   //Retrieve the data from the user profile using the UID
   async function profileData(userId) {
@@ -191,12 +194,22 @@ export default function UserProfile(props) {
   }
 
   let username;
+  let profileName;
   let avatar;
+
+  useEffect(() => {
+    if (username === profileName) {
+      setIsUsersProfile(true);
+    }
+  }, [username, profileName]);
 
   if (currentUser) {
     username = currentUser.displayName;
+    profileName = params.userId;
     avatar = currentUser.photoURL;
   }
+
+  document.title = `Memesfr - ${username}`;
 
   let active = 0;
 
@@ -481,7 +494,7 @@ export default function UserProfile(props) {
             </div>
           </div>
 
-          <span className="user-username">{currentUser.displayName}</span>
+          <span className="user-username">{profileName}</span>
           <div className="user-profile-stats">
             <div className="user-stat-group">
               <span className="user-follower-count">{followers}</span>
@@ -516,16 +529,33 @@ export default function UserProfile(props) {
               </span>
             </div>
           </div>
-          <div className="user-follow-button-container">
-            <div
-              onClick={toggleFollowUser}
-              className={
-                followsUser ? 'user-follow-button-active' : 'user-follow-button'
-              }
-            >
-              <span>{followsUser ? 'Following' : 'Follow'} </span>
+          {isUsersProfile ? (
+            <div className="user-follow-button-container">
+              <div
+                onClick={toggleFollowUser}
+                className={
+                  followsUser
+                    ? 'user-follow-button-active'
+                    : 'user-follow-button'
+                }
+              >
+                <span>Edit Profile </span>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="user-follow-button-container">
+              <div
+                onClick={toggleFollowUser}
+                className={
+                  followsUser
+                    ? 'user-follow-button-active'
+                    : 'user-follow-button'
+                }
+              >
+                <span>{followsUser ? 'Following' : 'Follow'} </span>
+              </div>
+            </div>
+          )}
 
           <div className="user-profile-content">
             <div

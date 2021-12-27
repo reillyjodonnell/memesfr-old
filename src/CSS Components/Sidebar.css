@@ -46,7 +46,7 @@
   font-size: 2rem;
 }
 .sidebar-logo span {
-  margin-left: 1rem;
+  margin-left: 2px;
   stroke: #4ea5d9;
   stroke: #00a7e1 !important;
   stroke: #ea3788;
@@ -115,15 +115,8 @@
 }
 
 .navigation-group-active {
-  color: white;
-  font-size: 1.4rem;
-  font-weight: 600;
-  width: 100%;
-  right: 0;
-  padding-right: 28px;
-  border-right: 3px solid green;
-  border-radius: 20px;
-  border-image: linear-gradient(#ea3788, #00a7e1) 2 stretch;
+  color: var(--primary-accent);
+  font-weight: 700;
 }
 .navigation-group svg,
 .logout-container svg {
@@ -138,6 +131,10 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+}
+.navigation-group-items svg {
+  stroke-width: 0.5px;
+  stroke: black;
 }
 
 .sidebar-login {

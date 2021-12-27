@@ -17,6 +17,8 @@ import { useAuth } from '../contexts/AuthContext';
 export default function Memesfr() {
   const [nav, setNav] = useState({ count: 0 });
 
+  document.title = 'Memesfr - Dankest Memes';
+
   return (
     <>
       <BrowserRouter>
@@ -25,7 +27,7 @@ export default function Memesfr() {
             <AuthProvider>
               <Routes>
                 <Route exact path="/" element={<Home />}>
-                  <Route path="/" element={<Feed nav={nav} />}></Route>
+                  <Route path="/" element={<Feed nav={nav} />} />
                   <Route path=":userId" element={<UserProfile />} />
                   <Route path="/notifications" element={<Notifications />} />
                 </Route>

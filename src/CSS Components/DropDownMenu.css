@@ -5,20 +5,7 @@
   height: 100px;
   z-index: 2;
 }
-:root {
-  --bg: #272932;
-  --light-bg: #4c4d62;
-  --bg-accent: #b74f6f;
-  --pink: #ea3788;
-  --blue: #00a7e1;
 
-  --text-color: #eeeeee;
-  --nav-size: 80px;
-  --border: 2px solid rgba(70, 70, 70, 0.342);
-  --border-radius: 8px;
-  --speed: 300ms;
-  --window-width: 100vw;
-}
 ul {
   list-style: none;
   margin: 0;

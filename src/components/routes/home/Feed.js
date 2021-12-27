@@ -111,7 +111,7 @@ const useStyles = makeStyles((theme) => ({
   skeleton: {
     margin: '1rem',
 
-    width: '40vw',
+    width: '35vw',
     minWidth: '300px',
     height: '35vh',
   },
