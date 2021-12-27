@@ -1,21 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ReactComponent as Settings } from '../Assets/SVGs/settings.svg';
-import { ReactComponent as Logout } from '../Assets/SVGs/logout.svg';
-import { ReactComponent as Castle } from '../Assets/SVGs/castle.svg';
 import { ReactComponent as Home } from '../Assets/Icons/Home.svg';
-import { ReactComponent as Trending } from '../Assets/SVGs/trending.svg';
 import { ReactComponent as Popular } from '../Assets/Icons/Popular.svg';
 import { ReactComponent as Recent } from '../Assets/Icons/Recent.svg';
-import { ReactComponent as Random } from '../Assets/Icons/Random.svg';
-import { ReactComponent as Plus } from '../Assets/Icons/Plus.svg';
 import { CSSTransition } from 'react-transition-group';
-import { ReactComponent as LeftArrow } from '../Assets/SVGs/arrowLeft.svg';
 import { ReactComponent as Doge } from '../Assets/doge.svg';
-import { ReactComponent as Help } from '../Assets/SVGs/help.svg';
-import { ReactComponent as Ball } from '../Assets/SVGs/pokeBall.svg';
-import { ReactComponent as Discord } from '../Assets/SVGs/discordLogo.svg';
-import { ReactComponent as ProfilePic } from '../Assets/SVGs/photo.svg';
-import { ReactComponent as Password } from '../Assets/SVGs/lock.svg';
 import { ReactComponent as User } from '../Assets/SVGs/user.svg';
 import { ReactComponent as Notification } from '../Assets/Icons/Notifications.svg';
 import { useAuth } from '../contexts/AuthContext';
@@ -23,6 +11,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useMobile } from '../contexts/MobileContext';
 import '../CSS Components/Sidebar.css';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import Countdown from './Countdown';
+import TrendingTopics from './TrendingTopics';
 
 export default function Sidebar(props) {
   const [activeNav, setActiveNav] = useState();
@@ -193,85 +183,39 @@ export default function Sidebar(props) {
                 />
                 <span className="navigation-group-text"> Profile</span>
               </div>
-              <div
-                onClick={props.homeFilter}
-                className={
-                  props.active === 0 ? 'navigation-group' : 'navigation-group'
-                }
-              >
-                <div className="navigation-group-items">
-                  <Home />
-                  <span className="navigation-group-text">Home</span>
+              <div className="rightsidebar-content">
+                <div className="daily-counter">
+                  <Countdown />
+                </div>
+                <div className="rightsidebar-main-section">
+                  <div className="daily-meme-lord-container">
+                    <div className="daily-meme-lord">
+                      <span className="main-section-title">
+                        today's memelord 👑
+                      </span>
+                      <div className="rightsidebar-user-profile">
+                        {/* <img className="rightsidebar-avatar" src={Doge} /> */}
+                        <Doge />
+                        <span>@reilly</span>
+                      </div>
+
+                      <div className="rightsidebar-user-stats">
+                        <span className="rightsidebar-crown-count">
+                          1.6k 👑
+                        </span>
+                        <span className="rightsidebar-meme-count">
+                          24 memes
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="rightsidebar-secondary-section">
+                  <TrendingTopics />
                 </div>
               </div>
-              <div
-                onClick={props.navigateToNotifications}
-                className={
-                  props.active === 1
-                    ? 'navigation-group navigation-group-active'
-                    : 'navigation-group'
-                }
-              >
-                <Notification
-                  style={
-                    props.active === 1
-                      ? { stroke: 'var(--primary-accent)' }
-                      : null
-                  }
-                />
-                <span className="navigation-group-text">Notifications</span>
-              </div>
-              <div
-                onClick={props.popularFilter}
-                className={
-                  props.active === 2
-                    ? 'navigation-group navigation-group-active'
-                    : 'navigation-group'
-                }
-              >
-                <Popular
-                  style={
-                    props.active === 2
-                      ? { fill: 'var(--primary-accent)' }
-                      : null
-                  }
-                />
-                <span className="navigation-group-text">Popular</span>
-              </div>
-              <div
-                onClick={props.recentFilter}
-                className={
-                  props.active === 3
-                    ? 'navigation-group navigation-group-active'
-                    : 'navigation-group'
-                }
-              >
-                <Recent
-                  style={
-                    props.active === 3
-                      ? { stroke: 'var(--primary-accent)' }
-                      : null
-                  }
-                />
-                <span className="navigation-group-text">Recent</span>
-              </div>
-              <div
-                onClick={props.navigateToProfile}
-                className={
-                  props.active === 4
-                    ? 'navigation-group navigation-group-active'
-                    : 'navigation-group'
-                }
-              >
-                <User
-                  style={
-                    props.active === 4
-                      ? { stroke: 'var(--primary-accent)' }
-                      : null
-                  }
-                />
-                <span className="navigation-group-text"> Profile</span>
-              </div>
+
               {/* <div
                 onClick={() => setActiveMenu('settings')}
                 className="navigation-group"

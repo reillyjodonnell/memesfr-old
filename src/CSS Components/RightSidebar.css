@@ -17,7 +17,6 @@
   align-items: center;
   background-color: var(--bg);
   height: 100%;
-  padding: 1rem;
 }
 .rightsidebar-main-section {
   display: flex;

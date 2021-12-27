@@ -1,5 +1,5 @@
 .sidebar-fixed {
-  height: 100vh;
+  height: 90vh;
   width: 20vw;
   max-width: 400px;
   position: sticky;
@@ -15,9 +15,9 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  height: 100%;
   padding: 1rem;
   width: 100%;
+  overflow-y: scroll;
   /* border-right: 0.5px solid rgba(255, 255, 255, 0.212); */
 }
 .sidebar-create-post {

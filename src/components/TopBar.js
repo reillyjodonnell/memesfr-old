@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import '../CSS Components/TopBar.css';
 import { ReactComponent as Castle } from '../Assets/SVGs/castle.svg';
 import { ReactComponent as Plus } from '../Assets/Icons/Plus.svg';
+import { ReactComponent as Logout } from '../Assets/SVGs/logout.svg';
+import { ReactComponent as Coins } from '../Assets/Icons/Coins.svg';
+import { ReactComponent as Language } from '../Assets/Icons/Language.svg';
+import { ReactComponent as Help } from '../Assets/Icons/Help.svg';
+
+import { Message, Settings } from '@material-ui/icons';
 
 export default function TopBar(props) {
   const [isHovering, setIsHovering] = useState(false);
@@ -17,10 +23,28 @@ export default function TopBar(props) {
   const ProfileModal = () => {
     return (
       <div className="topbar-profile-modal" onMouseLeave={handleMouseOut}>
-        <span className="topbar-profile-modal-item">Settings</span>
-        <span className="topbar-profile-modal-item">Privacy</span>
-        <span className="topbar-profile-modal-item">Language</span>
-        <span className="topbar-profile-modal-item">Log out</span>
+        <div className="topbar-profile-modal-item">
+          <Settings className="topbar-profile-modal-icon" />
+          <span className="topbar-profile-modal-item-text">Settings</span>
+        </div>
+        <div className="topbar-profile-modal-item">
+          <Coins className="topbar-profile-modal-icon" />
+          <span className="topbar-profile-modal-item-text">Coins</span>
+        </div>
+        <div className="topbar-profile-modal-item">
+          <Help className="topbar-profile-modal-icon" />
+          <span className="topbar-profile-modal-item-text">Help</span>
+        </div>
+        <div className="topbar-profile-modal-item">
+          <Language className="topbar-profile-modal-icon" />
+          <span className="topbar-profile-modal-item-text">Language</span>
+        </div>
+        <div className="topbar-profile-modal-logout-container">
+          <div className="topbar-profile-modal-item-logout">
+            <Logout className="topbar-profile-modal-icon" />
+            <span className="topbar-profile-modal-item-text">Logout</span>
+          </div>
+        </div>
       </div>
     );
   };
@@ -32,10 +56,15 @@ export default function TopBar(props) {
           <Castle />
           <span>Memesfr</span>
         </div>
-        <div className="topbar-upload-meme-button">
-          <Plus />
-          <span className="upload-meme-button-text">Upload Meme</span>
+        <div className="topbar-icon-container">
+          <div className="topbar-upload-meme-button topbar-first-button">
+            <Plus />
+          </div>
+          <div className="topbar-upload-meme-button">
+            <Message />
+          </div>
         </div>
+
         <div
           className="topbar-avatar-container"
           onClick={props.navigateToProfile}
