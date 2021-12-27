@@ -193,6 +193,85 @@ export default function Sidebar(props) {
                 />
                 <span className="navigation-group-text"> Profile</span>
               </div>
+              <div
+                onClick={props.homeFilter}
+                className={
+                  props.active === 0 ? 'navigation-group' : 'navigation-group'
+                }
+              >
+                <div className="navigation-group-items">
+                  <Home />
+                  <span className="navigation-group-text">Home</span>
+                </div>
+              </div>
+              <div
+                onClick={props.navigateToNotifications}
+                className={
+                  props.active === 1
+                    ? 'navigation-group navigation-group-active'
+                    : 'navigation-group'
+                }
+              >
+                <Notification
+                  style={
+                    props.active === 1
+                      ? { stroke: 'var(--primary-accent)' }
+                      : null
+                  }
+                />
+                <span className="navigation-group-text">Notifications</span>
+              </div>
+              <div
+                onClick={props.popularFilter}
+                className={
+                  props.active === 2
+                    ? 'navigation-group navigation-group-active'
+                    : 'navigation-group'
+                }
+              >
+                <Popular
+                  style={
+                    props.active === 2
+                      ? { fill: 'var(--primary-accent)' }
+                      : null
+                  }
+                />
+                <span className="navigation-group-text">Popular</span>
+              </div>
+              <div
+                onClick={props.recentFilter}
+                className={
+                  props.active === 3
+                    ? 'navigation-group navigation-group-active'
+                    : 'navigation-group'
+                }
+              >
+                <Recent
+                  style={
+                    props.active === 3
+                      ? { stroke: 'var(--primary-accent)' }
+                      : null
+                  }
+                />
+                <span className="navigation-group-text">Recent</span>
+              </div>
+              <div
+                onClick={props.navigateToProfile}
+                className={
+                  props.active === 4
+                    ? 'navigation-group navigation-group-active'
+                    : 'navigation-group'
+                }
+              >
+                <User
+                  style={
+                    props.active === 4
+                      ? { stroke: 'var(--primary-accent)' }
+                      : null
+                  }
+                />
+                <span className="navigation-group-text"> Profile</span>
+              </div>
               {/* <div
                 onClick={() => setActiveMenu('settings')}
                 className="navigation-group"
