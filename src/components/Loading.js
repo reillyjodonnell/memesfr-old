@@ -1,32 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import React from 'react';
+import { ReactComponent as Castle } from '../Assets/SVGs/castle.svg';
+import '../CSS Components/Loading.css';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    position: "absolute",
-    left: "50%",
-    top: "50%",
-  },
-}));
-
-export default function CircularIndeterminate() {
-  const classes = useStyles();
-  const [displayLogo, setDisplayLogo] = useState(true);
-
-  useEffect(() => {
-    let mount = true;
-    {
-      setTimeout(() => {
-        if (mount === true) setDisplayLogo(false);
-      }, 1000);
-    }
-    return () => (mount = false);
-  }, []);
-
+export default function Loading() {
   return (
-    <div className={classes.root}>
-      {displayLogo ? <span>MemesFR</span> : <CircularProgress />}
+    <div className="loading-window">
+      <div className="loading-sidebar-logo">
+        <Castle />
+        <span>Memesfr</span>
+      </div>
     </div>
   );
 }

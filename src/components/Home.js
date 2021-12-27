@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import Dashboard from "./Dashboard";
-import { useAuth } from "../contexts/AuthContext";
-import Loading from "./Loading";
+import React, { useState, useEffect } from 'react';
+import Dashboard from './Dashboard';
+import { useAuth } from '../contexts/AuthContext';
+import Loading from './Loading';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -10,9 +10,11 @@ export default function Home() {
   useEffect(() => {
     let mount = true;
     if (mount === true) {
-      if (loadUser === false || currentUser === undefined) {
-        setLoading(false);
-      }
+      setTimeout(() => {
+        if (loadUser === false || currentUser === undefined) {
+          setLoading(false);
+        }
+      });
     }
 
     return () => (mount = false);

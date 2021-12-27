@@ -1,0 +1,19 @@
+.loading-window {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.loading-sidebar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0.9rem;
+  font-weight: 600;
+  font-size: 3rem;
+  color: white;
+}
+.loading-sidebar-logo svg {
+  width: 70px;
+  height: 70px;
+}
