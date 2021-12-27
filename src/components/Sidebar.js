@@ -71,11 +71,7 @@ export default function Sidebar(props) {
   return (
     <div className="sidebar-fixed">
       <div className="sidebar-content">
-        <div className="sidebar-logo">
-          <Castle />
-          <span>Memesfr</span>
-        </div>
-        {props.avatar !== undefined ? (
+        {/* {props.avatar !== undefined ? (
           <Link to={`/${props.username}`}>
             <div className="sidebar-user-section">
               <div
@@ -98,7 +94,7 @@ export default function Sidebar(props) {
         <div className="upload-meme-button">
           <Plus style={{ width: '30px', paddingRight: '5px' }} />
           <span>Upload Meme</span>
-        </div>
+        </div> */}
 
         <div className="sidebar-navigation">
           <CSSTransition
@@ -197,14 +193,14 @@ export default function Sidebar(props) {
                 />
                 <span className="navigation-group-text"> Profile</span>
               </div>
-              <div
+              {/* <div
                 onClick={() => setActiveMenu('settings')}
                 className="navigation-group"
               >
                 <Settings style={active ? { stroke: 'url(#grad)' } : null} />
                 <span className="navigation-group-text">Settings</span>
-              </div>
-              <div className="sidebar-login ">
+              </div> */}
+              {/* <div className="sidebar-login ">
                 {props.avatar !== undefined ? (
                   <div className="logout-container" onClick={signOut}>
                     <Logout />
@@ -218,11 +214,11 @@ export default function Sidebar(props) {
                     </span>
                   </div>
                 )}
-              </div>
+              </div> */}
             </>
           </CSSTransition>
 
-          <CSSTransition
+          {/* <CSSTransition
             in={activeMenu === 'settings'}
             timeout={200}
             classNames="navigation-secondary"
@@ -281,7 +277,7 @@ export default function Sidebar(props) {
                 </>
               ) : null}
             </div>
-          </CSSTransition>
+          </CSSTransition> */}
         </div>
       </div>
     </div>

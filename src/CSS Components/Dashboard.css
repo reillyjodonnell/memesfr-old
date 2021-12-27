@@ -4,7 +4,7 @@
   align-items: center;
   flex-direction: column;
   margin-bottom: 2rem;
-  width: 40vw;
+  width: 100%;
 }
 .dashboard {
   width: 100%;
@@ -14,7 +14,11 @@
 .dashboard-content {
   display: flex;
   height: 100%;
-  max-width: 1200px;
+  width: 100%;
+  margin: 0 9rem;
+  max-width: 1400px;
+  position: relative;
+  flex-direction: column;
 }
 .section-header-area {
   display: flex;

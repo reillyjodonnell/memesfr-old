@@ -3,11 +3,11 @@
   width: 20vw;
   max-width: 400px;
   position: sticky;
+  left: 0;
   display: flex;
   background-color: #272932;
   overflow: hidden;
-  left: 0;
-  top: 0;
+  top: 76px;
   color: #fbfaf8;
   min-width: 285px;
 }
@@ -18,7 +18,7 @@
   height: 100%;
   padding: 1rem;
   width: 100%;
-  border-right: 0.5px solid rgba(255, 255, 255, 0.212);
+  /* border-right: 0.5px solid rgba(255, 255, 255, 0.212); */
 }
 .sidebar-create-post {
   cursor: pointer;
@@ -119,7 +119,7 @@
   border: white 1px solid;
 }
 .sidebar-navigation {
-  border-top: 1px solid rgba(207, 207, 207, 0.13);
+  /* border-top: 1px solid rgba(207, 207, 207, 0.13); */
   font-size: 0.5rem;
   padding: 0 1rem;
   display: flex;
@@ -154,8 +154,8 @@
 }
 .navigation-group svg,
 .logout-container svg {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
 }
 .navigation-group-text {
   margin-left: 1.5rem;

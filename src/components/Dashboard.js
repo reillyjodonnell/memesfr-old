@@ -475,22 +475,40 @@ export default function Dashboard(props) {
             />
           </>
         ) : (
-          <Sidebar
-            homeFilter={filterHome}
-            trendingFilter={filterTrending}
-            recentFilter={filterRecent}
-            popularFilter={filterPopular}
-            randomFilter={filterRandom}
-            navigateToProfile={navigateToProfile}
-            navigateToNotifications={navigateToNotifications}
-            createPost={createMemePost}
-            active={nav.count}
-            username={username}
-            avatar={avatar}
-            resetPassword={resetUserPassword}
-          />
+          <>
+            <Topbar
+              homeFilter={filterHome}
+              trendingFilter={filterTrending}
+              recentFilter={filterRecent}
+              popularFilter={filterPopular}
+              randomFilter={filterRandom}
+              navigateToProfile={navigateToProfile}
+              navigateToNotifications={navigateToNotifications}
+              createPost={createMemePost}
+              active={nav.count}
+              username={username}
+              avatar={avatar}
+              resetPassword={resetUserPassword}
+            />
+            <div style={{ display: 'flex', position: 'relative' }}>
+              <Sidebar
+                homeFilter={filterHome}
+                trendingFilter={filterTrending}
+                recentFilter={filterRecent}
+                popularFilter={filterPopular}
+                randomFilter={filterRandom}
+                navigateToProfile={navigateToProfile}
+                navigateToNotifications={navigateToNotifications}
+                createPost={createMemePost}
+                active={nav.count}
+                username={username}
+                avatar={avatar}
+                resetPassword={resetUserPassword}
+              />
+              <Outlet />
+            </div>
+          </>
         )}
-        <Outlet />
 
         {/* <main className={classes.content}>
           <Topbar createPost={createMemePost} />
