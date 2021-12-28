@@ -16,7 +16,7 @@
   width: 100%;
   background: no-repeat center/80% url('../Assets/doge.svg');
   border-radius: 20px;
-  background-color: var(--text-color);
+  background-color: var(--shadow);
 }
 .user-profile-avatar {
   height: 40px;

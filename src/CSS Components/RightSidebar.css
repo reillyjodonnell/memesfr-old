@@ -62,13 +62,14 @@
 }
 
 .rightsidebar-secondary-section {
+  color: var(--text-color);
   display: flex;
   width: 100%;
-  margin: 1rem;
   justify-content: flex-start;
   flex-direction: column;
   align-items: center;
   border-radius: 20px;
+  padding: 1rem;
 }
 
 .daily-meme-lord-container {

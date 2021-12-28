@@ -16,21 +16,32 @@ body {
   /* --blue: #00a7e1; */
 
   /*BackgroundColor presets*/
-  --dark-bg: #272932;
   --light-bg: #ffffff;
+  --dark-bg: #272932;
+
   --light-text: #ffffff;
-  --light-text-secondary: rgb(34, 34, 34);
   --dark-text: black;
+
+  --light-text-secondary: rgb(34, 34, 34);
   --dark-text-secondary: rgb(142, 142, 142);
+
+  --light-mode-shadow: #0000001f;
+  --dark-mode-shadow: #ffffff3b;
+
+  --light-mode-line: #00000054;
+  --dark-mode-line: #ffffff3b;
+
+  --light-mode-hover: #d4d4d473;
+  --dark-mode-hover: #393c469f;
 
   --bg: var(--dark-bg);
   --text-color: var(--light-text);
   --secondary-text-color: var(--dark-text-secondary);
   --highlight: var(--purple-highlight);
-
+  --light-highlight: var(--purple-light-highlight);
+  --shadow: var(--dark-mode-shadow);
   --line: var(--dark-mode-line);
-  --light-mode-line: #00000054;
-  --dark-mode-line: #ffffff3b;
+  --hover: var(--dark-mode-hover);
 
   /*ChangeColor Presets */
   --orange: #ff7f11;
@@ -45,7 +56,13 @@ body {
   --green-highlight: #5deb5b8a;
   --purple-highlight: #cb48b798;
 
-  --primary-accent: #cb48b7;
+  --orange-light-highlight: #ff801127;
+  --red-light-highlight: #ff1b1b27;
+  --secondary-blue-light-highlight: #20a6f334;
+  --green-light-highlight: #5deb5b2c;
+  --purple-light-highlight: #cb48b725;
+
+  --primary-accent: var(--purple);
 
   /*End of ChangeColor Presets*/
 

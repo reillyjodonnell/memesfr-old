@@ -39,9 +39,6 @@ export default function Countdown() {
       <div className="countdown-timer">
         {timerActive ? (
           <>
-            <div className="countdown-timer-message">
-              <span>next memelord in:</span>
-            </div>
             <div className="countdown-timer-time">
               <span className="countdown-timer-time">
                 {hoursTimer < 10 ? `0${hoursTimer}` : hoursTimer}

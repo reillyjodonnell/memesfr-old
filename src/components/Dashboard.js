@@ -357,7 +357,6 @@ export default function Dashboard(props) {
   };
   const navigateToCoins = () => {
     setNav({ count: null });
-
     navigate('/coins');
   };
   const navigateToHelp = () => {

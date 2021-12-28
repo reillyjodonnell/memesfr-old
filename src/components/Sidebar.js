@@ -25,6 +25,38 @@ export default function Sidebar(props) {
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
   const { signOut, currentUser } = useAuth();
+  const [timerActive, setTimerActive] = useState(true);
+  const [hoursTimer, setHoursTimer] = useState(1);
+  const [minutesTimer, setMinutesTimer] = useState(0);
+  const [secondsTimer, setSecondsTimer] = useState(3);
+  const [timerMessage, setTimerMessage] = useState('');
+
+  const countdownTimer = () => {
+    if (secondsTimer > 0) {
+      setSecondsTimer((seconds) => seconds - 1);
+    } else if (secondsTimer === 0) {
+      setSecondsTimer(0);
+      if (minutesTimer > 0) {
+        setMinutesTimer((prevMin) => prevMin - 1);
+        setSecondsTimer(59);
+      } else if (minutesTimer === 0 && hoursTimer >= 1) {
+        setHoursTimer((prevHour) => prevHour - 1);
+        setMinutesTimer(59);
+        setSecondsTimer(59);
+      } else {
+        setTimerActive(false);
+        setTimerMessage('A new memelord appears ');
+      }
+    }
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(countdownTimer, 1000);
+
+    return function cleanup() {
+      clearTimeout(timer);
+    };
+  });
 
   function activateDoge() {
     updateDoge();
@@ -96,224 +128,151 @@ export default function Sidebar(props) {
         </div> */}
 
         <div className="sidebar-navigation">
-          <CSSTransition
-            in={activeMenu === 'main'}
-            timeout={200}
-            classNames="navigation-primary"
-            unmountOnExit
-            onEnter={calcHeight}
-            dropdownRef={dropdownRef}
-          >
-            <>
-              <div
-                onClick={props.homeFilter}
-                className={
-                  props.active === 0
-                    ? 'navigation-group navigation-group-active'
-                    : 'navigation-group'
-                }
-              >
-                <div className="navigation-group-items">
-                  <Home
-                    style={
-                      props.active === 0
-                        ? { fill: 'var(--primary-accent)' }
-                        : null
-                    }
-                  />
-                  <span className="navigation-group-text">Home</span>
-                </div>
-              </div>
-              <div
-                onClick={props.navigateToNotifications}
-                className={
-                  props.active === 1
-                    ? 'navigation-group navigation-group-active'
-                    : 'navigation-group'
-                }
-              >
-                <div className="notification-container">
-                  <Notification
-                    style={
-                      props.active === 1
-                        ? { stroke: 'var(--primary-accent)' }
-                        : null
-                    }
-                  ></Notification>
-                  {hasNotification && <NotificationAlert />}
-                </div>
-
-                <span className="navigation-group-text">Notifications</span>
-              </div>
-              <div
-                onClick={props.popularFilter}
-                className={
-                  props.active === 2
-                    ? 'navigation-group navigation-group-active'
-                    : 'navigation-group'
-                }
-              >
-                <Popular
+          <>
+            <div
+              onClick={props.homeFilter}
+              className={
+                props.active === 0
+                  ? 'navigation-group navigation-group-active'
+                  : 'navigation-group'
+              }
+            >
+              <div className="navigation-group-items">
+                <Home
                   style={
-                    props.active === 2
+                    props.active === 0
                       ? { fill: 'var(--primary-accent)' }
                       : null
                   }
                 />
-                <span className="navigation-group-text">Popular</span>
+                <span className="navigation-group-text">Home</span>
               </div>
-              <div
-                onClick={props.recentFilter}
-                className={
+            </div>
+            <div
+              onClick={props.navigateToNotifications}
+              className={
+                props.active === 1
+                  ? 'navigation-group navigation-group-active'
+                  : 'navigation-group'
+              }
+            >
+              <div className="notification-container">
+                <Notification
+                  style={
+                    props.active === 1
+                      ? { stroke: 'var(--primary-accent)' }
+                      : null
+                  }
+                ></Notification>
+                {hasNotification && <NotificationAlert />}
+              </div>
+
+              <span className="navigation-group-text">Notifications</span>
+            </div>
+            <div
+              onClick={props.popularFilter}
+              className={
+                props.active === 2
+                  ? 'navigation-group navigation-group-active'
+                  : 'navigation-group'
+              }
+            >
+              <Popular
+                style={
+                  props.active === 2 ? { fill: 'var(--primary-accent)' } : null
+                }
+              />
+              <span className="navigation-group-text">Popular</span>
+            </div>
+            <div
+              onClick={props.recentFilter}
+              className={
+                props.active === 3
+                  ? 'navigation-group navigation-group-active'
+                  : 'navigation-group'
+              }
+            >
+              <Recent
+                style={
                   props.active === 3
-                    ? 'navigation-group navigation-group-active'
-                    : 'navigation-group'
+                    ? { stroke: 'var(--primary-accent)' }
+                    : null
                 }
-              >
-                <Recent
-                  style={
-                    props.active === 3
-                      ? { stroke: 'var(--primary-accent)' }
-                      : null
-                  }
-                />
-                <span className="navigation-group-text">Recent</span>
-              </div>
-              <div
-                onClick={props.navigateToProfile}
-                className={
+              />
+              <span className="navigation-group-text">Recent</span>
+            </div>
+            <div
+              onClick={props.navigateToProfile}
+              className={
+                props.active === 4
+                  ? 'navigation-group navigation-group-active'
+                  : 'navigation-group'
+              }
+            >
+              <User
+                style={
                   props.active === 4
-                    ? 'navigation-group navigation-group-active'
-                    : 'navigation-group'
+                    ? { stroke: 'var(--primary-accent)' }
+                    : null
                 }
-              >
-                <User
-                  style={
-                    props.active === 4
-                      ? { stroke: 'var(--primary-accent)' }
-                      : null
-                  }
-                />
-                <span className="navigation-group-text"> Profile</span>
-              </div>
-              <div className="rightsidebar-content">
-                <div className="daily-counter">
-                  <Countdown />
-                </div>
-                <div className="rightsidebar-main-section">
-                  <div className="daily-meme-lord-container">
-                    <div className="daily-meme-lord">
-                      <span className="main-section-title">
-                        today's memelord 👑
-                      </span>
-                      <div className="rightsidebar-user-profile">
-                        {/* <img className="rightsidebar-avatar" src={Doge} /> */}
-                        <Doge />
-                        <span>@reilly</span>
-                      </div>
-
-                      <div className="rightsidebar-user-stats">
-                        <span className="rightsidebar-crown-count">
-                          1.6k 👑
-                        </span>
-                        <span className="rightsidebar-meme-count">
-                          24 memes
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rightsidebar-secondary-section">
-                  <TrendingTopics />
-                </div>
-              </div>
-
-              {/* <div
-                onClick={() => setActiveMenu('settings')}
-                className="navigation-group"
-              >
-                <Settings style={active ? { stroke: 'url(#grad)' } : null} />
-                <span className="navigation-group-text">Settings</span>
-              </div> */}
-              {/* <div className="sidebar-login ">
-                {props.avatar !== undefined ? (
-                  <div className="logout-container" onClick={signOut}>
-                    <Logout />
-                    <span className="navigation-group-text">Logout</span>
-                  </div>
-                ) : (
-                  <div onClick={goToLogin} className={'navigation-group'}>
-                    <Logout />
-                    <span className="navigation-group-text">
-                      Sign in/ Sign up
-                    </span>
-                  </div>
-                )}
-              </div> */}
-            </>
-          </CSSTransition>
-
-          {/* <CSSTransition
-            in={activeMenu === 'settings'}
-            timeout={200}
-            classNames="navigation-secondary"
-            unmountOnExit
-            onEnter={calcHeight}
-          >
-            <div>
-              <div
-                onClick={() => setActiveMenu('main')}
-                className="sidebar-navigation-settings-header"
-              >
-                <LeftArrow />
-                <span style={{ color: 'white' }}>Settings</span>
-              </div>
-
-              <div onClick={activateDoge} className={'navigation-group'}>
-                <div className="navigation-group-items navigation-settings-icon">
-                  <Doge
-                    style={props.active === 0 ? { fill: 'url(#grad)' } : null}
-                  />
-                  <span className="navigation-group-text">
-                    {doge ? 'Deactivate Doge' : 'Activate Doge'}
+              />
+              <span className="navigation-group-text"> Profile</span>
+            </div>
+            <div className="sidebar-container">
+              <span>Daily Memelord 👑</span>
+            </div>
+            <div className="navigation-group">
+              <Doge />
+              <span className="navigation-group-text">Reilly</span>
+              <span className="countdown-timer">
+                <div className="countdown-timer-time">
+                  <span className="countdown-timer-time">
+                    {hoursTimer < 10 ? `0${hoursTimer}` : hoursTimer}
+                  </span>
+                  <span className="countdown-timer-time">:</span>
+                  <span className="countdown-timer-time">
+                    {minutesTimer < 10 ? `0${minutesTimer}` : minutesTimer}
+                  </span>
+                  <span className="countdown-timer-time">:</span>
+                  <span className="countdown-timer-time">
+                    {secondsTimer < 10 ? `0${secondsTimer}` : secondsTimer}
                   </span>
                 </div>
-              </div>
-              <div className={'navigation-group'}>
-                <a target="_blank" href={discLink}>
-                  <div className="navigation-group-items navigation-settings-icon">
-                    <Discord />
-                    <span className="navigation-group-text">
-                      Discord Server
-                    </span>
-                  </div>
-                </a>
-              </div>
-              {currentUser ? (
-                <>
-                  <div className={'navigation-group'}>
-                    <div
-                      onClick={props.resetPassword}
-                      className="navigation-group-items navigation-settings-icon"
-                    >
-                      <Password />
-                      <span className="navigation-group-text">
-                        Change Password
-                      </span>
-                    </div>
-                  </div>
-
-                  <div onClick={signOut} className={'navigation-group'}>
-                    <div className="navigation-group-items navigation-settings-icon">
-                      <Logout />
-                      <span className="navigation-group-text">Sign Out</span>
-                    </div>
-                  </div>
-                </>
-              ) : null}
+              </span>
             </div>
-          </CSSTransition> */}
+
+            {/* <div className="rightsidebar-content">
+              <div className="daily-counter">
+                <Countdown />
+              </div>
+              <div className="rightsidebar-main-section">
+                <div className="daily-meme-lord-container">
+                  <div className="daily-meme-lord">
+                    <span className="main-section-title">
+                      today's memelord 👑
+                    </span>
+                    <div className="rightsidebar-user-profile">
+                      <img className="rightsidebar-avatar" src={Doge} /> 
+                      <Doge />
+                      <span>@reilly</span>
+                    </div>
+
+                    <div className="rightsidebar-user-stats">
+                      <span className="rightsidebar-crown-count">1.6k 👑</span>
+                      <span className="rightsidebar-meme-count">24 memes</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              
+            </div> 
+              */}
+            <div className="rightsidebar-secondary-section">
+              <TrendingTopics />
+            </div>
+          </>
         </div>
       </div>
     </div>

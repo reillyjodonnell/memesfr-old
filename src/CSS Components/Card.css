@@ -237,12 +237,12 @@
   padding: 0.25rem 0.25rem;
   /* background-color: rgba(0, 0, 0, 0.26); */
   cursor: pointer;
-  /* background-color: #ffffff1a; */
-  background-color: var(--line);
+  background-color: var(--shadow);
+  /* background-color: var(--line); */
 }
 .like-container svg {
   padding: 0 0.25rem;
-  color: white;
+  color: var(--text-color);
 }
 
 .like-container-active {
@@ -251,19 +251,18 @@
   align-items: center;
   text-align: center;
   width: auto;
-  border: 1px solid rgb(182, 50, 199);
+  border: 1px solid var(--primary-accent);
   border-radius: 15px;
   /* padding: 0 1rem; */
   padding: 0.25rem 0.25rem;
   cursor: pointer;
-
-  background-color: rgba(133, 67, 146, 0.116);
+  background-color: var(--light-highlight);
 }
 
 .like-container:hover {
-  border: 1px solid rgb(177, 177, 177);
+  border: 1px solid var(--secondary-text-color);
   border-radius: 15px;
-  background-color: rgba(138, 138, 138, 0.26);
+  background-color: var(--hover);
   transition: all var(--speed);
 }
 .likes-icon {
@@ -339,7 +338,7 @@
   padding: 0.25rem;
   font-size: 1rem;
   border-radius: 20px;
-  background-color: rgba(236, 28, 63, 0.075);
+  /* background-color: var(--highlight); */
   animation: appearButton var(--speed);
   filter: opacity(0.4);
 }

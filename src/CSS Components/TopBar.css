@@ -52,6 +52,7 @@
   transition: all 0.3s;
   border: 1px solid rgba(255, 255, 255, 0);
   border-radius: 15px;
+  background-color: var(--hover);
 }
 
 .topbar-upload-meme-button:hover {
@@ -120,7 +121,7 @@
 }
 .topbar-profile-modal-item:hover {
   transition: all var(--speed);
-  background-color: rgba(255, 255, 255, 0.123);
+  background-color: var(--hover);
   border-radius: 10px;
 }
 .topbar-profile-modal-icon {
@@ -144,6 +145,7 @@
 }
 .topbar-profile-modal-item-logout:hover {
   transition: all var(--speed);
-  background-color: rgba(255, 255, 255, 0.123);
+  background-color: var(--hover);
+
   border-radius: 10px;
 }
