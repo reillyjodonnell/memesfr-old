@@ -351,6 +351,30 @@ export default function Dashboard(props) {
     setNav({ count: 1 });
     navigate(`/notifications`);
   };
+  const navigateToSettings = () => {
+    setNav({ count: null });
+    navigate('/settings');
+  };
+  const navigateToCoins = () => {
+    setNav({ count: null });
+
+    navigate('/coins');
+  };
+  const navigateToHelp = () => {
+    setNav({ count: null });
+
+    navigate('/help');
+  };
+  const navigateToMessage = () => {
+    setNav({ count: null });
+
+    navigate('/messages');
+  };
+  const navigateToWallet = () => {
+    setNav({ count: null });
+
+    navigate('/wallet');
+  };
 
   const ConfirmEmailPrompt = () => {
     return (
@@ -484,6 +508,11 @@ export default function Dashboard(props) {
               randomFilter={filterRandom}
               navigateToProfile={navigateToProfile}
               navigateToNotifications={navigateToNotifications}
+              navigateToCoins={navigateToCoins}
+              navigateToHelp={navigateToHelp}
+              navigateToSettings={navigateToSettings}
+              navigateToMessage={navigateToMessage}
+              navigateToWallet={navigateToWallet}
               createPost={createMemePost}
               active={nav.count}
               username={username}

@@ -9,15 +9,46 @@ body {
 }
 
 :root {
-  --bg: #272932;
+  /* --bg: #272932; */
   --light-bg: #4c4d62;
   --bg-accent: #b74f6f;
-  --pink: #ea3788;
-  --blue: #00a7e1;
+  /* --pink: #ea3788; */
+  /* --blue: #00a7e1; */
+
+  /*BackgroundColor presets*/
+  --dark-bg: #272932;
+  --light-bg: #ffffff;
+  --light-text: #ffffff;
+  --light-text-secondary: rgb(34, 34, 34);
+  --dark-text: black;
+  --dark-text-secondary: rgb(142, 142, 142);
+
+  --bg: var(--dark-bg);
+  --text-color: var(--light-text);
+  --secondary-text-color: var(--dark-text-secondary);
+  --highlight: var(--purple-highlight);
+
+  --line: var(--dark-mode-line);
+  --light-mode-line: #00000054;
+  --dark-mode-line: #ffffff3b;
+
+  /*ChangeColor Presets */
+  --orange: #ff7f11;
+  --red: #ff1b1c;
+  --secondary-blue: #20a4f3;
+  --green: #5eeb5b;
+  --purple: #cb48b7;
+
+  --orange-highlight: #ff80119c;
+  --red-highlight: #ff1b1b9f;
+  --secondary-blue-highlight: #20a6f3a1;
+  --green-highlight: #5deb5b8a;
+  --purple-highlight: #cb48b798;
 
   --primary-accent: #cb48b7;
 
-  --text-color: #eeeeee;
+  /*End of ChangeColor Presets*/
+
   --nav-size: 80px;
   --border: 2px solid rgba(70, 70, 70, 0.342);
   --border-radius: 8px;

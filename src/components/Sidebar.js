@@ -20,6 +20,7 @@ export default function Sidebar(props) {
   const [activeMenu, setActiveMenu] = useState('main');
   const [menuHeight, setMenuHeight] = useState(null);
   const [doge, setDoge] = useState(false);
+  const [hasNotification, setHasNotfication] = useState(true);
   const { updateDoge } = useTheme();
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
@@ -50,6 +51,14 @@ export default function Sidebar(props) {
         <span className="navigation-group-text">Help</span>
       </div>
     </div>;
+  };
+
+  const NotificationAlert = () => {
+    return (
+      <div className="notification-alert">
+        <span className="notification-alert-number">2</span>
+      </div>
+    );
   };
 
   const discLink = 'https://discord.gg/234DDJUQpD';
@@ -123,13 +132,17 @@ export default function Sidebar(props) {
                     : 'navigation-group'
                 }
               >
-                <Notification
-                  style={
-                    props.active === 1
-                      ? { stroke: 'var(--primary-accent)' }
-                      : null
-                  }
-                />
+                <div className="notification-container">
+                  <Notification
+                    style={
+                      props.active === 1
+                        ? { stroke: 'var(--primary-accent)' }
+                        : null
+                    }
+                  ></Notification>
+                  {hasNotification && <NotificationAlert />}
+                </div>
+
                 <span className="navigation-group-text">Notifications</span>
               </div>
               <div

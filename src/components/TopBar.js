@@ -6,6 +6,7 @@ import { ReactComponent as Logout } from '../Assets/SVGs/logout.svg';
 import { ReactComponent as Coins } from '../Assets/Icons/Coins.svg';
 import { ReactComponent as Language } from '../Assets/Icons/Language.svg';
 import { ReactComponent as Help } from '../Assets/Icons/Help.svg';
+import { ReactComponent as Wallet } from '../Assets/Icons/Wallet.svg';
 
 import {
   Message,
@@ -44,15 +45,24 @@ export default function TopBar(props) {
   const ProfileModal = () => {
     return (
       <div className="topbar-profile-modal" onMouseLeave={handleMouseOut}>
-        <div className="topbar-profile-modal-item">
+        <div
+          className="topbar-profile-modal-item"
+          onClick={props.navigateToSettings}
+        >
           <Settings className="topbar-profile-modal-icon" />
           <span className="topbar-profile-modal-item-text">Settings</span>
         </div>
-        <div className="topbar-profile-modal-item">
+        <div
+          className="topbar-profile-modal-item"
+          onClick={props.navigateToCoins}
+        >
           <Coins className="topbar-profile-modal-icon" />
           <span className="topbar-profile-modal-item-text">Coins</span>
         </div>
-        <div className="topbar-profile-modal-item">
+        <div
+          className="topbar-profile-modal-item"
+          onClick={props.navigateToHelp}
+        >
           <Help className="topbar-profile-modal-icon" />
           <span className="topbar-profile-modal-item-text">Help</span>
         </div>
@@ -87,14 +97,16 @@ export default function TopBar(props) {
           <div
             onMouseOver={handleShowText}
             className="topbar-upload-meme-button"
+            onClick={props.navigateToMessage}
           >
             <Message />
           </div>
           <div
             onMouseOver={handleShowText}
             className="topbar-upload-meme-button"
+            onClick={props.navigateToWallet}
           >
-            <AccountBalanceWalletRounded />
+            <Wallet />
           </div>
         </div>
 

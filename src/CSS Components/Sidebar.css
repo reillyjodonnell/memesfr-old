@@ -2,22 +2,22 @@
   height: 90vh;
   width: 20vw;
   max-width: 400px;
-  position: sticky;
-  left: 0;
   display: flex;
-  background-color: #272932;
+  background-color: var(--bg);
   overflow: hidden;
   top: 76px;
   color: #fbfaf8;
   min-width: 285px;
+  top: 80px;
+  position: -webkit-sticky;
+  position: sticky;
+  overflow-y: auto;
 }
 .sidebar-content {
-  position: relative;
   display: flex;
   flex-direction: column;
   padding: 1rem;
   width: 100%;
-  overflow-y: scroll;
   /* border-right: 0.5px solid rgba(255, 255, 255, 0.212); */
 }
 .sidebar-create-post {
@@ -144,7 +144,7 @@
   font-size: 1rem;
   cursor: pointer;
   font-size: 1.3rem;
-  color: rgba(255, 255, 255, 0.767);
+  color: var(--text-color);
   font-weight: 500;
 }
 
@@ -194,6 +194,37 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+/*Notification bell & Alert*/
+.notification-container {
+  display: flex;
+  position: relative;
+}
+
+.notification-alert {
+  font-size: 0.85rem;
+  z-index: 200000;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  right: 0;
+  top: 0px;
+  display: flex;
+  background-color: var(--primary-accent);
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  line-height: 10px;
+  white-space: nowrap;
+  box-sizing: content-box;
+  text-align: center;
+}
+.notification-alert-number {
+  color: white;
+  line-height: 10px;
+  display: inline-block;
+  text-align: start;
 }
 
 /*Settings components*/
