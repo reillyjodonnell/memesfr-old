@@ -11,9 +11,6 @@ export default function TrendingTopics() {
 
   return (
     <div className="trendingtopics-section">
-      <div className="trendingtopics-title-container">
-        <span className="trendingtopics-title">Trending</span>
-      </div>
       <div className="trendingtopics-text-container">
         {trendingTopics.map((topic, index) => {
           return (

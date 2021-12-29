@@ -1,9 +1,11 @@
 import React from 'react';
 
 export default function Messages() {
+  document.title = '✉️ Messages - Memesfr';
+
   return (
     <div className="main-content">
-      <span>Messages</span>
+      <span>Here are the messages</span>
     </div>
   );
 }

@@ -23,7 +23,7 @@ body {
   --dark-text: black;
 
   --light-text-secondary: rgb(34, 34, 34);
-  --dark-text-secondary: rgb(142, 142, 142);
+  --dark-text-secondary: #fdfdfd91;
 
   --light-mode-shadow: #0000001f;
   --dark-mode-shadow: #ffffff3b;
@@ -70,6 +70,7 @@ body {
   --border: 2px solid rgba(70, 70, 70, 0.342);
   --border-radius: 8px;
   --speed: 300ms;
+  --delayed-speed: 10000ms;
   --window-width: 100vw;
 }
 

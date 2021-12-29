@@ -69,7 +69,7 @@
   flex-direction: column;
   align-items: center;
   border-radius: 20px;
-  padding: 1rem;
+  padding: 0 0.75rem;
 }
 
 .daily-meme-lord-container {

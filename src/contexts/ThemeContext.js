@@ -11,6 +11,7 @@ export default function ThemeProvider({ children }) {
   const [doge, setDoge] = useState(false);
   const [activeColor, setActiveColor] = useState(1);
   const [darkMode, setDarkMode] = useState(null);
+  const [accentColor, setAccentColor] = useState('');
 
   useEffect(() => {
     const darkModeJSON = localStorage.getItem('darkMode');
@@ -28,6 +29,7 @@ export default function ThemeProvider({ children }) {
     const colorValue = localStorage.getItem('accentColor');
     const colorNumberJSON = localStorage.getItem('accentColorNumber');
     const colorNumber = JSON.parse(colorNumberJSON);
+    setAccentColor(colorValue);
     setActiveColor(colorNumber);
     handleSettingColor(colorValue);
   }, []);
@@ -103,6 +105,7 @@ export default function ThemeProvider({ children }) {
     setActiveColor(value);
     handleStoringColor(color, value);
     handleSettingColor(color);
+    setAccentColor(color);
   };
 
   const values = {
@@ -114,6 +117,7 @@ export default function ThemeProvider({ children }) {
     SelectAnotherColor,
     darkMode,
     toggleDarkMode,
+    accentColor,
   };
   return (
     <ThemeContext.Provider value={values}>{children}</ThemeContext.Provider>

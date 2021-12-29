@@ -138,9 +138,10 @@ export default function Feed({ activeNav }) {
   const myRef = useRef(null);
 
   useEffect(() => {
-    console.log('Getting and showing popular posts');
     showPopular();
   }, []);
+
+  document.title = '🏠 Memesfr - Dankest Memes';
 
   const {
     currentUser,
@@ -356,7 +357,7 @@ export default function Feed({ activeNav }) {
       <RecentlyPosted />
       {activeScreen
         ? activeScreen.length !== undefined &&
-          activeScreen.map((item) => {
+          activeScreen.map((item, index) => {
             let liked = false;
             let hearted = false;
             if (usersLikedPosts.includes(item.id)) {
@@ -366,7 +367,7 @@ export default function Feed({ activeNav }) {
               <Card
                 hearted={hearted}
                 liked={liked}
-                key={item.id}
+                key={index}
                 likedPosts={usersLikedPosts}
                 item={item}
               ></Card>

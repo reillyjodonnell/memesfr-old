@@ -1,5 +1,5 @@
-import "./App.css";
-import Memesfr from "./components/Memesfr";
+import './App.css';
+import Memesfr from './components/Memesfr';
 
 function App() {
   return <Memesfr />;

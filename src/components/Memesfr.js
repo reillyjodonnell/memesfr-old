@@ -18,8 +18,12 @@ import { useAuth } from '../contexts/AuthContext';
 import Messages from './routes/messages/Messages';
 import Wallet from './routes/wallet/Wallet';
 import LanguageProvider from '../contexts/LanguageContext';
+import Post from './routes/post/Post';
+import Modal from './templates/Modal';
+
 export default function Memesfr() {
   const [nav, setNav] = useState({ count: 0 });
+  const [notificationCount, setNotificationCount] = useState(3);
 
   document.title = 'Memesfr - Dankest Memes';
 
@@ -31,15 +35,27 @@ export default function Memesfr() {
             <ThemeProvider>
               <AuthProvider>
                 <Routes>
-                  <Route exact path="/" element={<Home />}>
+                  <Route
+                    exact
+                    path="/"
+                    element={<Home notificationCount={notificationCount} />}
+                  >
                     <Route path="/" element={<Feed nav={nav} />} />
-                    <Route path=":userId" element={<UserProfile />} />
-                    <Route path="/notifications" element={<Notifications />} />
+                    <Route path=":userId" element={<UserProfile />}></Route>
+                    <Route
+                      path="/notifications"
+                      element={
+                        <Notifications notificationCount={notificationCount} />
+                      }
+                    />
+                    {/* <Route path=":userId/post/:postId" element={<Modal />} /> */}
+
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/coins" element={<Coins />} />
                     <Route path="/help" element={<Help />} />
                     <Route path="/messages" element={<Messages />} />
                     <Route path="/wallet" element={<Wallet />} />
+                    <Route path="/create" element={<Post />} />
                   </Route>
                   <Route path="/signup" element={<Register />} />
                   <Route path="/setup" element={<CreateProfile />} />

@@ -178,11 +178,9 @@ export default function Dashboard(props) {
 
   //Runs three times
   useEffect(() => {
-    console.log('Running useEffect to find  liked posts');
     let mounted = true;
     if (mounted) {
       async function match() {
-        console.log('running match function within useEffect');
         if (currentUser) {
           const results = await hasUserLikedPost();
           let [{ likedPosts }, { heartedPosts }] = results;
@@ -375,6 +373,11 @@ export default function Dashboard(props) {
     navigate('/wallet');
   };
 
+  const navigateToCreate = () => {
+    setNav({ count: null });
+    navigate('/create');
+  };
+
   const ConfirmEmailPrompt = () => {
     return (
       <div
@@ -480,6 +483,8 @@ export default function Dashboard(props) {
     return null;
   };
 
+  const notificationCount = 5;
+
   return (
     <div className="dashboard">
       <div className="dashboard-content">
@@ -495,6 +500,7 @@ export default function Dashboard(props) {
               randomFilter={filterRandom}
               createPost={createMemePost}
               resetPassword={resetUserPassword}
+              navigateToCreate={navigateToCreate}
             />
           </>
         ) : (
@@ -512,13 +518,20 @@ export default function Dashboard(props) {
               navigateToSettings={navigateToSettings}
               navigateToMessage={navigateToMessage}
               navigateToWallet={navigateToWallet}
+              navigateToCreate={navigateToCreate}
               createPost={createMemePost}
               active={nav.count}
               username={username}
               avatar={avatar}
               resetPassword={resetUserPassword}
             />
-            <div style={{ display: 'flex', position: 'relative' }}>
+            <div
+              style={{
+                display: 'flex',
+                position: 'relative',
+                justifyContent: 'space-between',
+              }}
+            >
               <Sidebar
                 homeFilter={filterHome}
                 trendingFilter={filterTrending}
@@ -528,6 +541,7 @@ export default function Dashboard(props) {
                 navigateToProfile={navigateToProfile}
                 navigateToNotifications={navigateToNotifications}
                 createPost={createMemePost}
+                notificationCount={props.notificationCount}
                 active={nav.count}
                 username={username}
                 avatar={avatar}

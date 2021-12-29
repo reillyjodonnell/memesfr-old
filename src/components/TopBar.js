@@ -7,6 +7,8 @@ import { ReactComponent as Coins } from '../Assets/Icons/Coins.svg';
 import { ReactComponent as Language } from '../Assets/Icons/Language.svg';
 import { ReactComponent as Help } from '../Assets/Icons/Help.svg';
 import { ReactComponent as Wallet } from '../Assets/Icons/Wallet.svg';
+import { useLanguage } from '../contexts/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 import {
   Message,
@@ -16,7 +18,96 @@ import {
 
 export default function TopBar(props) {
   const [isHovering, setIsHovering] = useState(false);
+  const [languageModal, setLanguageModal] = useState(false);
   const [showIconText, setShowIconText] = useState(false);
+
+  const { t, i18n } = useTranslation('common');
+
+  const {
+    setLanguageToSpanish,
+    setLanguageToChinese,
+    setLanguageToGerman,
+    setLanguageToEnglish,
+    setLanguageToFrench,
+    setLanguageToArabic,
+    languagePreference,
+  } = useLanguage();
+
+  const beginCountdownForModal = (count) => {
+    setTimeout(() => {
+      setIsHovering(false);
+    }, count);
+  };
+
+  const handleHoveringState = () => {};
+
+  const LanguageModal = () => {
+    return (
+      <div className="topbar-profile-modal" onMouseLeave={handleMouseOut}>
+        <div
+          className={
+            languagePreference === 'English'
+              ? 'topbar-profile-modal-item-active'
+              : 'topbar-profile-modal-item'
+          }
+          // onClick={props.navigateToSettings}
+          onClick={() => navigateAndClose(setLanguageToEnglish)}
+        >
+          <span className="topbar-profile-modal-item-text">English</span>
+        </div>
+        <div
+          className={
+            languagePreference === 'Spanish'
+              ? 'topbar-profile-modal-item-active'
+              : 'topbar-profile-modal-item'
+          }
+          onClick={() => navigateAndClose(setLanguageToSpanish)}
+        >
+          <span className="topbar-profile-modal-item-text">Español</span>
+        </div>
+        <div
+          onClick={() => navigateAndClose(setLanguageToFrench)}
+          className={
+            languagePreference === 'French'
+              ? 'topbar-profile-modal-item-active'
+              : 'topbar-profile-modal-item'
+          }
+        >
+          <span className="topbar-profile-modal-item-text">français</span>
+        </div>
+        <div
+          onClick={() => navigateAndClose(setLanguageToGerman)}
+          className={
+            languagePreference === 'German'
+              ? 'topbar-profile-modal-item-active'
+              : 'topbar-profile-modal-item'
+          }
+        >
+          <span className="topbar-profile-modal-item-text">Deutsch</span>
+        </div>
+        <div
+          onClick={() => navigateAndClose(setLanguageToChinese)}
+          className={
+            languagePreference === 'Chinese'
+              ? 'topbar-profile-modal-item-active'
+              : 'topbar-profile-modal-item'
+          }
+        >
+          <span className="topbar-profile-modal-item-text">中国人</span>
+        </div>
+        <div
+          onClick={() => navigateAndClose(setLanguageToArabic)}
+          className={
+            languagePreference === 'Arabic'
+              ? 'topbar-profile-modal-item-active'
+              : 'topbar-profile-modal-item'
+          }
+        >
+          <span className="topbar-profile-modal-item-text">عربى</span>
+        </div>
+      </div>
+    );
+  };
 
   const handleMouseOver = () => {
     if (isHovering) {
@@ -38,8 +129,14 @@ export default function TopBar(props) {
     );
   };
 
+  const navigateAndClose = (navigate) => {
+    navigate();
+    handleMouseOut();
+  };
+
   const handleMouseOut = () => {
     setIsHovering(false);
+    setLanguageModal(false);
   };
 
   const ProfileModal = () => {
@@ -47,33 +144,43 @@ export default function TopBar(props) {
       <div className="topbar-profile-modal" onMouseLeave={handleMouseOut}>
         <div
           className="topbar-profile-modal-item"
-          onClick={props.navigateToSettings}
+          // onClick={props.navigateToSettings}
+          onClick={() => navigateAndClose(props.navigateToSettings)}
         >
           <Settings className="topbar-profile-modal-icon" />
-          <span className="topbar-profile-modal-item-text">Settings</span>
+          <span className="topbar-profile-modal-item-text">
+            {t('settings')}
+          </span>
         </div>
         <div
           className="topbar-profile-modal-item"
           onClick={props.navigateToCoins}
         >
           <Coins className="topbar-profile-modal-icon" />
-          <span className="topbar-profile-modal-item-text">Coins</span>
+          <span className="topbar-profile-modal-item-text">{t('coins')}</span>
         </div>
         <div
           className="topbar-profile-modal-item"
           onClick={props.navigateToHelp}
         >
           <Help className="topbar-profile-modal-icon" />
-          <span className="topbar-profile-modal-item-text">Help</span>
+          <span className="topbar-profile-modal-item-text">{t('help')}</span>
         </div>
-        <div className="topbar-profile-modal-item">
+        <div
+          onClick={() => setLanguageModal((prev) => !prev)}
+          className="topbar-profile-modal-item"
+        >
           <Language className="topbar-profile-modal-icon" />
-          <span className="topbar-profile-modal-item-text">Language</span>
+          <span className="topbar-profile-modal-item-text">
+            {t('languages')}
+          </span>
         </div>
         <div className="topbar-profile-modal-logout-container">
           <div className="topbar-profile-modal-item-logout">
             <Logout className="topbar-profile-modal-icon" />
-            <span className="topbar-profile-modal-item-text">Logout</span>
+            <span className="topbar-profile-modal-item-text">
+              {t('logout')}
+            </span>
           </div>
         </div>
       </div>
@@ -83,13 +190,14 @@ export default function TopBar(props) {
   return (
     <>
       <div className="topbar-content">
-        <div className="topbar-logo">
+        <div onClick={props.homeFilter} className="topbar-logo">
           <Castle />
           <span>Memesfr</span>
         </div>
         <div className="topbar-icon-container">
           <div
             onMouseOver={handleShowText}
+            onClick={props.navigateToCreate}
             className="topbar-upload-meme-button topbar-first-button"
           >
             <Plus />
@@ -121,7 +229,11 @@ export default function TopBar(props) {
             src={props.avatar}
           />
         </div>
-        {isHovering && <ProfileModal />}
+        {isHovering && !languageModal ? (
+          <ProfileModal />
+        ) : languageModal ? (
+          <LanguageModal />
+        ) : null}
       </div>
     </>
   );

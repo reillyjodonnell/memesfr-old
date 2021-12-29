@@ -18,6 +18,7 @@ import RightSidebar from '../../RightSidebar';
 import Doge from '../../../Assets/doge.svg';
 import '../../../CSS Components/UserProfile.css';
 import { Skeleton } from '@material-ui/lab';
+import { useTheme } from '../../../contexts/ThemeContext';
 
 const drawerWidth = 240;
 
@@ -154,6 +155,8 @@ export default function UserProfile(props) {
   const myRef = useRef(null);
 
   const { isMobile } = useMobile();
+
+  const { accentColor } = useTheme();
 
   const {
     currentUser,
@@ -527,14 +530,16 @@ export default function UserProfile(props) {
             </div>
           </div>
           {isUsersProfile ? (
-            <div className="user-follow-button-container">
+            <div className={'user-follow-button-container'}>
               <div
                 onClick={toggleFollowUser}
-                className={
+                className={`${
                   followsUser
                     ? 'user-follow-button-active'
                     : 'user-follow-button'
-                }
+                } ${
+                  accentColor === 'green' && 'user-follow-button-active-alt'
+                } `}
               >
                 <span>Edit Profile </span>
               </div>

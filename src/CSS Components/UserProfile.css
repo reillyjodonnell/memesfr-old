@@ -16,7 +16,7 @@
   width: 100%;
   background: no-repeat center/80% url('../Assets/doge.svg');
   border-radius: 20px;
-  background-color: var(--shadow);
+  background-color: var(--hover);
 }
 .user-profile-avatar {
   height: 40px;
@@ -163,6 +163,10 @@
   border-radius: 20px;
   background-color: var(--highlight);
   animation: appearButton var(--speed);
+}
+
+.user-follow-button-active-alt {
+  background-color: var(--primary-accent);
 }
 .user-follow-button:hover {
 }

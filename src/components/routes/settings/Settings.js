@@ -9,11 +9,14 @@ import { ReactComponent as Trash } from '../../../Assets/SVGs/trash.svg';
 import { ReactComponent as User } from '../../../Assets/SVGs/user.svg';
 import { ReactComponent as Camera } from '../../../Assets/Icons/Image.svg';
 import { ReactComponent as Pencil } from '../../../Assets/SVGs/pencil.svg';
+import { useTranslation } from 'react-i18next';
 
 export default function Settings() {
   const [activeMenu, setActiveMenu] = useState(0);
   const { activeColor, SelectAnotherColor, darkMode, toggleDarkMode } =
     useTheme();
+
+  const { t, i18n } = useTranslation('common');
 
   const ActiveColor = () => {
     return (
@@ -33,7 +36,7 @@ export default function Settings() {
           }`}
         >
           <SettingsIcon className="settings-header-option-icon" />
-          <span className="settings-header-option-text">Settings</span>
+          <span className="settings-header-option-text">{t('settings')}</span>
         </div>
         <div
           onClick={() => setActiveMenu(1)}
@@ -42,21 +45,21 @@ export default function Settings() {
           }`}
         >
           <DisplayIcon className="settings-header-option-icon" />
-          <span className="settings-header-option-text">Display</span>
+          <span className="settings-header-option-text">{t('display')}</span>
         </div>
       </div>
       <div className="settings-dropdown-column">
         {activeMenu === 0 && (
           <>
             <div className="setting-dropdown-title">
-              <span>Account & Privacy</span>
+              <span>{t('accountAndPrivacy')}</span>
             </div>
             <div className="settings-main-section">
               <div className="settings-option">
                 <div className="settings-header-option">
                   <Lock className="settings-option-icon" />
                   <span className="settings-option-text">
-                    Change your password
+                    {t('changeYourPassword')}
                   </span>
                 </div>
               </div>
@@ -64,7 +67,7 @@ export default function Settings() {
                 <div className="settings-header-option">
                   <User className="settings-option-icon" />
                   <span className="settings-option-text">
-                    View Account Info
+                    {t('viewAccountInformation')}
                   </span>
                 </div>
               </div>
@@ -72,21 +75,23 @@ export default function Settings() {
                 <div className="settings-header-option">
                   <Camera className="settings-option-icon" />
                   <span className="settings-option-text">
-                    Change Profile Pic
+                    {t('changeProfilePic')}
                   </span>
                 </div>
               </div>
               <div className="settings-option">
                 <div className="settings-header-option">
                   <Pencil className="settings-option-icon" />
-                  <span className="settings-option-text">Change Username</span>
+                  <span className="settings-option-text">
+                    {t('changeUsername')}
+                  </span>
                 </div>
               </div>
               <div className="settings-option">
                 <div className="settings-header-option">
                   <Trash className="settings-option-icon" />
                   <span className="settings-option-text">
-                    Delete your account
+                    {t('deleteYourAccount')}
                   </span>
                 </div>
               </div>

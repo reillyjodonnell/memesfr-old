@@ -1,6 +1,5 @@
 .sidebar-fixed {
   height: 90vh;
-  width: 20vw;
   max-width: 400px;
   display: flex;
   background-color: var(--bg);
@@ -148,6 +147,8 @@
   color: var(--text-color);
   font-weight: 500;
   border-radius: 20px;
+  min-width: 200px;
+  width: fit-content;
 }
 .navigation-group:hover {
   background-color: var(--hover);
@@ -160,8 +161,8 @@
 }
 .navigation-group svg,
 .logout-container svg {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
 }
 .navigation-group-text {
   margin-left: 1.5rem;
@@ -239,10 +240,10 @@
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  font-size: 1.25rem;
+  font-size: 1rem;
   cursor: pointer;
-  color: var(--text-color);
-  font-weight: 600;
+  color: var(--secondary-text-color);
+  font-weight: 500;
   border-top: 1px solid var(--shadow);
   margin-top: 1.5rem;
 }

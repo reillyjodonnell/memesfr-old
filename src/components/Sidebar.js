@@ -13,6 +13,7 @@ import '../CSS Components/Sidebar.css';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import Countdown from './Countdown';
 import TrendingTopics from './TrendingTopics';
+import { useTranslation } from 'react-i18next';
 
 export default function Sidebar(props) {
   const [activeNav, setActiveNav] = useState();
@@ -30,6 +31,8 @@ export default function Sidebar(props) {
   const [minutesTimer, setMinutesTimer] = useState(0);
   const [secondsTimer, setSecondsTimer] = useState(3);
   const [timerMessage, setTimerMessage] = useState('');
+
+  const { t, i18n } = useTranslation('common');
 
   const countdownTimer = () => {
     if (secondsTimer > 0) {
@@ -80,7 +83,7 @@ export default function Sidebar(props) {
     <div onClick={() => navigate('/help')} className={'navigation-group'}>
       <div className="navigation-group-items navigation-settings-icon">
         <Help />
-        <span className="navigation-group-text">Help</span>
+        <span className="navigation-group-text">{t('help')}</span>
       </div>
     </div>;
   };
@@ -88,7 +91,9 @@ export default function Sidebar(props) {
   const NotificationAlert = () => {
     return (
       <div className="notification-alert">
-        <span className="notification-alert-number">2</span>
+        <span className="notification-alert-number">
+          {props.notificationCount}
+        </span>
       </div>
     );
   };
@@ -145,7 +150,7 @@ export default function Sidebar(props) {
                       : null
                   }
                 />
-                <span className="navigation-group-text">Home</span>
+                <span className="navigation-group-text">{t('home')}</span>
               </div>
             </div>
             <div
@@ -167,7 +172,9 @@ export default function Sidebar(props) {
                 {hasNotification && <NotificationAlert />}
               </div>
 
-              <span className="navigation-group-text">Notifications</span>
+              <span className="navigation-group-text">
+                {t('notifications')}
+              </span>
             </div>
             <div
               onClick={props.popularFilter}
@@ -182,7 +189,7 @@ export default function Sidebar(props) {
                   props.active === 2 ? { fill: 'var(--primary-accent)' } : null
                 }
               />
-              <span className="navigation-group-text">Popular</span>
+              <span className="navigation-group-text">{t('popular')}</span>
             </div>
             <div
               onClick={props.recentFilter}
@@ -199,7 +206,7 @@ export default function Sidebar(props) {
                     : null
                 }
               />
-              <span className="navigation-group-text">Recent</span>
+              <span className="navigation-group-text">{t('recent')}</span>
             </div>
             <div
               onClick={props.navigateToProfile}
@@ -216,10 +223,10 @@ export default function Sidebar(props) {
                     : null
                 }
               />
-              <span className="navigation-group-text"> Profile</span>
+              <span className="navigation-group-text">{t('profile')}</span>
             </div>
             <div className="sidebar-container">
-              <span>Daily Memelord 👑</span>
+              <span>{t('dailyMemelord')} 👑</span>
             </div>
             <div className="navigation-group">
               <Doge />
@@ -269,6 +276,9 @@ export default function Sidebar(props) {
               
             </div> 
               */}
+            <div className="sidebar-container">
+              <span>{t('trending')}</span>
+            </div>
             <div className="rightsidebar-secondary-section">
               <TrendingTopics />
             </div>
