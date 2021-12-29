@@ -483,6 +483,8 @@ export default function UserProfile(props) {
     setFollowsUser((prevState) => !prevState);
   };
 
+  const hasTitle = true;
+
   const UserProfile = () => {
     return (
       <div className="user-profile-container">
@@ -495,6 +497,11 @@ export default function UserProfile(props) {
           </div>
 
           <span className="user-username">{profileName}</span>
+          {hasTitle && (
+            <div className="title-container">
+              <span>{'Meme Lord'}</span>
+            </div>
+          )}
           <div className="user-profile-stats">
             <div className="user-stat-group">
               <span className="user-follower-count">{followers}</span>

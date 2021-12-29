@@ -19,7 +19,6 @@ import Messages from './routes/messages/Messages';
 import Wallet from './routes/wallet/Wallet';
 import LanguageProvider from '../contexts/LanguageContext';
 import Post from './routes/post/Post';
-import Modal from './templates/Modal';
 
 export default function Memesfr() {
   const [nav, setNav] = useState({ count: 0 });
@@ -48,7 +47,6 @@ export default function Memesfr() {
                         <Notifications notificationCount={notificationCount} />
                       }
                     />
-                    {/* <Route path=":userId/post/:postId" element={<Modal />} /> */}
 
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/coins" element={<Coins />} />

@@ -9,11 +9,17 @@ import { ReactComponent as LikeIcon } from '../Assets/SVGs/thumbUp.svg';
 import buffDoge from '../Assets/buff-doge.jpg';
 import { ReactComponent as CheckMark } from '../Assets/Icons/CheckMark.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShare, faComment, faCrown } from '@fortawesome/free-solid-svg-icons';
+import {
+  faShare,
+  faComment,
+  faCrown,
+  faHeart,
+} from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 
 import { useMobile } from '../contexts/MobileContext';
-import Modal from './templates/Modal';
+import Modal from './templates/FullScreenModal';
+import Titles from '../sample-data/titles.json';
 
 export default function Card(props) {
   const [heart, setHeart] = useState(false);
@@ -34,9 +40,15 @@ export default function Card(props) {
 
   /* FOR DEV ONLY */
   const isVerified = true;
+  const hasBanner = true;
   const shares = Math.round(Math.random() * 10000);
   const comments = Math.round(Math.random() * 40000);
 
+  //Get random title
+  const size = Object.keys(Titles).length;
+  const randomNumber = Math.floor(Math.random() * (size - 1) + 1);
+  const bannerText = Titles[randomNumber].title;
+  // let bannerText = '';
   /* END DEV ONLY */
 
   const {
@@ -51,6 +63,14 @@ export default function Card(props) {
 
   const toggleFollowUser = () => {
     setFollowsUser((prevState) => !prevState);
+  };
+
+  const UserBanner = () => {
+    return (
+      <div className="user-banner">
+        <span>{bannerText}</span>
+      </div>
+    );
   };
 
   function captureUserInput() {
@@ -281,7 +301,9 @@ export default function Card(props) {
                           <CheckMark />
                         </div>
                       )}
+                      {hasBanner && <UserBanner />}
                     </div>
+
                     <span className="meme-title">{props.item.title}</span>
 
                     <span className="hashtag-identifier"></span>
@@ -361,6 +383,13 @@ export default function Card(props) {
                   </span>
                   <span className="number-of-likes">{likes}</span>
                 </div>
+                <div className="like-container">
+                  <FontAwesomeIcon
+                    icon={faHeart}
+                    style={{ width: '1.5rem', height: '1.5rem' }}
+                  />
+                  <span className="number-of-likes">{comments}</span>
+                </div>
 
                 <div className="like-container">
                   <FontAwesomeIcon
@@ -394,7 +423,9 @@ export default function Card(props) {
                     <CheckMark />
                   </div>
                 )}
+                {hasBanner && <UserBanner />}
               </div>
+
               <span className="meme-title">{props.item.title}</span>
 
               <span className="hashtag-identifier"></span>

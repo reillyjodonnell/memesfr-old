@@ -21,6 +21,14 @@
 .topbar-icon-container {
   display: flex;
   margin-left: auto;
+  position: relative;
+}
+.topbar-icon-text {
+  color: var(--text-color);
+  position: absolute;
+  width: 100%;
+  padding: 1rem;
+  bottom: 0;
 }
 
 .topbar-upload-meme-button {
@@ -77,7 +85,7 @@
 }
 .topbar-upload-meme-button svg {
   height: 30px;
-  width: 30px;
+  width: 30px !important;
 }
 
 .topbar-avatar-container {

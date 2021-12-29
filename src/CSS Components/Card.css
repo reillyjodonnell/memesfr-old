@@ -123,6 +123,42 @@
   align-items: center;
   padding-top: auto;
 }
+
+/* User banner */
+.user-banner {
+  margin-left: 5px;
+  padding: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  /* background-color: var(--primary-accent); */
+  color: var(--neon-font-color);
+  /* text-shadow: 2px 2px var(--highlight); */
+  /* text-shadow: 0 0 7px var(--bg), 0 0 10px var(--bg), 0 0 21px var(--bg),
+    0 0 42px var(--primary-accent), 0 0 82px var(--primary-accent),
+    0 0 92px var(--primary-accent), 0 0 102px var(--primary-accent),
+    0 0 151px var(--primary-accent); */
+
+  text-shadow: -1px -1px 1px var(--light-highlight),
+    -1px 1px 1px var(--highlight), 1px -1px 1px var(--highlight),
+    1px 1px 1px var(--highlight), 0 0 3px var(--highlight),
+    -2px 0 2px var(--light-highlight), -2px 0 4px var(--light-highlight),
+    2px 0 2px var(--light-highlight), 2px 0 4px var(--light-highlight),
+    0 0 2px var(--light-highlight), 0 0 4px var(--light-highlight),
+    0 0 10px var(--light-highlight), 0 0 20px var(--light-highlight),
+    0 0 15px var(--highlight), 0 0 20px var(--highlight),
+    0 0 40px var(--light-highlight), 0 0 50px var(--light-highlight),
+    0 0 200px var(--light-highlight), 0 0 200px var(--light-highlight);
+
+  /* letter-spacing: 1px;
+  color: #e0ecfa;
+  text-shadow: 0 0 2px rgba(202, 228, 225, 0.92),
+    0 0 13px rgba(202, 228, 225, 0.34), 0 0 6px rgba(30, 132, 242, 0.52),
+    0 0 18px rgba(30, 132, 242, 0.92), 0 0 18px rgba(30, 132, 242, 0.78),
+    0 0 24px rgba(30, 132, 242, 0.92); */
+}
+
 .image-container {
   display: flex;
   justify-content: center;

@@ -10,11 +10,9 @@ export default function Home({ notificationCount }) {
   useEffect(() => {
     let mount = true;
     if (mount === true) {
-      setTimeout(() => {
-        if (loadUser === false || currentUser === undefined) {
-          setLoading(false);
-        }
-      });
+      if (loadUser === false || currentUser === undefined) {
+        setLoading(false);
+      }
     }
 
     return () => (mount = false);

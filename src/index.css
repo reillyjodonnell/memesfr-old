@@ -39,9 +39,13 @@ body {
   --secondary-text-color: var(--dark-text-secondary);
   --highlight: var(--purple-highlight);
   --light-highlight: var(--purple-light-highlight);
+
   --shadow: var(--dark-mode-shadow);
+  --neon-font-color: #ffffffab;
   --line: var(--dark-mode-line);
   --hover: var(--dark-mode-hover);
+
+  --additional-blue: #3777ff;
 
   /*ChangeColor Presets */
   --orange: #ff7f11;

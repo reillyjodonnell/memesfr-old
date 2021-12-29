@@ -14,14 +14,17 @@ export default function ThemeProvider({ children }) {
   const [accentColor, setAccentColor] = useState('');
 
   useEffect(() => {
-    const darkModeJSON = localStorage.getItem('darkMode');
-    const darkModeValue = JSON.parse(darkModeJSON);
-    if (darkModeValue) {
+    const darkModeJSON = localStorage.getItem('backgroundColor');
+    // const darkModeValue = JSON.parse(darkModeJSON);
+    if (darkModeJSON === 'dark') {
       handleDarkMode();
       setDarkMode(true);
-    } else if (!darkModeValue) {
+    } else if (darkModeJSON === 'light') {
       handleLightMode();
       setDarkMode(false);
+    } else {
+      handleDarkMode();
+      setDarkMode(true);
     }
   }, []);
 
@@ -29,9 +32,16 @@ export default function ThemeProvider({ children }) {
     const colorValue = localStorage.getItem('accentColor');
     const colorNumberJSON = localStorage.getItem('accentColorNumber');
     const colorNumber = JSON.parse(colorNumberJSON);
-    setAccentColor(colorValue);
-    setActiveColor(colorNumber);
-    handleSettingColor(colorValue);
+    console.log(colorNumber);
+    if (colorNumber === null) {
+      setAccentColor('purple');
+      setActiveColor(1);
+      handleSettingColor('purple');
+    } else {
+      setAccentColor(colorValue);
+      setActiveColor(colorNumber);
+      handleSettingColor(colorValue);
+    }
   }, []);
 
   useEffect(() => {
@@ -78,10 +88,10 @@ export default function ThemeProvider({ children }) {
 
   const toggleDarkMode = () => {
     if (darkMode) {
-      localStorage.setItem('darkMode', 'false');
+      localStorage.setItem('backgroundColor', 'light');
       handleLightMode();
     } else {
-      localStorage.setItem('darkMode', 'true');
+      localStorage.setItem('backgroundColor', 'dark');
       handleDarkMode();
     }
 
@@ -96,6 +106,7 @@ export default function ThemeProvider({ children }) {
   };
 
   const handleSettingColor = (color) => {
+    console.log(`Received ${color}`);
     r.style.setProperty('--primary-accent', `var(--${color})`);
     r.style.setProperty('--highlight', `var(--${color}-highlight)`);
     r.style.setProperty('--light-highlight', `var(--${color}-light-highlight)`);
