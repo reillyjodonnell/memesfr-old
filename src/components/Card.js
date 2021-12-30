@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next';
 import { useMobile } from '../contexts/MobileContext';
 import Modal from './templates/FullScreenModal';
 import Titles from '../sample-data/titles.json';
+import { useInView } from 'react-intersection-observer';
 
 export default function Card(props) {
   const [heart, setHeart] = useState(false);
@@ -38,12 +39,22 @@ export default function Card(props) {
 
   const { t, i18n } = useTranslation('common');
 
+  const [ref, inView] = useInView({
+    threshold: 0.3,
+    rootMargin: '40px',
+  });
+
+  const isInView = inView.toString();
+
+  if (isInView) {
+    console.log(`${props.item.title} is in view`);
+  }
+
   /* FOR DEV ONLY */
   const isVerified = true;
   const hasBanner = true;
   const shares = Math.round(Math.random() * 10000);
   const comments = Math.round(Math.random() * 40000);
-  console.log(props);
 
   //Get random title
   const size = Object.keys(Titles).length;
@@ -228,14 +239,12 @@ export default function Card(props) {
   };
 
   const openFullScreen = () => {
-    console.log('Full screen is true');
     document.getElementById('root').style.filter = 'blur(5px)';
 
     setFullScreen(true);
   };
 
   const closeFullScreen = () => {
-    console.log('Full screen is true');
     document.getElementById('root').style.filter = '';
     setFullScreen(false);
   };
@@ -243,17 +252,33 @@ export default function Card(props) {
   const VideoPlayback = () => {
     return (
       <>
-        <video
-          type="video/mp4"
-          style={{ objectFit: 'cover' }}
-          controls
-          loop
-          // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
-          className="meme-image"
-          poster={props.item.poster}
-          src={props.item.image}
-        />
-        <div></div>
+        {inView ? (
+          <video
+            type="video/mp4"
+            style={{ objectFit: 'cover' }}
+            loop
+            playsInline
+            autoPlay
+            // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
+            className="meme-image"
+            poster={props.item.poster}
+            src={props.item.image}
+          />
+        ) : (
+          <video
+            type="video/mp4"
+            style={{ objectFit: 'cover' }}
+            controls
+            loop
+            muted
+            playsInline
+            autoPlay
+            // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
+            className="meme-image"
+            poster={props.item.poster}
+            src={props.item.image}
+          />
+        )}
       </>
     );
   };
@@ -266,192 +291,196 @@ export default function Card(props) {
   }
 
   return props ? (
-    <div
-      className="card-area"
-      style={isMobile ? { width: '100%' } : null}
-      onMouseLeave={captureUserInput}
-      onScrollCapture={isMobile ? captureUserInput : null}
-    >
-      {fullScreen && (
-        <Modal toggleState={closeFullScreen}>
-          <div
-            className="card-area"
-            style={isMobile ? { width: '100%' } : null}
-            onMouseLeave={captureUserInput}
-            onScrollCapture={isMobile ? captureUserInput : null}
-          >
-            <div className="card">
-              <div className="upper">
-                <div className="upper-top-info">
-                  <DisplayAvatar />
-                  <div className="meme-identification">
-                    <div className="user-name-information">
-                      <span className="clickable">{memeAuthor()}</span>
-                      {isVerified && (
-                        <div className="verified-container">
-                          <CheckMark />
+    <div inView={inView}>
+      <div ref={ref}>
+        <div
+          className="card-area"
+          style={isMobile ? { width: '100%' } : null}
+          onMouseLeave={captureUserInput}
+          onScrollCapture={isMobile ? captureUserInput : null}
+        >
+          {fullScreen && (
+            <Modal toggleState={closeFullScreen}>
+              <div
+                className="card-area"
+                style={isMobile ? { width: '100%' } : null}
+                onMouseLeave={captureUserInput}
+                onScrollCapture={isMobile ? captureUserInput : null}
+              >
+                <div className="card">
+                  <div className="upper">
+                    <div className="upper-top-info">
+                      <DisplayAvatar />
+                      <div className="meme-identification">
+                        <div className="user-name-information">
+                          <span className="clickable">{memeAuthor()}</span>
+                          {isVerified && (
+                            <div className="verified-container">
+                              <CheckMark />
+                            </div>
+                          )}
+                          {hasBanner && <UserBanner />}
                         </div>
-                      )}
-                      {hasBanner && <UserBanner />}
+
+                        <span className="meme-title">{props.item.title}</span>
+
+                        <span className="hashtag-identifier"></span>
+                      </div>
+                      <div className="user-follow-button-container-card">
+                        <div
+                          onClick={toggleFollowUser}
+                          className={
+                            followsUser
+                              ? 'user-follow-button-card-active'
+                              : 'user-follow-button-card'
+                          }
+                        >
+                          <span>
+                            {followsUser ? t('following') : t('follow')}{' '}
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
-                    <span className="meme-title">{props.item.title}</span>
-
-                    <span className="hashtag-identifier"></span>
+                    <div className="image-container">
+                      {props.item.fileType === 'video' ? (
+                        <VideoPlayback />
+                      ) : (
+                        <img
+                          alt=""
+                          // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
+                          className="meme-image"
+                          src={props.item.image}
+                        ></img>
+                      )}
+                    </div>
+                    <div className="upper-top"></div>
                   </div>
-                  <div className="user-follow-button-container-card">
+
+                  <div className="lower">
+                    {/* <div className="heart-container">
+
+              <HeartIcon
+                className={
+                  heart
+                    ? 'active-heart heart-icon'
+                    : 'heart-icon inactive-heart'
+                }
+                onClick={currentUser ? toggleHeart : activatePrompt}
+              />
+              <span
+                className={
+                  heart ? 'active-heart number-of-likes' : 'number-of-likes'
+                }
+              >
+                1
+              </span>
+            </div> */}
+
                     <div
-                      onClick={toggleFollowUser}
+                      onClick={currentUser ? toggleThumbUp : activatePrompt}
                       className={
-                        followsUser
-                          ? 'user-follow-button-card-active'
-                          : 'user-follow-button-card'
+                        thumbUp ? 'crown-container-active' : 'crown-container'
                       }
                     >
-                      <span>{followsUser ? t('following') : t('follow')} </span>
+                      {/* <LikeIcon
+                style={thumbUp ? { fill: 'url(#thumb-grad)' } : null}
+                className={thumbUp ? 'active-thumbup' : 'inactive-thumbup'}
+                onClick={currentUser ? toggleThumbUp : activatePrompt}
+              />
+              <span
+                className={
+                  thumbUp ? 'active-thumbUp number-of-likes' : 'number-of-likes'
+                }
+              >
+                {likes}
+              </span> */}
+                      <span className="likes-icon">
+                        <FontAwesomeIcon
+                          icon={faCrown}
+                          style={{ width: '1.5rem', height: '1.5rem' }}
+                        />
+                      </span>
+                      <span className="number-of-likes">{likes}</span>
+                    </div>
+                    <div className="like-container">
+                      <FontAwesomeIcon
+                        icon={faHeart}
+                        style={{ width: '1.5rem', height: '1.5rem' }}
+                      />
+                      <span className="number-of-likes">{comments}</span>
+                    </div>
+
+                    <div className="like-container">
+                      <FontAwesomeIcon
+                        icon={faComment}
+                        style={{ width: '1.5rem', height: '1.5rem' }}
+                      />
+                      <span className="number-of-likes">{comments}</span>
+                    </div>
+                    <div className="like-container">
+                      <FontAwesomeIcon
+                        icon={faShare}
+                        style={{ width: '1.5rem', height: '1.5rem' }}
+                      />
+                      <span className="number-of-likes">{shares}</span>
                     </div>
                   </div>
-                </div>
-
-                <div className="image-container">
-                  {props.item.fileType === 'video' ? (
-                    <VideoPlayback />
-                  ) : (
-                    <img
-                      alt=""
-                      // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
-                      className="meme-image"
-                      src={props.item.image}
-                    ></img>
-                  )}
-                </div>
-                <div className="upper-top"></div>
-              </div>
-
-              <div className="lower">
-                {/* <div className="heart-container">
-
-              <HeartIcon
-                className={
-                  heart
-                    ? 'active-heart heart-icon'
-                    : 'heart-icon inactive-heart'
-                }
-                onClick={currentUser ? toggleHeart : activatePrompt}
-              />
-              <span
-                className={
-                  heart ? 'active-heart number-of-likes' : 'number-of-likes'
-                }
-              >
-                1
-              </span>
-            </div> */}
-
-                <div
-                  onClick={currentUser ? toggleThumbUp : activatePrompt}
-                  className={
-                    thumbUp ? 'crown-container-active' : 'crown-container'
-                  }
-                >
-                  {/* <LikeIcon
-                style={thumbUp ? { fill: 'url(#thumb-grad)' } : null}
-                className={thumbUp ? 'active-thumbup' : 'inactive-thumbup'}
-                onClick={currentUser ? toggleThumbUp : activatePrompt}
-              />
-              <span
-                className={
-                  thumbUp ? 'active-thumbUp number-of-likes' : 'number-of-likes'
-                }
-              >
-                {likes}
-              </span> */}
-                  <span className="likes-icon">
-                    <FontAwesomeIcon
-                      icon={faCrown}
-                      style={{ width: '1.5rem', height: '1.5rem' }}
-                    />
-                  </span>
-                  <span className="number-of-likes">{likes}</span>
-                </div>
-                <div className="like-container">
-                  <FontAwesomeIcon
-                    icon={faHeart}
-                    style={{ width: '1.5rem', height: '1.5rem' }}
-                  />
-                  <span className="number-of-likes">{comments}</span>
-                </div>
-
-                <div className="like-container">
-                  <FontAwesomeIcon
-                    icon={faComment}
-                    style={{ width: '1.5rem', height: '1.5rem' }}
-                  />
-                  <span className="number-of-likes">{comments}</span>
-                </div>
-                <div className="like-container">
-                  <FontAwesomeIcon
-                    icon={faShare}
-                    style={{ width: '1.5rem', height: '1.5rem' }}
-                  />
-                  <span className="number-of-likes">{shares}</span>
+                  {options ? <OptionsExpanded /> : null}
                 </div>
               </div>
-              {options ? <OptionsExpanded /> : null}
-            </div>
-          </div>
-        </Modal>
-      )}
-      <div className="card">
-        <div className="upper">
-          <div className="upper-top-info">
-            <DisplayAvatar />
-            <div className="meme-identification">
-              <div className="user-name-information">
-                <span className="clickable">{memeAuthor()}</span>
-                {isVerified && (
-                  <div className="verified-container">
-                    <CheckMark />
+            </Modal>
+          )}
+          <div className="card">
+            <div className="upper">
+              <div className="upper-top-info">
+                <DisplayAvatar />
+                <div className="meme-identification">
+                  <div className="user-name-information">
+                    <span className="clickable">{memeAuthor()}</span>
+                    {isVerified && (
+                      <div className="verified-container">
+                        <CheckMark />
+                      </div>
+                    )}
+                    {/* {hasBanner && <UserBanner />} */}
                   </div>
+
+                  <span className="meme-title">{props.item.title}</span>
+
+                  <span className="hashtag-identifier"></span>
+                </div>
+                <div className="user-follow-button-container-card">
+                  <div
+                    onClick={toggleFollowUser}
+                    className={
+                      followsUser
+                        ? 'user-follow-button-card-active'
+                        : 'user-follow-button-card'
+                    }
+                  >
+                    <span>{followsUser ? t('following') : t('follow')} </span>
+                  </div>
+                </div>
+              </div>
+
+              <div onClick={openFullScreen} className="image-container">
+                {props.item.fileType === 'video' ? (
+                  <VideoPlayback />
+                ) : (
+                  <img
+                    alt=""
+                    // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
+                    className="meme-image"
+                    src={props.item.image}
+                  ></img>
                 )}
-                {/* {hasBanner && <UserBanner />} */}
               </div>
-
-              <span className="meme-title">{props.item.title}</span>
-
-              <span className="hashtag-identifier"></span>
+              <div className="upper-top"></div>
             </div>
-            <div className="user-follow-button-container-card">
-              <div
-                onClick={toggleFollowUser}
-                className={
-                  followsUser
-                    ? 'user-follow-button-card-active'
-                    : 'user-follow-button-card'
-                }
-              >
-                <span>{followsUser ? t('following') : t('follow')} </span>
-              </div>
-            </div>
-          </div>
 
-          <div onClick={openFullScreen} className="image-container">
-            {props.item.fileType === 'video' ? (
-              <VideoPlayback />
-            ) : (
-              <img
-                alt=""
-                // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
-                className="meme-image"
-                src={props.item.image}
-              ></img>
-            )}
-          </div>
-          <div className="upper-top"></div>
-        </div>
-
-        <div className="lower">
-          {/* <div className="heart-container">
+            <div className="lower">
+              {/* <div className="heart-container">
 
               <HeartIcon
                 className={
@@ -470,11 +499,13 @@ export default function Card(props) {
               </span>
             </div> */}
 
-          <div
-            onClick={currentUser ? toggleThumbUp : activatePrompt}
-            className={thumbUp ? 'crown-container-active' : 'crown-container'}
-          >
-            {/* <LikeIcon
+              <div
+                onClick={currentUser ? toggleThumbUp : activatePrompt}
+                className={
+                  thumbUp ? 'crown-container-active' : 'crown-container'
+                }
+              >
+                {/* <LikeIcon
                 style={thumbUp ? { fill: 'url(#thumb-grad)' } : null}
                 className={thumbUp ? 'active-thumbup' : 'inactive-thumbup'}
                 onClick={currentUser ? toggleThumbUp : activatePrompt}
@@ -486,31 +517,33 @@ export default function Card(props) {
               >
                 {likes}
               </span> */}
-            <span className="likes-icon">
-              <FontAwesomeIcon
-                icon={faCrown}
-                style={{ width: '1.5rem', height: '1.5rem' }}
-              />
-            </span>
-            <span className="number-of-likes">{likes}</span>
-          </div>
+                <span className="likes-icon">
+                  <FontAwesomeIcon
+                    icon={faCrown}
+                    style={{ width: '1.5rem', height: '1.5rem' }}
+                  />
+                </span>
+                <span className="number-of-likes">{likes}</span>
+              </div>
 
-          <div className="like-container">
-            <FontAwesomeIcon
-              icon={faComment}
-              style={{ width: '1.5rem', height: '1.5rem' }}
-            />
-            <span className="number-of-likes">{comments}</span>
-          </div>
-          <div className="like-container">
-            <FontAwesomeIcon
-              icon={faShare}
-              style={{ width: '1.5rem', height: '1.5rem' }}
-            />
-            <span className="number-of-likes">{shares}</span>
+              <div className="like-container">
+                <FontAwesomeIcon
+                  icon={faComment}
+                  style={{ width: '1.5rem', height: '1.5rem' }}
+                />
+                <span className="number-of-likes">{comments}</span>
+              </div>
+              <div className="like-container">
+                <FontAwesomeIcon
+                  icon={faShare}
+                  style={{ width: '1.5rem', height: '1.5rem' }}
+                />
+                <span className="number-of-likes">{shares}</span>
+              </div>
+            </div>
+            {options ? <OptionsExpanded /> : null}
           </div>
         </div>
-        {options ? <OptionsExpanded /> : null}
       </div>
     </div>
   ) : null;

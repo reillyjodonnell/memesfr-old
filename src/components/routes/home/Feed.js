@@ -10,6 +10,7 @@ import CreatePost from '../../CreatePost';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useMobile } from '../../../contexts/MobileContext';
 import PasswordModal from '../../PasswordModal';
+
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   toolbar: {
@@ -133,8 +134,6 @@ export default function Feed(props) {
   const [usersLikedPosts, setUsersLikedPosts] = useState([]);
   const [usersHeartedPosts, setUsersHeartedPosts] = useState([]);
 
-  // console.log(...posts);
-
   const [nav, setNav] = useState(0);
 
   const myRef = useRef(null);
@@ -144,8 +143,6 @@ export default function Feed(props) {
   }, []);
 
   document.title = '🏠 Memesfr - Dankest Memes';
-
-  console.log('on Feed cOmponent');
 
   const {
     currentUser,
@@ -161,7 +158,6 @@ export default function Feed(props) {
   };
 
   useEffect(() => {
-    console.log(props.postsData);
     if (props.postsData.length === undefined) {
       setLoadingFilter(true);
     } else {

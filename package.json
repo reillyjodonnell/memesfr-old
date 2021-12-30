@@ -25,6 +25,7 @@
     "react-firebaseui": "^5.0.2",
     "react-i18next": "^11.15.2",
     "react-infinite-scroll-component": "^6.1.0",
+    "react-intersection-observer": "^8.33.1",
     "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
     "react-transition-group": "^4.4.2",
