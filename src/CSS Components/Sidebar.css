@@ -155,6 +155,27 @@
   transition: all var(--speed);
 }
 
+.navigation-group-memelord {
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1rem;
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: var(--text-color);
+  font-weight: 500;
+  border-radius: 20px;
+  min-width: 200px;
+  width: fit-content;
+  margin-bottom: 1rem;
+}
+.navigation-group-memelord:hover {
+  background-color: var(--hover);
+  transition: all var(--speed);
+}
+
 .navigation-group-active {
   color: var(--primary-accent);
   font-weight: 700;
@@ -245,7 +266,25 @@
   color: var(--secondary-text-color);
   font-weight: 500;
   border-top: 1px solid var(--shadow);
-  margin-top: 1.5rem;
+}
+.memelord-container {
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--secondary-text-color);
+  font-weight: 500;
+  border-top: 1px solid var(--shadow);
+  margin-top: 1rem;
+}
+.daily-memelord-rank {
+  font-size: 1.75rem;
+}
+.daily-meme-avatar {
+  margin-left: 1.5rem;
 }
 
 /*Settings components*/

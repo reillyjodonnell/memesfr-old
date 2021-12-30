@@ -3,9 +3,25 @@ import Dashboard from './Dashboard';
 import { useAuth } from '../contexts/AuthContext';
 import Loading from './Loading';
 
-export default function Home({ notificationCount }) {
+export default function Home({ notificationCount, setPosts }) {
   const [loading, setLoading] = useState(true);
   const { loadUser, currentUser } = useAuth();
+
+  const { retrievePopularPosts } = useAuth();
+
+  useEffect(() => {
+    async function retrievePosts() {
+      const postsPromises = await retrievePopularPosts();
+      const retrieveData = Promise.all(postsPromises).then((data) => {
+        return data;
+      });
+      return retrieveData;
+    }
+    retrievePosts().then((data) => {
+      console.log(data);
+      setPosts(data);
+    });
+  }, []);
 
   useEffect(() => {
     let mount = true;

@@ -43,6 +43,7 @@ export default function Card(props) {
   const hasBanner = true;
   const shares = Math.round(Math.random() * 10000);
   const comments = Math.round(Math.random() * 40000);
+  console.log(props);
 
   //Get random title
   const size = Object.keys(Titles).length;
@@ -52,7 +53,6 @@ export default function Card(props) {
   /* END DEV ONLY */
 
   const {
-    activeScreen,
     likePost,
     dislikePost,
     heartPost,
@@ -99,31 +99,22 @@ export default function Card(props) {
 
   useEffect(() => {}, [likes]);
 
-  useEffect(() => {
-    let mounted = true;
-    if (mounted === true) {
-      if (currentUser) {
-        if (currentUser.uid === props.item.author) {
-          setPermissionToEdit(true);
-        } else setPermissionToEdit(false);
-      } else setPermissionToEdit(false);
-    }
-    return () => (mounted = false);
-  }, [activeScreen]);
+  // useEffect(() => {
+  //   let mounted = true;
+  //   if (mounted === true) {
+  //     if (currentUser) {
+  //       if (currentUser.uid === props.item.author) {
+  //         setPermissionToEdit(true);
+  //       } else setPermissionToEdit(false);
+  //     } else setPermissionToEdit(false);
+  //   }
+  //   return () => (mounted = false);
+  // }, [props.item.likes]);
 
   useEffect(() => {
-    let mounted = true;
-    if (mounted === true) {
-      if (props) {
-        changeLikes(props.item.likes);
-      }
-      return () => {
-        mounted = false;
-        changeLikes();
-      };
-    }
-    return () => (mounted = false);
-  }, [activeScreen]);
+    //Await for the props to be passed
+    changeLikes(props.item.likes);
+  }, [props.item.likes]);
 
   const toggleThumbUp = () => {
     setNeedSubmit(true);
@@ -423,7 +414,7 @@ export default function Card(props) {
                     <CheckMark />
                   </div>
                 )}
-                {hasBanner && <UserBanner />}
+                {/* {hasBanner && <UserBanner />} */}
               </div>
 
               <span className="meme-title">{props.item.title}</span>

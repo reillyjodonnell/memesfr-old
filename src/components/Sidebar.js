@@ -225,10 +225,10 @@ export default function Sidebar(props) {
               />
               <span className="navigation-group-text">{t('profile')}</span>
             </div>
-            <div className="sidebar-container">
+            <div className="memelord-container">
               <span>{t('dailyMemelord')} 👑</span>
             </div>
-            <div className="navigation-group">
+            <div className="navigation-group-memelord">
               <Doge />
               <span className="navigation-group-text">Reilly</span>
               <span className="countdown-timer">

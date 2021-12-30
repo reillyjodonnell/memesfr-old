@@ -23,6 +23,7 @@ import Post from './routes/post/Post';
 export default function Memesfr() {
   const [nav, setNav] = useState({ count: 0 });
   const [notificationCount, setNotificationCount] = useState(3);
+  const [posts, setPosts] = useState({});
 
   document.title = 'Memesfr - Dankest Memes';
 
@@ -37,9 +38,17 @@ export default function Memesfr() {
                   <Route
                     exact
                     path="/"
-                    element={<Home notificationCount={notificationCount} />}
+                    element={
+                      <Home
+                        setPosts={setPosts}
+                        notificationCount={notificationCount}
+                      />
+                    }
                   >
-                    <Route path="/" element={<Feed nav={nav} />} />
+                    <Route
+                      path="/"
+                      element={<Feed postsData={posts} nav={nav} />}
+                    />
                     <Route path=":userId" element={<UserProfile />}></Route>
                     <Route
                       path="/notifications"

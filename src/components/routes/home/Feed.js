@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Feed({ activeNav }) {
+export default function Feed(props) {
   const classes = useStyles();
   const [resetPassword, resetPasswordFunction] = useState(false);
   const [register, openRegister] = useState(false);
@@ -133,6 +133,8 @@ export default function Feed({ activeNav }) {
   const [usersLikedPosts, setUsersLikedPosts] = useState([]);
   const [usersHeartedPosts, setUsersHeartedPosts] = useState([]);
 
+  // console.log(...posts);
+
   const [nav, setNav] = useState(0);
 
   const myRef = useRef(null);
@@ -142,6 +144,8 @@ export default function Feed({ activeNav }) {
   }, []);
 
   document.title = '🏠 Memesfr - Dankest Memes';
+
+  console.log('on Feed cOmponent');
 
   const {
     currentUser,
@@ -156,6 +160,16 @@ export default function Feed({ activeNav }) {
     resetPasswordFunction(!resetPassword);
   };
 
+  useEffect(() => {
+    console.log(props.postsData);
+    if (props.postsData.length === undefined) {
+      setLoadingFilter(true);
+    } else {
+      setPopularPosts(props.postsData);
+      setLoadingFilter(false);
+    }
+  }, [props.postsData]);
+
   function showPopular() {
     setLoadingFilter(true);
     setActiveScreen();
@@ -165,22 +179,18 @@ export default function Feed({ activeNav }) {
     if (randomPosts) {
       setRandomPosts();
     }
-    loadPopular().then((items) => {
-      setPopularPosts(items);
-      setActiveScreen(items);
-      setLoadingFilter(false);
-    });
+    // setActiveScreen(props.postsData);
   }
 
-  async function loadPopular() {
-    const memeDataPromise = await retrievePopularPosts();
-    if (memeDataPromise !== []) {
-      const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
-        return memeData;
-      });
-      return memeDataObject;
-    } else return memeDataPromise;
-  }
+  // async function loadPopular() {
+  //   const memeDataPromise = await retrievePopularPosts();
+  //   if (memeDataPromise !== []) {
+  //     const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
+  //       return memeData;
+  //     });
+  //     return memeDataObject;
+  //   } else return memeDataPromise;
+  // }
   async function loadRecent() {
     const memeDataPromise = await retrieveRecentPosts();
     const memeDataObject = Promise.all(memeDataPromise).then((memeData) => {
@@ -189,42 +199,42 @@ export default function Feed({ activeNav }) {
     return memeDataObject;
   }
 
-  function showRecent() {
-    setActiveScreen();
-    if (popularPosts) {
-      setPopularPosts();
-    }
-    if (randomPosts) {
-      setRandomPosts();
-    }
-    loadRecent().then((items) => {
-      setRecentPosts(items);
-      setActiveScreen(items);
-      setLoadingFilter(false);
-    });
-  }
-  async function loadRandom() {
-    const memeDataPromise = await retrieveRandomMeme();
-    return memeDataPromise;
-  }
+  // function showRecent() {
+  //   setActiveScreen();
+  //   if (popularPosts) {
+  //     setPopularPosts();
+  //   }
+  //   if (randomPosts) {
+  //     setRandomPosts();
+  //   }
+  //   loadRecent().then((items) => {
+  //     setRecentPosts(items);
+  //     setActiveScreen(items);
+  //     setLoadingFilter(false);
+  //   });
+  // }
+  // async function loadRandom() {
+  //   const memeDataPromise = await retrieveRandomMeme();
+  //   return memeDataPromise;
+  // }
 
-  function showRandom() {
-    setLoadingFilter(true);
+  // function showRandom() {
+  //   setLoadingFilter(true);
 
-    setActiveScreen();
-    if (popularPosts) {
-      setPopularPosts();
-    }
-    if (recentPosts) {
-      setRecentPosts();
-    }
+  //   setActiveScreen();
+  //   if (popularPosts) {
+  //     setPopularPosts();
+  //   }
+  //   if (recentPosts) {
+  //     setRecentPosts();
+  //   }
 
-    loadRandom().then((items) => {
-      setRandomPosts(items);
-      setActiveScreen([items]);
-      setLoadingFilter(false);
-    });
-  }
+  //   loadRandom().then((items) => {
+  //     setRandomPosts(items);
+  //     setActiveScreen([items]);
+  //     setLoadingFilter(false);
+  //   });
+  // }
 
   function filterHome() {
     if (nav !== 0) {
@@ -353,27 +363,29 @@ export default function Feed({ activeNav }) {
 
   return (
     <div className="main-content">
-      {loadingFilter || activeScreen.length < 1 ? <ShowSkeletons /> : null}
+      {loadingFilter ? (
+        <ShowSkeletons />
+      ) : !loadingFilter && popularPosts ? (
+        popularPosts.length !== undefined &&
+        popularPosts.map((item, index) => {
+          let liked = false;
+          let hearted = false;
+          if (usersLikedPosts.includes(item.id)) {
+            liked = true;
+          }
+          return (
+            <Card
+              hearted={hearted}
+              liked={liked}
+              key={index}
+              likedPosts={usersLikedPosts}
+              item={item}
+            ></Card>
+          );
+        })
+      ) : null}
+
       <RecentlyPosted />
-      {activeScreen
-        ? activeScreen.length !== undefined &&
-          activeScreen.map((item, index) => {
-            let liked = false;
-            let hearted = false;
-            if (usersLikedPosts.includes(item.id)) {
-              liked = true;
-            }
-            return (
-              <Card
-                hearted={hearted}
-                liked={liked}
-                key={index}
-                likedPosts={usersLikedPosts}
-                item={item}
-              ></Card>
-            );
-          })
-        : null}
 
       {!loadingFilter && nav !== 4 && (
         <div className="end-of-memes">
