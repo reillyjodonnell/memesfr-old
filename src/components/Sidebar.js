@@ -14,6 +14,13 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import Countdown from './Countdown';
 import TrendingTopics from './TrendingTopics';
 import { useTranslation } from 'react-i18next';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faShare,
+  faComment,
+  faCrown,
+  faClock,
+} from '@fortawesome/free-solid-svg-icons';
 
 export default function Sidebar(props) {
   const [activeNav, setActiveNav] = useState();
@@ -146,7 +153,10 @@ export default function Sidebar(props) {
                 <Home
                   style={
                     props.active === 0
-                      ? { fill: 'var(--primary-accent)' }
+                      ? {
+                          fill: 'var(--primary-accent)',
+                          stroke: 'var(--primary-accent)',
+                        }
                       : null
                   }
                 />
@@ -206,6 +216,14 @@ export default function Sidebar(props) {
                     : null
                 }
               />
+              {/* <FontAwesomeIcon
+                icon={faClock}
+                style={
+                  props.active === 3
+                    ? { stroke: 'var(--primary-accent)' }
+                    : null
+                }
+              /> */}
               <span className="navigation-group-text">{t('recent')}</span>
             </div>
             <div
@@ -228,9 +246,11 @@ export default function Sidebar(props) {
             <div className="memelord-container">
               <span>{t('dailyMemelord')} 👑</span>
             </div>
-            <div className="navigation-group-memelord">
-              <Doge />
-              <span className="navigation-group-text">Reilly</span>
+            <div className="navigation-group-memelord-container">
+              <div className="navigation-group-memelord">
+                <Doge />
+                <span className="navigation-group-text">Reilly</span>
+              </div>
               <span className="countdown-timer">
                 <div className="countdown-timer-time">
                   <span className="countdown-timer-time">

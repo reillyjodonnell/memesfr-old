@@ -32,7 +32,6 @@ export default function ThemeProvider({ children }) {
     const colorValue = localStorage.getItem('accentColor');
     const colorNumberJSON = localStorage.getItem('accentColorNumber');
     const colorNumber = JSON.parse(colorNumberJSON);
-    console.log(colorNumber);
     if (colorNumber === null) {
       setAccentColor('purple');
       setActiveColor(1);
@@ -65,7 +64,6 @@ export default function ThemeProvider({ children }) {
   }
 
   const handleLightMode = () => {
-    console.log('handling light mode');
     r.style.setProperty('--bg', 'var(--light-bg)');
     r.style.setProperty('--text-color', 'var(--dark-text)');
     r.style.setProperty('--line', 'var(--light-mode-line)');
@@ -106,7 +104,6 @@ export default function ThemeProvider({ children }) {
   };
 
   const handleSettingColor = (color) => {
-    console.log(`Received ${color}`);
     r.style.setProperty('--primary-accent', `var(--${color})`);
     r.style.setProperty('--highlight', `var(--${color}-highlight)`);
     r.style.setProperty('--light-highlight', `var(--${color}-light-highlight)`);

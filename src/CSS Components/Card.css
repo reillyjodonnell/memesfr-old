@@ -48,9 +48,9 @@
 }
 .avatar-picture {
   display: flex;
-  height: 42px;
+  height: 52px;
   border-radius: 20px;
-  width: 42px;
+  width: 52px;
   justify-self: center;
   margin-right: 0.65rem;
   min-width: 42px;
@@ -71,6 +71,7 @@
   max-width: 100%;
   max-height: 100%;
   border-radius: 10px;
+  cursor: pointer;
 }
 .upper-top-info {
   display: flex;
@@ -163,13 +164,84 @@
     0 0 24px rgba(30, 132, 242, 0.92); */
 }
 
-.image-container {
+.video-container {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: var(--hover);
   border-radius: 5px;
-  min-width: 100%;
+  position: relative;
+}
+.video-container:hover .playback-icon-mute-container {
+  display: flex;
+
+  animation: fadein var(--speed) forwards;
+}
+
+.video-container:hover .playback-icon-pause-container {
+  display: flex;
+  animation: fadein var(--speed) forwards;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+    display: none;
+  }
+}
+
+.playback-icon-pause-container {
+  position: absolute;
+  bottom: 2rem;
+  cursor: pointer;
+  display: flex;
+  right: 1rem;
+  z-index: 5;
+  padding: 1rem;
+  animation: fadeout var(--speed) forwards;
+}
+
+.playback-icon-volume,
+.playback-icon-play {
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  color: white;
+  stroke: white;
+  fill: white;
+}
+
+.playback-icon-mute-container {
+  position: absolute;
+  bottom: 2rem;
+  cursor: pointer;
+  display: flex;
+  left: 1rem;
+  z-index: 5;
+  padding: 1rem;
+  animation: fadeout var(--speed) forwards;
+}
+
+.playback-icon-mute-container svg {
+  cursor: pointer;
+  stroke: white;
+  fill: white;
+}
+
+.playback-icon-volume {
+}
+.playback-icon-play {
 }
 
 /*PENCIL*/
@@ -249,6 +321,7 @@
 .meme-title {
   font-weight: 500;
   color: var(--secondary-text-color);
+  margin-top: 6px;
 }
 .lower {
   display: flex;

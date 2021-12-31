@@ -12,11 +12,64 @@ export default function LanguageProvider({ children }) {
   const [languagePreference, setLanguagePreference] = useState('');
   const [languageChanged, setLanguageChanged] = useState(false);
 
+  // function getLang() {
+  //   if (navigator.languages != undefined) {
+  //     console.log(navigator);
+  //     return navigator.languages[0];
+  //   }
+  //   return navigator.language;
+  // }
+
+  // console.log(getLang());
+
   const [t, i18n] = useTranslation();
 
   useEffect(() => {
     const languageJSON = window.localStorage.getItem('language');
     setLanguagePreference(languageJSON);
+    if (!languageJSON) {
+      const i18nextLngValue = window.localStorage.getItem('i18nextLng');
+      //Just get the first two letters
+      const firstTwoLettersOfLanguage = i18nextLngValue.slice(0, 2);
+
+      switch (firstTwoLettersOfLanguage) {
+        case 'en':
+          setLanguagePreference('English');
+          break;
+        case 'fr':
+          setLanguagePreference('French');
+          break;
+        case 'de':
+          setLanguagePreference('German');
+          break;
+        case 'zh':
+          setLanguagePreference('Chinese');
+          break;
+        case 'ar':
+          setLanguagePreference('Arabic');
+          break;
+        case 'es':
+          setLanguagePreference('Spanish');
+          break;
+        case 'ru':
+          setLanguagePreference('Russian');
+          break;
+        case 'pt':
+          setLanguagePreference('Portuguese');
+          break;
+        // case 'it':
+        //   setLanguagePreference('Italian');
+        //   break;
+        // case 'ja':
+        //   setLanguagePreference('Japanese');
+        //   break;
+        // case 'hi':
+        //   setLanguagePreference('Hindi');
+        //   break;
+        default:
+          setLanguagePreference('English');
+      }
+    }
     // }
   }, []);
 
@@ -63,6 +116,18 @@ export default function LanguageProvider({ children }) {
         window.localStorage.setItem('language', 'Arabic');
 
         break;
+      case 'Russian':
+        console.log('Russian');
+        i18n.changeLanguage('ru');
+        window.localStorage.setItem('language', 'Russian');
+
+        break;
+      case 'Portuguese':
+        console.log('Portuguese');
+        i18n.changeLanguage('pt');
+        window.localStorage.setItem('language', 'Portuguese');
+
+        break;
       default:
     }
   }, [languagePreference]);
@@ -97,6 +162,16 @@ export default function LanguageProvider({ children }) {
     i18n.changeLanguage('ar');
     setLanguageChanged(true);
   };
+  const setLanguageToRussian = () => {
+    setLanguagePreference('Russian');
+    i18n.changeLanguage('ru');
+    setLanguageChanged(true);
+  };
+  const setLanguageToPortuguese = () => {
+    setLanguagePreference('Portuguese');
+    i18n.changeLanguage('pt');
+    setLanguageChanged(true);
+  };
 
   const values = {
     languagePreference,
@@ -106,6 +181,8 @@ export default function LanguageProvider({ children }) {
     setLanguageToEnglish,
     setLanguageToFrench,
     setLanguageToArabic,
+    setLanguageToRussian,
+    setLanguageToPortuguese,
   };
 
   return (

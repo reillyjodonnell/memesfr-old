@@ -28,8 +28,8 @@ body {
   --light-mode-shadow: #0000001f;
   --dark-mode-shadow: #ffffff3b;
 
-  --light-mode-line: #00000054;
-  --dark-mode-line: #ffffff3b;
+  --light-mode-line: #0000001a;
+  --dark-mode-line: #ffffff14;
 
   --light-mode-hover: #d4d4d473;
   --dark-mode-hover: #393c469f;
@@ -81,11 +81,28 @@ body {
 /* ::-webkit-scrollbar {
   width: 10px;
 } */
-::-webkit-scrollbar-track {
-  background-color: #272932;
+
+/* 
+  scrollbar-width: none; /* Firefox 
+  -ms-overflow-style: none; IE 10+ */
+/* ::-webkit-scrollbar-track {
+  -webkit-box-shadow: none !important;
+  background-color: transparent;
+} */
+::-webkit-scrollbar {
+  width: 6px !important;
+  background-color: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: rgb(177, 177, 177);
+  background-color: transparent;
+}
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: none !important;
+
+  background-color: #ffffff00;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(177, 177, 177, 0.322);
   border-radius: 20px;
   background-clip: content-box;
 }

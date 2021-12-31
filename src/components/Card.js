@@ -8,6 +8,7 @@ import { ReactComponent as HeartIcon } from '../Assets/SVGs/heart.svg';
 import { ReactComponent as LikeIcon } from '../Assets/SVGs/thumbUp.svg';
 import buffDoge from '../Assets/buff-doge.jpg';
 import { ReactComponent as CheckMark } from '../Assets/Icons/CheckMark.svg';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faShare,
@@ -21,7 +22,7 @@ import { useMobile } from '../contexts/MobileContext';
 import Modal from './templates/FullScreenModal';
 import Titles from '../sample-data/titles.json';
 import { useInView } from 'react-intersection-observer';
-
+import VideoIconPlayback from './VideoIconPlayback';
 export default function Card(props) {
   const [heart, setHeart] = useState(false);
   const [thumbUp, setThumbUp] = useState(false);
@@ -46,9 +47,9 @@ export default function Card(props) {
 
   const isInView = inView.toString();
 
-  if (isInView) {
-    console.log(`${props.item.title} is in view`);
-  }
+  // if (isInView) {
+  //   console.log(`${props.item.title} is in view`);
+  // }
 
   /* FOR DEV ONLY */
   const isVerified = true;
@@ -249,40 +250,6 @@ export default function Card(props) {
     setFullScreen(false);
   };
 
-  const VideoPlayback = () => {
-    return (
-      <>
-        {inView ? (
-          <video
-            type="video/mp4"
-            style={{ objectFit: 'cover' }}
-            loop
-            playsInline
-            autoPlay
-            // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
-            className="meme-image"
-            poster={props.item.poster}
-            src={props.item.image}
-          />
-        ) : (
-          <video
-            type="video/mp4"
-            style={{ objectFit: 'cover' }}
-            controls
-            loop
-            muted
-            playsInline
-            autoPlay
-            // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
-            className="meme-image"
-            poster={props.item.poster}
-            src={props.item.image}
-          />
-        )}
-      </>
-    );
-  };
-
   function memeAuthor() {
     const memeAuthorUsername = props.item.userName;
     if (props.item.userName) {
@@ -344,7 +311,12 @@ export default function Card(props) {
 
                     <div className="image-container">
                       {props.item.fileType === 'video' ? (
-                        <VideoPlayback />
+                        <VideoIconPlayback
+                          openFullScreen={openFullScreen}
+                          inView={inView}
+                          image={props.item.image}
+                          poster={props.item.poster}
+                        />
                       ) : (
                         <img
                           alt=""
@@ -464,9 +436,14 @@ export default function Card(props) {
                 </div>
               </div>
 
-              <div onClick={openFullScreen} className="image-container">
+              <div className="image-container">
                 {props.item.fileType === 'video' ? (
-                  <VideoPlayback />
+                  <VideoIconPlayback
+                    openFullScreen={openFullScreen}
+                    inView={inView}
+                    image={props.item.image}
+                    poster={props.item.poster}
+                  />
                 ) : (
                   <img
                     alt=""

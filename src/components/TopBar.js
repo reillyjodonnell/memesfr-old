@@ -33,6 +33,8 @@ export default function TopBar(props) {
     setLanguageToEnglish,
     setLanguageToFrench,
     setLanguageToArabic,
+    setLanguageToPortuguese,
+    setLanguageToRussian,
     languagePreference,
   } = useLanguage();
 
@@ -108,12 +110,32 @@ export default function TopBar(props) {
         >
           <span className="topbar-profile-modal-item-text">عربى</span>
         </div>
+        <div
+          onClick={() => navigateAndClose(setLanguageToPortuguese)}
+          className={
+            languagePreference === 'Portuguese'
+              ? 'topbar-profile-modal-item-active'
+              : 'topbar-profile-modal-item'
+          }
+        >
+          <span className="topbar-profile-modal-item-text">Português</span>
+        </div>
+        <div
+          onClick={() => navigateAndClose(setLanguageToRussian)}
+          className={
+            languagePreference === 'Russian'
+              ? 'topbar-profile-modal-item-active'
+              : 'topbar-profile-modal-item'
+          }
+        >
+          <span className="topbar-profile-modal-item-text">русский</span>
+        </div>
       </div>
     );
   };
 
   const handleMouseOver = () => {
-    console.log('Hovering over');
+    // console.log('Hovering over');
     if (isHovering) {
       setIsHovering(false);
     } else {
@@ -221,13 +243,13 @@ export default function TopBar(props) {
           >
             <FontAwesomeIcon icon={faBoxOpen} />
           </div>
-          <div
+          {/* <div
             onMouseOver={handleShowText}
             className="topbar-upload-meme-button"
             onClick={props.navigateToWallet}
           >
             <Wallet />
-          </div>
+          </div> */}
         </div>
         {props.avatar ? (
           <div

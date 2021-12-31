@@ -18,7 +18,7 @@ export default function Home({ notificationCount, setPosts }) {
       return retrieveData;
     }
     retrievePosts().then((data) => {
-      console.log(data);
+      // console.log(data);
       setPosts(data);
     });
   }, []);

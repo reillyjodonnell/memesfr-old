@@ -10,6 +10,8 @@ import { ReactComponent as User } from '../../../Assets/SVGs/user.svg';
 import { ReactComponent as Camera } from '../../../Assets/Icons/Image.svg';
 import { ReactComponent as Pencil } from '../../../Assets/SVGs/pencil.svg';
 import { useTranslation } from 'react-i18next';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { HelpOutlineRounded } from '@material-ui/icons';
 
 export default function Settings() {
   const [activeMenu, setActiveMenu] = useState(0);
@@ -46,6 +48,15 @@ export default function Settings() {
         >
           <DisplayIcon className="settings-header-option-icon" />
           <span className="settings-header-option-text">{t('display')}</span>
+        </div>
+        <div
+          onClick={() => setActiveMenu(2)}
+          className={`settings-header-option ${
+            activeMenu === 2 && 'settings-header-option-active'
+          }`}
+        >
+          <HelpOutlineRounded className="settings-header-option-icon" />
+          <span className="settings-header-option-text">{t('Help')}</span>
         </div>
       </div>
       <div className="settings-dropdown-column">
