@@ -22,8 +22,11 @@ body {
   --light-text: #ffffff;
   --dark-text: black;
 
-  --light-text-secondary: rgb(34, 34, 34);
+  --light-text-secondary: rgba(34, 34, 34, 0.705);
   --dark-text-secondary: #fdfdfd91;
+
+  --light-secondary-title-color: rgba(0, 0, 0, 0.753);
+  --dark-secondary-title-color: #ffffffc4;
 
   --light-mode-shadow: #0000001f;
   --dark-mode-shadow: #ffffff3b;
@@ -39,6 +42,7 @@ body {
   --secondary-text-color: var(--dark-text-secondary);
   --highlight: var(--purple-highlight);
   --light-highlight: var(--purple-light-highlight);
+  --secondary-title-color: var(--dark-secondary-title-color);
 
   --shadow: var(--dark-mode-shadow);
   --neon-font-color: #ffffffab;

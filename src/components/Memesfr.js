@@ -22,7 +22,7 @@ import Post from './routes/post/Post';
 
 export default function Memesfr() {
   const [nav, setNav] = useState({ count: 0 });
-  const [notificationCount, setNotificationCount] = useState(3);
+  const [notificationCount, setNotificationCount] = useState(69);
   const [posts, setPosts] = useState({});
 
   document.title = 'Memesfr - Dankest Memes';

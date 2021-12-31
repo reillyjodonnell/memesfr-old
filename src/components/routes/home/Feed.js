@@ -133,6 +133,7 @@ export default function Feed(props) {
   const [loadAnotherRandomMeme, setLoadAnotherRandomMeme] = useState(false);
   const [usersLikedPosts, setUsersLikedPosts] = useState([]);
   const [usersHeartedPosts, setUsersHeartedPosts] = useState([]);
+  const [isMuted, setIsMuted] = useState(true);
 
   const [nav, setNav] = useState(0);
 
@@ -306,6 +307,10 @@ export default function Feed(props) {
     );
   };
 
+  const toggleMute = () => {
+    setIsMuted((prev) => !prev);
+  };
+
   const RecentlyPosted = () => {
     let sayingOne = '';
     let sayingTwo = '';
@@ -349,7 +354,14 @@ export default function Feed(props) {
             </div>
           </div>
           {recentlyUploaded.map((item) => {
-            return <Card key={item.id} item={item}></Card>;
+            return (
+              <Card
+                key={item.id}
+                toggleMuted={toggleMute}
+                isMuted={isMuted}
+                item={item}
+              ></Card>
+            );
           })}
         </>
       );
@@ -374,6 +386,8 @@ export default function Feed(props) {
               hearted={hearted}
               liked={liked}
               key={index}
+              toggleMute={toggleMute}
+              isMuted={isMuted}
               likedPosts={usersLikedPosts}
               item={item}
             ></Card>

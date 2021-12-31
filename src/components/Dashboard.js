@@ -413,8 +413,6 @@ export default function Dashboard(props) {
     return null;
   };
 
-  const notificationCount = 5;
-
   return (
     <div className="dashboard">
       <div className="dashboard-content">

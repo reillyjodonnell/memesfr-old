@@ -17,18 +17,19 @@ export default function VideoIconPlayback({
   inView,
   poster,
   image,
+  toggleMute,
+  isMuted,
 }) {
-  const [isMuted, setIsMuted] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
 
   const handleMuteVideo = () => {
     const videoId = document.getElementById('playback-video');
     if (!videoId.muted) {
       videoId.muted = true;
-      setIsMuted(true);
+      toggleMute();
     } else {
       videoId.muted = false;
-      setIsMuted(false);
+      toggleMute();
     }
   };
 
@@ -86,27 +87,29 @@ export default function VideoIconPlayback({
             style={{ objectFit: 'cover' }}
             loop
             muted={isMuted}
+            defaultMuted
             playsInline
-            autoPlay
+            autoPlay={true}
             // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
             className="meme-image"
             poster={poster}
-            src={image}
+            src={`${image}#t=0`}
           />
         ) : (
           <video
             onClick={openFullScreen}
+            id="playback-video"
             type="video/mp4"
             style={{ objectFit: 'cover' }}
-            controls
-            loop
+            // loop
             muted={true}
+            defaultMuted
             playsInline
-            autoPlay
+            // autoPlay={true}
             // onDoubleClick={currentUser ? toggleHeart : activatePrompt}
             className="meme-image"
             poster={poster}
-            src={image}
+            src={`${image}`}
           />
         )}
       </div>

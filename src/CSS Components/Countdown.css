@@ -29,7 +29,7 @@
 }
 .countdown-timer-time {
   display: flex;
-  color: var(--line);
+  color: var(--secondary-title-color);
   font-weight: 600;
   justify-content: center;
   align-items: center;

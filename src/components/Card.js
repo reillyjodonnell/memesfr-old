@@ -312,6 +312,8 @@ export default function Card(props) {
                     <div className="image-container">
                       {props.item.fileType === 'video' ? (
                         <VideoIconPlayback
+                          isMuted={props.isMuted}
+                          toggleMute={props.toggleMute}
                           openFullScreen={openFullScreen}
                           inView={inView}
                           image={props.item.image}
@@ -439,6 +441,8 @@ export default function Card(props) {
               <div className="image-container">
                 {props.item.fileType === 'video' ? (
                   <VideoIconPlayback
+                    isMuted={props.isMuted}
+                    toggleMute={props.toggleMute}
                     openFullScreen={openFullScreen}
                     inView={inView}
                     image={props.item.image}

@@ -73,6 +73,10 @@ export default function ThemeProvider({ children }) {
     );
     r.style.setProperty('--shadow', 'var(--light-mode-shadow)');
     r.style.setProperty('--hover', 'var(--light-mode-hover)');
+    r.style.setProperty(
+      '--secondary-title-color',
+      'var(--light-secondary-title-color)'
+    );
   };
 
   const handleDarkMode = () => {
@@ -82,6 +86,10 @@ export default function ThemeProvider({ children }) {
     r.style.setProperty('--secondary-text-color', 'var(--dark-text-secondary)');
     r.style.setProperty('--shadow', 'var(--dark-mode-shadow)');
     r.style.setProperty('--hover', 'var(--dark-mode-hover)');
+    r.style.setProperty(
+      '--secondary-title-color',
+      'var(--dark-secondary-title-color)'
+    );
   };
 
   const toggleDarkMode = () => {

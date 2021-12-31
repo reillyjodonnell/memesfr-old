@@ -320,7 +320,7 @@
 /*End Of Pencil*/
 .meme-title {
   font-weight: 500;
-  color: var(--secondary-text-color);
+  color: var(--secondary-title-color);
   margin-top: 6px;
 }
 .lower {
@@ -357,10 +357,13 @@
   /* background-color: var(--shadow); */
   /* background-color: var(--line); */
   box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+
+  /* background-color: #ffffff08; */
+  background-color: var(--line);
 }
 .crown-container svg {
   padding: 0 0.25rem;
-  color: var(--line);
+  color: var(--secondary-text-color);
 }
 
 .crown-container-active:before,
@@ -482,10 +485,12 @@
   cursor: pointer;
   /* background-color: var(--shadow); */
   /* background-color: var(--line); */
+  /* background-color: #ffffff0d; */
+  background-color: var(--line);
 }
 .like-container svg {
   padding: 0 0.25rem;
-  color: var(--line);
+  color: var(--secondary-text-color);
 }
 
 .like-container-active {
