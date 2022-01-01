@@ -152,3 +152,34 @@
     font-size: 0.75rem;
   }
 }
+
+/* When the largest mobile phone is detected */
+@media only screen and (max-height: 900px) and (max-width: 500px) {
+  .dashboard-content {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+
+    font-weight: 400;
+    margin: 0;
+  }
+  .card-area {
+    width: 75vw;
+    display: flex;
+    /* width: 35vw; */
+    margin: 0rem 2.5rem;
+    /* max-width: 800px; */
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1rem;
+  }
+  .card {
+    width: 100%;
+  }
+}

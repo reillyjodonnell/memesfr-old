@@ -10,6 +10,10 @@ import CreatePost from '../../CreatePost';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useMobile } from '../../../contexts/MobileContext';
 import PasswordModal from '../../PasswordModal';
+import '../../../CSS Components/routes/home/Feed.css';
+import FullscreenPlayer from './FullscreenPlayer';
+import SideCrownContainer from '../../Mobile/SideCrownContainer';
+import { ReactComponent as User } from '../../../Assets/SVGs/user.svg';
 
 const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
@@ -369,7 +373,22 @@ export default function Feed(props) {
     return null;
   };
 
-  return (
+  return isMobile ? (
+    <div className="home-content-mobile">
+      <div className="home-mobile-scroll"></div>
+      <FullscreenPlayer />
+      <SideCrownContainer />
+      <div className="home-content-user-information">
+        <div className="home-content-username-and-title">
+          <span className="home-content-username">@Reilly</span>
+          <span className="home-content-title">This is a sample 😂</span>
+        </div>
+        <div className="home-content-avatar">
+          <User className="sidebar-avatar" />
+        </div>
+      </div>
+    </div>
+  ) : (
     <div className="main-content">
       {loadingFilter ? (
         <ShowSkeletons />

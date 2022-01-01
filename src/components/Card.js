@@ -377,13 +377,13 @@ export default function Card(props) {
                       </span>
                       <span className="number-of-likes">{likes}</span>
                     </div>
-                    <div className="like-container">
+                    {/* <div className="like-container">
                       <FontAwesomeIcon
                         icon={faHeart}
                         style={{ width: '1.5rem', height: '1.5rem' }}
                       />
                       <span className="number-of-likes">{comments}</span>
-                    </div>
+                    </div> */}
 
                     <div className="like-container">
                       <FontAwesomeIcon

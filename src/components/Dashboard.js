@@ -419,6 +419,8 @@ export default function Dashboard(props) {
         {isMobile ? (
           <>
             <MobileHeader activeUser={currentUser} />
+
+            <Outlet />
             <MobileNav
               active={nav.count}
               homeFilter={filterHome}
